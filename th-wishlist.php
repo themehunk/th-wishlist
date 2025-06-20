@@ -18,6 +18,17 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
+/**
+ * Declare compatibility with WooCommerce High-Performance Order Storage (HPOS).
+ */
+function thw_hpos_compatibility() {
+    if ( defined( 'THW_PLUGIN_FILE' ) && class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', THW_PLUGIN_FILE, true );
+    }
+}
+add_action( 'before_woocommerce_init', 'thw_hpos_compatibility' );
+
+
 if ( ! class_exists( 'TH_Wishlist' ) ) :
 
 /**
@@ -30,7 +41,7 @@ final class TH_Wishlist {
     /**
      * @var string Plugin version.
      */
-    public $version = '1.0.0';
+    public $version = '';
 
     /**
      * @var TH_Wishlist The single instance of the class
@@ -53,6 +64,7 @@ final class TH_Wishlist {
      */
     public function __construct() {
         $this->define_constants();
+        $this->set_version();
         $this->includes();
         $this->init_hooks();
     }
@@ -69,6 +81,17 @@ final class TH_Wishlist {
     }
 
     /**
+     * Set the plugin version from the plugin header.
+     */
+    private function set_version() {
+        if ( ! function_exists( 'get_plugin_data' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+        $plugin_data = get_plugin_data( __FILE__ );
+        $this->version = $plugin_data['Version'];
+    }
+
+    /**
      * Include required core files.
      */
     public function includes() {
@@ -77,8 +100,6 @@ final class TH_Wishlist {
         require_once THW_DIR . 'includes/class-th-wishlist-frontend.php';
         require_once THW_DIR . 'includes/class-th-wishlist-admin.php';
         require_once THW_DIR . 'includes/class-th-wishlist-list-table.php';
-
-        
     }
 
     /**
@@ -127,4 +148,3 @@ function THW() {
 
 // Global for backwards compatibility.
 $GLOBALS['th_wishlist'] = THW();
-

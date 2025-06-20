@@ -1,0 +1,63 @@
+/* TH Wishlist Admin Styles */
+#thw-settings-notice {
+    display: none;
+    padding: 10px 20px;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+#thw-settings-notice.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+#thw-settings-notice.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+.thw-custom-icon-row {
+    display: none;
+}
+.thw-custom-icon-row.show {
+    display: table-row;
+}
+.thw-sortable-columns {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 400px;
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    padding: 10px;
+}
+.thw-sortable-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin: 5px 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: move;
+}
+.thw-sortable-item:hover {
+    background: #f1f1f1;
+}
+.thw-drag-handle {
+    margin-right: 10px;
+    color: #555;
+    cursor: grab;
+}
+.thw-column-label {
+    flex: 1;
+}
+.thw-sortable-item input[type="checkbox"] {
+    margin: 0 10px 0 0;
+}
+.ui-state-highlight {
+    height: 40px;
+    background: #e6e6e6;
+    border: 1px dashed #ccc;
+    border-radius: 3px;
+}
