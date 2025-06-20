@@ -1,0 +1,114 @@
+/* Add to Wishlist Button */
+.thw-add-to-wishlist-button {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.thw-add-to-wishlist-button .thw-icon {
+    margin-right: 8px;
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+.thw-add-to-wishlist-button.loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.thw-add-to-wishlist-button.in-wishlist {
+    background-color: #e91e63 !important;
+    color: #fff !important;
+    border-color: #e91e63 !important;
+}
+
+/* Icon Only (No Button Style) */
+.thw-add-to-wishlist-button.no-style {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    color: #e91e63 !important;
+    box-shadow: none !important;
+}
+
+.thw-add-to-wishlist-button.no-style:hover {
+    color: #c2185b !important;
+}
+
+.thw-add-to-wishlist-button.no-style .thw-icon {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+
+/* Wishlist Table */
+.thw-wishlist-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.thw-wishlist-table th,
+.thw-wishlist-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.thw-wishlist-table .product-thumbnail img {
+    max-width: 60px;
+    height: auto;
+}
+
+.thw-wishlist-table .product-quantity input {
+    width: 60px;
+    text-align: center;
+}
+
+.thw-wishlist-table .product-remove a {
+    color: red;
+    font-size: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Center checkbox and add to cart text */
+.thw-wishlist-table .product-checkbox,
+.thw-wishlist-table .product-add_to_cart {
+    text-align: center;
+}
+
+/* Wishlist Actions & Sharing */
+.thw-wishlist-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.thw-social-share {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.thw-social-share a {
+    font-size: 20px;
+    text-decoration: none;
+    color: #555;
+    transition: color 0.3s;
+}
+
+.thw-social-share a:hover {
+    color: #000;
+}
+
+.thw-copy-link-button {
+    cursor: pointer;
+}
