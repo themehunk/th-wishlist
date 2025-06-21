@@ -29,7 +29,10 @@ class TH_Wishlist_Settings_Ajax {
         $defaults = TH_Wishlist_Settings::get_default_settings();
 
         foreach ( $defaults as $key => $default_value ) {
-            if ( isset( $data[ $key ] ) ) {
+            if ( $key === 'th_wishlist_table_columns' && isset( $data['th_wishlist_table_columns'] ) && is_array( $data['th_wishlist_table_columns'] ) ) {
+                // Handle the table columns array specifically
+                $sanitized['th_wishlist_table_columns'] = array_map( 'sanitize_text_field', $data['th_wishlist_table_columns'] );
+            } elseif ( isset( $data[ $key ] ) ) {
                 if ( is_array( $data[ $key ] ) ) {
                     $sanitized[ $key ] = array_map( 'sanitize_text_field', $data[ $key ] );
                 } else {
@@ -47,7 +50,6 @@ class TH_Wishlist_Settings_Ajax {
      * Save settings via AJAX.
      */
     public function save_settings() {
-        
         check_ajax_referer( 'th_wishlist_nonce', '_wpnonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {

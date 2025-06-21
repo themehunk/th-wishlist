@@ -4,7 +4,7 @@
  * Plugin URI:        https://www.themehunk.com/
  * Description:       A modern wishlist plugin for WooCommerce. Allows users to add products to a wishlist, view, and manage them.
  * Version:           1.0.0
- * Author:            Your Name
+ * Author:            themehunk
  * Author URI:        https://www.themehunk.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
@@ -41,7 +41,7 @@ final class TH_Wishlist {
     /**
      * @var string Plugin version.
      */
-    public $version = '';
+    public $version;
 
     /**
      * @var TH_Wishlist The single instance of the class
@@ -84,22 +84,21 @@ final class TH_Wishlist {
      * Set the plugin version from the plugin header.
      */
     private function set_version() {
-        if ( ! function_exists( 'get_plugin_data' ) ) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';
-        }
-        $plugin_data = get_plugin_data( __FILE__ );
-        $this->version = $plugin_data['Version'];
+        $plugin_data = get_file_data(__FILE__, array('version' => 'version'), false);
+        $this->version = $plugin_data['version'];
     }
 
     /**
      * Include required core files.
      */
     public function includes() {
+        require_once THW_DIR . 'includes/class-th-wishlist-settings-manager.php';
+        require_once THW_DIR . 'includes/class-th-wishlist-admin.php';
         require_once THW_DIR . 'includes/class-th-wishlist-install.php';
         require_once THW_DIR . 'includes/class-th-wishlist-data.php';
         require_once THW_DIR . 'includes/class-th-wishlist-frontend.php';
-        require_once THW_DIR . 'includes/class-th-wishlist-admin.php';
         require_once THW_DIR . 'includes/class-th-wishlist-list-table.php';
+        require_once THW_DIR . 'includes/th-wishlist-function.php';
     }
 
     /**
@@ -124,6 +123,7 @@ final class TH_Wishlist {
         }
 
         // Instantiate classes
+        TH_Wishlist_Settings_Manager::get_instance();
         new TH_Wishlist_Frontend();
         new TH_Wishlist_Admin();
     }
