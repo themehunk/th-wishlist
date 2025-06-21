@@ -121,6 +121,47 @@ class TH_Wishlist_Settings {
                     </tr>
                 </table>
 
+                <h2><?php esc_html_e( 'Loop Settings', 'th-wishlist' ); ?></h2>
+                <table class="form-table">
+                     <tr>
+                        <th scope="row"><?php esc_html_e( 'Show "Add to wishlist" in loop', 'th-wishlist' ); ?></th>
+                        <td>
+                            <input type="checkbox" name="settings[thw_show_in_loop]" value="1" <?php checked( isset( $options['thw_show_in_loop'] ) ? $options['thw_show_in_loop'] : 0, 1 ); ?> />
+                            <span class="description"><?php esc_html_e( 'Enable the "Add to wishlist" feature in WooCommerce products loop', 'th-wishlist' ); ?></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php esc_html_e( 'Position of "Add to wishlist" in loop', 'th-wishlist' ); ?></th>
+                        <td>
+                            <?php $selected_position = isset( $options['thw_in_loop_position'] ) ? $options['thw_in_loop_position'] : 'after_crt_btn';?>
+                            <select name="settings[thw_in_loop_position]">
+                                <option value="after_crt_btn" <?php selected( $selected_position, 'after_crt_btn' ); ?>><?php esc_html_e( 'After "Add to Cart" Button', 'th-wishlist' ); ?></option>
+                                <option value="before_crt_btn" <?php selected( $selected_position, 'before_crt_btn' ); ?>><?php esc_html_e( 'Before "Add to Cart" Button', 'th-wishlist' ); ?></option>
+                                <option value="on_top" <?php selected( $selected_position, 'on_top' ); ?>><?php esc_html_e( 'On Top', 'th-wishlist' ); ?></option>
+                                <option value="on_shortcode" <?php selected( $selected_position, 'on_shortcode' ); ?>><?php esc_html_e( 'Use Shortcode', 'th-wishlist' ); ?></option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+
+                <h2><?php esc_html_e( 'Product Page', 'th-wishlist' ); ?></h2>
+                <table class="form-table">
+                     
+                    <tr>
+                        <th scope="row"><?php esc_html_e( 'Position of "Add to wishlist" on product page', 'th-wishlist' ); ?></th>
+                        <td>
+                            <?php $selected_position = isset( $options['thw_in_single_position'] ) ? $options['thw_in_single_position'] : 'after_crt_btn';?>
+                            <select name="settings[thw_in_single_position]">
+                                <option value="after_crt_btn" <?php selected( $selected_position, 'after_crt_btn' ); ?>><?php esc_html_e( 'After "Add to Cart"', 'th-wishlist' ); ?></option>
+                                <option value="after_thumb" <?php selected( $selected_position, 'after_thumb' ); ?>><?php esc_html_e( 'After Thumbnails', 'th-wishlist' ); ?></option>
+                                <option value="after_summ" <?php selected( $selected_position, 'after_summ' ); ?>><?php esc_html_e( 'After Summary', 'th-wishlist' ); ?></option>
+                                <option value="on_shortcode" <?php selected( $selected_position, 'on_shortcode' ); ?>><?php esc_html_e( 'Use Shortcode', 'th-wishlist' ); ?></option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+
+
                 <h2><?php esc_html_e( 'Wishlist Page Settings', 'th-wishlist' ); ?></h2>
                 <table class="form-table">
                     <tr>
@@ -212,10 +253,13 @@ class TH_Wishlist_Settings {
             'thw_browse_wishlist_text'    => __( 'Browse Wishlist', 'th-wishlist' ),
             'thw_use_custom_icon'         => 0,
             'thw_custom_icon_url'         => '',
+            'thw_show_in_loop'            => 1,
+            'thw_in_loop_position'        => 'after_crt_btn',
+            'thw_in_single_position'     => 'after_crt_btn',
             'thw_show_add_all_to_cart'    => 0,
             'thw_show_social_share'       => 0,
             'thw_show_quantity'           => 0,
-            'thw_wishlist_table_columns'  => [ 'thumbnail', 'name', 'price', 'stock', 'add_to_cart', 'remove' ],
+            'th_wishlist_table_columns'     => [ 'thumbnail', 'name', 'price', 'stock', 'add_to_cart', 'remove' ],
         ];
     }
 }

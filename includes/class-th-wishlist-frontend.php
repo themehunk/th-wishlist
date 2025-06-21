@@ -9,15 +9,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class TH_Wishlist_Frontend
  */
 class TH_Wishlist_Frontend {
-    
-    public function __construct() {
-        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
-        add_action( 'woocommerce_after_add_to_cart_button', array( $this, 'add_to_wishlist_button' ), 20 );
-        add_action( 'woocommerce_after_shop_loop_item', array( $this, 'add_to_wishlist_button' ), 20 );
 
+    // Declare the property to avoid dynamic property deprecation warning
+    private $th_wishlist_option;
+
+    public function __construct() {
+
+        // Use static method directly, no need to instantiate
+        $this->th_wishlist_option = get_option( 'th_wishlist_settings', TH_Wishlist_Settings::get_default_settings() );
+        add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
         add_shortcode( 'th_wcwl_wishlist', array( $this, 'wishlist_page_shortcode' ) );
+        add_shortcode('th_wcwl_wishlist_button', array( $this,'thw_add_to_wishlist_button_shortcode'));
+       
+        add_action( 'wp', array( $this, 'hook_wishlist_loop_button_position' ) );
+        add_action( 'wp', array( $this, 'hook_wishlist_single_button_position' ) );
+        
 
         // AJAX handlers
+
         add_action( 'wp_ajax_thw_add_to_wishlist', array( $this, 'add_to_wishlist_ajax' ) );
         add_action( 'wp_ajax_nopriv_thw_add_to_wishlist', array( $this, 'add_to_wishlist_ajax' ) );
         add_action( 'wp_ajax_thw_remove_from_wishlist', array( $this, 'remove_from_wishlist_ajax' ) );
@@ -29,10 +38,12 @@ class TH_Wishlist_Frontend {
     }
 
     public function enqueue_styles_scripts() {
+        
         wp_enqueue_style( 'thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(), THW_VERSION );
         wp_enqueue_script( 'thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), THW_VERSION, true );
         
-        $wishlist_page_id = get_option( 'th_wcwl_wishlist_page_id' );
+        $wishlist_page_id = isset($this->th_wishlist_option['th_wcwl_wishlist_page_id']) ? $this->th_wishlist_option['th_wcwl_wishlist_page_id'] : 0;
+        $thw_redirect_to_cart = isset($this->th_wishlist_option['thw_redirect_to_cart']) ? $this->th_wishlist_option['thw_redirect_to_cart'] : '';
         
         wp_localize_script( 'thw-wishlist', 'thw_wishlist_params', array(
             'ajax_url'            => admin_url( 'admin-ajax.php' ),
@@ -41,52 +52,227 @@ class TH_Wishlist_Frontend {
             'update_qty_nonce'    => wp_create_nonce( 'thw-update-qty-nonce' ),
             'add_all_nonce'       => wp_create_nonce( 'thw-add-all-nonce' ),
             'wishlist_page_url'   => $wishlist_page_id ? get_permalink( $wishlist_page_id ) : '',
-            'i18n_added'          => get_option('thw_browse_wishlist_text', __( 'Browse Wishlist', 'th-wishlist' )),
+            'i18n_added'          => isset($this->th_wishlist_option['thw_browse_wishlist_text']) ? $this->th_wishlist_option['thw_browse_wishlist_text'] : __('Browse Wishlist', 'th-wishlist'),
             'i18n_error'          => __( 'An error occurred. Please try again.', 'th-wishlist' ),
             'i18n_empty_wishlist' => __('Your wishlist is currently empty.', 'th-wishlist'),
-            'redirect_to_cart'    => get_option('thw_redirect_to_cart') === '1',
+            'redirect_to_cart'    => $thw_redirect_to_cart === '1',
             'cart_url'            => wc_get_cart_url(),
         ) );
     }
 
-    public function add_to_wishlist_button() {
-        global $product;
-        if (get_option('thw_require_login') === '1' && !is_user_logged_in()) {
-            echo '<a href="' . esc_url(get_permalink(get_option('woocommerce_myaccount_page_id'))) . '" class="button thw-login-required">' . __('Login to add to wishlist', 'th-wishlist') . '</a>';
-            return;
-        }
+    public function thw_add_to_wishlist_button_shortcode() {
 
-        $wishlist = TH_Wishlist_Data::get_or_create_wishlist();
-        $product_id = $product->get_id();
-        $variation_id = $product->is_type('variation') ? $product->get_id() : 0;
-        
-        $in_wishlist = $wishlist ? TH_Wishlist_Data::is_product_in_wishlist( $wishlist->id, $product_id, $variation_id ) : false;
-        
-        $add_text = get_option('thw_add_to_wishlist_text', __( 'Add to Wishlist', 'th-wishlist' ));
-        $browse_text = get_option('thw_browse_wishlist_text', __( 'Browse Wishlist', 'th-wishlist' ));
-        $text = $in_wishlist ? $browse_text : $add_text;
-        
-        $class = $in_wishlist ? 'in-wishlist' : '';
-        
-        $display_style = get_option('thw_button_display_style', 'icon_text');
-        if($display_style === 'icon_only_no_style') {
-            $class .= ' no-style';
-        }
+    global $product;
 
+    if (!isset($product) || !is_a($product, 'WC_Product')) {
+        return '';
+    }
+
+    ob_start();
+
+    if (isset($this->th_wishlist_option['thw_require_login']) && $this->th_wishlist_option['thw_require_login'] === '1' && !is_user_logged_in()) {
+        echo '<a href="' . esc_url(get_permalink(get_option('woocommerce_myaccount_page_id'))) . '" class="button thw-login-required">' . __('Login to add to wishlist', 'th-wishlist') . '</a>';
+        return ob_get_clean();
+    }
+
+    $wishlist = TH_Wishlist_Data::get_or_create_wishlist();
+    $product_id = $product->get_id();
+    $variation_id = $product->is_type('variation') ? $product->get_id() : 0;
+    $in_wishlist = $wishlist ? TH_Wishlist_Data::is_product_in_wishlist($wishlist->id, $product_id, $variation_id) : false;
+
+    $add_text = isset($this->th_wishlist_option['thw_add_to_wishlist_text']) ? $this->th_wishlist_option['thw_add_to_wishlist_text'] : __('Add to Wishlist', 'th-wishlist');
+    $browse_text = isset($this->th_wishlist_option['thw_browse_wishlist_text']) ? $this->th_wishlist_option['thw_browse_wishlist_text'] : __('Browse Wishlist', 'th-wishlist');
+    $text = $in_wishlist ? $browse_text : $add_text;
+
+    $classes = [];
+
+    if ( $in_wishlist ) {
+        $classes[] = 'in-wishlist';
+    }
+
+    $display_style = isset($this->th_wishlist_option['thw_button_display_style']) ? $this->th_wishlist_option['thw_button_display_style'] : 'icon_text';
+
+    if ( $display_style === 'icon_only_no_style' ) {
+        $classes[] = 'no-style';
+    }elseif ( $display_style === 'icon_text' ) {
+        $classes[] = 'th-icon-text';
+    }elseif( $display_style === 'icon' ) {
+        $classes[] = 'th-icon';
+    }elseif( $display_style === 'text' ) {
+        $classes[] = 'th-text';
+    }else{
+        $classes[] = '';
+    }
+
+    // Convert to string for HTML
+    $class_attr = implode( ' ', $classes );
+
+    $icon_html = '';
+    $text_html = '<span>' . esc_html($text) . '</span>';
+
+    if (in_array($display_style, ['icon', 'icon_text', 'icon_only_no_style'])) {
+        if (isset($this->th_wishlist_option['thw_use_custom_icon']) && $this->th_wishlist_option['thw_use_custom_icon'] === '1' && !empty($this->th_wishlist_option['thw_custom_icon_url'])) {
+            $icon_html = '<img src="' . esc_url($this->th_wishlist_option['thw_custom_icon_url']) . '" class="thw-icon" alt="Wishlist Icon" />';
+        } else {
+            $icon_html = '<span class="thw-icon">
+            <span class="dashicons dashicons-heart"></span>
+            </span>';
+        }
+    }
+
+    if (in_array($display_style, ['icon', 'icon_only_no_style'])) {
+        $text_html = '';
+    }
+
+    if ($display_style === 'text') {
         $icon_html = '';
-        $text_html = '<span>' . esc_html( $text ) . '</span>';
-        
-        if ($display_style === 'icon' || $display_style === 'icon_text' || $display_style === 'icon_only_no_style') {
-            if (get_option('thw_use_custom_icon') === '1' && get_option('thw_custom_icon_url')) {
-                $icon_html = '<img src="'.esc_url(get_option('thw_custom_icon_url')).'" class="thw-icon" alt="Wishlist Icon" />';
-            } else {
-                 $icon_html = '<span class="thw-icon">&hearts;</span>';
-            }
-        }
-        if($display_style === 'icon' || $display_style === 'icon_only_no_style') $text_html = '';
-        if($display_style === 'text') $icon_html = '';
+    }
 
-        echo '<button class="thw-add-to-wishlist-button button ' . $class . '" data-product-id="' . esc_attr( $product_id ) . '" data-variation-id="' . esc_attr( $variation_id ) . '">' . $icon_html . $text_html . '</button>';
+    echo '<div class="thw-add-to-wishlist-button-wrap">
+    <button class="thw-add-to-wishlist-button button ' . esc_attr($class_attr) . '" data-product-id="' . esc_attr($product_id) . '" data-variation-id="' . esc_attr($variation_id) . '">' . $icon_html . $text_html . '</button>
+    </div>';
+
+    return ob_get_clean();
+  }
+
+   public function add_to_wishlist_button() {
+    echo do_shortcode('[th_wcwl_wishlist_button]');
+   }
+
+   public function hook_wishlist_loop_button_position() {
+
+    $thw_show_in_loop = isset( $this->th_wishlist_option['thw_show_in_loop'] ) ? $this->th_wishlist_option['thw_show_in_loop'] : 1;
+
+    if ( ! $thw_show_in_loop ) {
+
+		return;
+	}
+
+    $position = isset( $this->th_wishlist_option['thw_in_loop_position'] ) ? $this->th_wishlist_option['thw_in_loop_position'] : 'after_crt_btn';
+
+    if ( is_admin() || is_singular( 'product' ) ) {
+        return; 
+    }
+
+    switch ( $position ) {
+
+            case 'before_crt_btn':
+               
+                if ( th_is_wc_block_template( 'archive-product' ) ) {
+                    // For blockified loop: hook before Add to Cart (product-button)
+                    add_filter( 'render_block_woocommerce/product-button', array( $this, 'inject_wishlist_in_block' ), 5, 3 );
+                } else {
+                    // Classic template: hook before Add to Cart in loop
+                    add_action( 'woocommerce_after_shop_loop_item', array( $this, 'add_to_wishlist_button' ), 7 );
+                }
+                break;
+
+            case 'after_crt_btn':
+                if ( th_is_wc_block_template( 'archive-product' ) ) {
+                    add_filter( 'render_block_woocommerce/product-button', array( $this, 'inject_wishlist_in_block' ),20, 3  );
+                } else {
+                    add_action( 'woocommerce_after_shop_loop_item', array( $this, 'add_to_wishlist_button' ), 15 );
+                }
+                break;
+
+            case 'on_top':
+                if ( th_is_wc_block_template( 'archive-product' ) ) {
+                    add_filter( 'render_block_woocommerce/product-image', array( $this, 'inject_wishlist_in_block' ), 10, 3 );
+                } else {
+                    add_action( 'woocommerce_before_shop_loop_item', array( $this, 'add_to_wishlist_button' ), 5 );
+                }
+                break;
+
+            case 'on_shortcode':
+                // Do not hook automatically
+                break;
+        }
+
+  }
+
+  public function hook_wishlist_single_button_position() {
+
+
+    $position = isset( $this->th_wishlist_option['thw_in_single_position'] ) ? $this->th_wishlist_option['thw_in_single_position'] : 'after_crt_btn';
+
+    if ( ! is_singular( 'product' ) ) {
+        return; 
+    }
+
+    if ( th_is_wc_block_template( 'single-product' ) ) {
+        
+       $this->add_button_for_blockified_template('single-product', $position);
+       
+    }else{
+        switch ( $position ) {
+        case 'after_thumb':
+            // Hook before "Add to Cart" by using before item end
+            add_action( 'woocommerce_before_single_product_summary', array( $this, 'add_to_wishlist_button' ), 21 );
+            break;
+
+        case 'after_crt_btn':
+            add_action( 'woocommerce_single_product_summary', array( $this, 'add_to_wishlist_button' ), 0 );
+            break;
+
+        case 'after_summ':
+            add_action( 'woocommerce_after_single_product_summary', array( $this, 'add_to_wishlist_button' ), 11 );
+            break;
+
+        case 'on_shortcode':
+            // Do not hook automatically
+            break;
+       }
+
+    }
+
+  }
+
+  /**
+ * Inject wishlist button into blockified WooCommerce templates.
+ *
+ * @param string $template Template slug (e.g., 'single-product').
+ * @param string $position Insertion position (e.g., 'after_crt_btn', 'after_thumb', 'after_summ').
+ */
+    public function add_button_for_blockified_template( $template, $position ) {
+        $hooked = false;
+
+        switch ( $position ) {
+            case 'after_crt_btn':
+                $block = ( 'single-product' === $template ) ? 'add-to-cart-form' : 'product-button';
+                add_filter( "render_block_woocommerce/$block", array( $this, 'inject_wishlist_in_block' ), 10, 3 );
+                $hooked = true;
+                break;
+
+            case 'after_thumb':
+                add_filter( 'render_block_woocommerce/product-image-gallery', array( $this, 'inject_wishlist_in_block' ), 10, 3 );
+                $hooked = true;
+                break;
+
+            case 'after_summ':
+                add_filter( 'render_block_woocommerce/product-details', array( $this, 'inject_wishlist_in_block' ), 10, 3 );
+                $hooked = true;
+                break;
+        }
+
+        if ( $hooked ) {
+            do_action( 'th_wishlist_blockified_hook_attached', $template, $position );
+        }
+    }
+
+    /**
+     * Appends the wishlist button HTML to a WooCommerce block's output.
+     *
+     * @param string $block_content The original block HTML.
+     * @param array  $block The full parsed block array.
+     * @param WP_Block $instance The block instance.
+     * @return string Modified block content.
+     */
+    public function inject_wishlist_in_block( $block_content, $block, $instance ) {
+        ob_start();
+        $this->add_to_wishlist_button();
+        $wishlist_button_html = ob_get_clean();
+        // Append after original content. You could also prepend or place conditionally.
+        return $block_content . $wishlist_button_html;
     }
 
     public function wishlist_page_shortcode() {

@@ -18,7 +18,7 @@ class TH_Wishlist_Admin {
         new TH_Wishlist_Settings();
         new TH_Wishlist_Settings_Ajax();
         new TH_Wishlist_Tracking();
-        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ));
     }
 
     /**

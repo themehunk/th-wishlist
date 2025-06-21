@@ -43,7 +43,7 @@ jQuery(document).ready(function($) {
         var data = $form.serializeArray();
         data.push({ name: 'action', value: 'th_wishlist_save_settings' });
         data.push({ name: '_wpnonce', value: $form.data('nonce') });
-
+  
         $.ajax({
             url: thWishlistAdmin.ajax_url,
             type: 'POST',
