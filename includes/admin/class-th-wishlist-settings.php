@@ -185,13 +185,13 @@ class TH_Wishlist_Settings {
                             <span class="description"><?php esc_html_e( 'Allows logged-in users to share their wishlist.', 'th-wishlist' ); ?></span>
                         </td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <th scope="row"><?php esc_html_e( 'Show Quantity Field', 'th-wishlist' ); ?></th>
                         <td>
                             <input type="checkbox" name="settings[thw_show_quantity]" value="1" <?php checked( isset( $options['thw_show_quantity'] ) ? $options['thw_show_quantity'] : 0, 1 ); ?> />
                             <span class="description"><?php esc_html_e( 'Allows users to manage item quantity directly in the wishlist.', 'th-wishlist' ); ?></span>
                         </td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <th scope="row"><?php esc_html_e( 'Wishlist Table Columns', 'th-wishlist' ); ?></th>
                         <td>
