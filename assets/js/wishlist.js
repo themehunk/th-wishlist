@@ -63,6 +63,14 @@ jQuery(function($) {
         var $input = $(this);
         var item_id = $input.data('item-id');
         var quantity = $input.val();
+        // Update WooCommerce add_to_cart_button data-quantity
+        var $row = $input.closest('tr');
+        var $button = $row.find('.add_to_cart_button');
+
+        if ($button.length) {
+            $button.attr('data-quantity', quantity);
+        }
+
         $.post(thw_wishlist_params.ajax_url, { action: 'thw_update_item_quantity', nonce: thw_wishlist_params.update_qty_nonce, item_id: item_id, quantity: quantity });
     });
 

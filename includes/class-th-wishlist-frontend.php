@@ -24,9 +24,7 @@ class TH_Wishlist_Frontend {
         add_action( 'wp', array( $this, 'hook_wishlist_loop_button_position' ) );
         add_action( 'wp', array( $this, 'hook_wishlist_single_button_position' ) );
         
-
         // AJAX handlers
-
         add_action( 'wp_ajax_thw_add_to_wishlist', array( $this, 'add_to_wishlist_ajax' ) );
         add_action( 'wp_ajax_nopriv_thw_add_to_wishlist', array( $this, 'add_to_wishlist_ajax' ) );
         add_action( 'wp_ajax_thw_remove_from_wishlist', array( $this, 'remove_from_wishlist_ajax' ) );
@@ -35,12 +33,15 @@ class TH_Wishlist_Frontend {
         add_action( 'wp_ajax_nopriv_thw_update_item_quantity', array( $this, 'update_item_quantity_ajax' ) );
         add_action( 'wp_ajax_thw_add_all_to_cart', array( $this, 'add_all_to_cart_ajax' ) );
         add_action( 'wp_ajax_nopriv_thw_add_all_to_cart', array( $this, 'add_all_to_cart_ajax' ) );
+        
+
+    
     }
 
     public function enqueue_styles_scripts() {
         
-        wp_enqueue_style( 'thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(), THW_VERSION );
-        wp_enqueue_script( 'thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), THW_VERSION, true );
+        wp_enqueue_style( 'thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),'1.0.0');
+        wp_enqueue_script( 'thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), '1.0.0', true );
         
         $wishlist_page_id = isset($this->th_wishlist_option['th_wcwl_wishlist_page_id']) ? $this->th_wishlist_option['th_wcwl_wishlist_page_id'] : 0;
         $thw_redirect_to_cart = isset($this->th_wishlist_option['thw_redirect_to_cart']) ? $this->th_wishlist_option['thw_redirect_to_cart'] : '';
@@ -101,7 +102,7 @@ class TH_Wishlist_Frontend {
     }elseif( $display_style === 'text' ) {
         $classes[] = 'th-text';
     }else{
-        $classes[] = '';
+       $classes[] = '';
     }
 
     // Convert to string for HTML
@@ -128,12 +129,16 @@ class TH_Wishlist_Frontend {
         $icon_html = '';
     }
 
-    echo '<div class="thw-add-to-wishlist-button-wrap">
-    <button class="thw-add-to-wishlist-button button ' . esc_attr($class_attr) . '" data-product-id="' . esc_attr($product_id) . '" data-variation-id="' . esc_attr($variation_id) . '">' . $icon_html . $text_html . '</button>
-    </div>';
+    $wrap_class = is_singular('product') ? 'th-wishlist-single' : '';
+    
+    ?>
 
-    return ob_get_clean();
-  }
+    <div class="thw-add-to-wishlist-button-wrap <?php echo esc_attr($wrap_class);?> ">
+    <button class="thw-add-to-wishlist-button button <?php echo esc_attr($class_attr);?>" data-product-id="<?php echo esc_attr($product_id);?>" data-variation-id="<?php echo esc_attr($variation_id);?>"><?php echo $icon_html; ?><?php echo $text_html;?></button>
+    </div>
+    <?php 
+        return ob_get_clean();
+    }
 
    public function add_to_wishlist_button() {
     echo do_shortcode('[th_wcwl_wishlist_button]');
@@ -276,6 +281,7 @@ class TH_Wishlist_Frontend {
     }
 
     public function wishlist_page_shortcode() {
+
         ob_start();
 
         $wishlist = null;
@@ -311,13 +317,13 @@ class TH_Wishlist_Frontend {
         }
 
         $items = TH_Wishlist_Data::get_wishlist_items($wishlist->id);
-        $columns = get_option('thw_wishlist_table_columns', ['thumbnail', 'name', 'price', 'stock', 'add_to_cart', 'remove']);
+        $columns = $this->th_wishlist_option['th_wishlist_table_columns'];
 
         echo '<div class="thw-wishlist-wrapper">';
         echo '<h2>' . esc_html($wishlist->wishlist_name) . '</h2>';
         echo '<form class="thw-wishlist-form">';
         echo '<table class="thw-wishlist-table"><thead><tr>';
-        
+
         $headers = [
             'checkbox' => '<input type="checkbox" id="thw-select-all" />',
             'thumbnail' => '&nbsp;',
@@ -340,7 +346,6 @@ class TH_Wishlist_Frontend {
                 $_product = wc_get_product($item->variation_id ? $item->variation_id : $item->product_id);
                 if (!$_product) continue;
                 echo '<tr data-item-id="' . esc_attr($item->id) . '" data-product-id="' . esc_attr($_product->get_id()) . '">';
-                
                 foreach($columns as $key) {
                     echo '<td class="product-'.$key.'">';
                     switch($key) {
@@ -369,7 +374,7 @@ class TH_Wishlist_Frontend {
                             break;
                         case 'add_to_cart':
                              echo '<div class="thw-add-to-cart-cell">';
-                             woocommerce_template_loop_add_to_cart(['product' => $_product]);
+                             $this->thw_render_add_to_cart_button( $_product , $item);
                              echo '</div>';
                             break;
                         case 'date':
@@ -390,28 +395,86 @@ class TH_Wishlist_Frontend {
         echo '</tbody></table></form>';
 
         echo '<div class="thw-wishlist-actions">';
-        if (get_option('thw_show_add_all_to_cart') === '1' && in_array('checkbox', $columns) && !empty($items)) {
-            echo '<button class="button thw-add-all-to-cart">' . __('Add Selected to Cart', 'th-wishlist') . '</button>';
+        
+        if ($this->th_wishlist_option['thw_show_add_all_to_cart'] === '1' && in_array('checkbox', $columns) && !empty($items)) {
+            echo '<button class="button wp-element-button add_to_cart_button  thw-add-all-to-cart">' . __('Add Selected to Cart', 'th-wishlist') . '</button>';
         }
 
-        if (get_option('thw_show_social_share') === '1' && $wishlist->privacy !== 'private' && !empty($wishlist->wishlist_token)) {
-            $share_url = add_query_arg('wishlist_token', $wishlist->wishlist_token, get_permalink(get_option('th_wcwl_wishlist_page_id')));
-            echo '<div class="thw-social-share">';
-            echo '<span>' . __('Share on:', 'th-wishlist') . '</span>';
-            echo '<a href="https://www.facebook.com/sharer/sharer.php?u=' . urlencode($share_url) . '" target="_blank" title="Facebook">FB</a>';
-            echo '<a href="https://twitter.com/intent/tweet?url=' . urlencode($share_url) . '&text=' . urlencode('My Wishlist') . '" target="_blank" title="Twitter">TW</a>';
-            echo '<a href="#" class="thw-copy-link-button" data-link="'.esc_attr($share_url).'" title="'.__('Copy Link', 'th-wishlist').'">Copy</a>';
-            echo '</div>';
-        }
+        $this->render_social_share_links( $wishlist );
+
         echo '</div>'; // .thw-wishlist-actions
         echo '</div>'; // .thw-wishlist-wrapper
         
         return ob_get_clean();
     }
-    
+
+    public function render_social_share_links( $wishlist ) {
+        if (
+            ! isset( $this->th_wishlist_option['thw_show_social_share'] ) ||
+            $this->th_wishlist_option['thw_show_social_share'] !== '1' ||
+            $wishlist->privacy === 'private' ||
+            empty( $wishlist->wishlist_token )
+        ) {
+            return;
+        }
+
+        $share_url = add_query_arg(
+            'wishlist_token',
+            $wishlist->wishlist_token,
+            get_permalink( $this->th_wishlist_option['th_wcwl_wishlist_page_id'] )
+        );
+
+        $encoded_url = urlencode( $share_url );
+        $encoded_title = urlencode( __( 'My Wishlist', 'th-wishlist' ) );
+
+        echo '<div class="thw-social-share">';
+        echo '<span class="thw-social-text">' . esc_html__( 'Share on:', 'th-wishlist' ) . '</span>';
+
+        // Facebook
+        echo '<a href="https://www.facebook.com/sharer/sharer.php?u=' . esc_url( $encoded_url ) . '" target="_blank" title="Facebook" class="thw-share-facebook">';
+        echo '<span class="dashicons dashicons-facebook"></span>';
+        echo '</a>';
+
+        // Twitter (X)
+        echo '<a href="https://twitter.com/intent/tweet?url=' . esc_url( $encoded_url ) . '&text=' . $encoded_title . '" target="_blank" title="X (Twitter)" class="thw-share-twitter">';
+        echo '<span class="dashicons dashicons-twitter"></span>';
+        echo '</a>';
+
+        // WhatsApp
+        echo '<a href="https://wa.me/?text=' . $encoded_title . '%20' . $encoded_url . '" target="_blank" title="WhatsApp" class="thw-share-whatsapp">';
+        echo '<span class="dashicons dashicons-whatsapp"></span>';
+        echo '</a>';
+
+        // Email
+        echo '<a href="mailto:?subject=' . $encoded_title . '&body=' . $encoded_url . '" title="Email" class="thw-share-email">';
+        echo '<span class="dashicons dashicons-email-alt"></span>';
+        echo '</a>';
+
+        // Copy link
+        echo '<a href="#" class="thw-copy-link-button" data-link="' . esc_attr( $share_url ) . '" title="' . esc_attr__( 'Copy Link', 'th-wishlist' ) . '">';
+        echo '<span class="dashicons dashicons-admin-links"></span>';
+        echo '</a>';
+
+        echo '</div>';
+    }
+
+
+
+    public function thw_render_add_to_cart_button( $custom_product, $item ) {
+
+	if ( ! $custom_product || ! is_a( $custom_product, 'WC_Product' ) ) {
+		return;
+	}
+	global $product;
+	$previous_product = $product;
+	$product = $custom_product;
+	woocommerce_template_loop_add_to_cart(array( 'quantity' => $item->quantity ));
+	$product = $previous_product;
+    }
+   
     // AJAX Handlers
     public function add_to_wishlist_ajax() {
-        if (get_option('thw_require_login') === '1' && !is_user_logged_in()) {
+        if ($this->th_wishlist_option['thw_require_login'] === '1' && !is_user_logged_in()) {
             wp_send_json_error(['message' => 'login_required']);
             return;
         }
@@ -451,4 +514,6 @@ class TH_Wishlist_Frontend {
         }
         wp_send_json_success(['message' => 'Products added to cart.']);
     }
+
+
 }
