@@ -21,7 +21,9 @@ jQuery(function($) {
             beforeSend: function() { $button.addClass('loading'); },
             success: function(response) {
                 if (response.success) {
+                    if (thw_wishlist_params.icon_style !== 'icon') {
                     $button.find('span').last().text(thw_wishlist_params.i18n_added);
+                    }
                     $button.addClass('in-wishlist');
                 } else {
                     alert(thw_wishlist_params.i18n_error);

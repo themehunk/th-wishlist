@@ -20,7 +20,10 @@ class TH_Wishlist_Frontend {
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles_scripts' ) );
         add_shortcode( 'th_wcwl_wishlist', array( $this, 'wishlist_page_shortcode' ) );
         add_shortcode('th_wcwl_wishlist_button', array( $this,'thw_add_to_wishlist_button_shortcode'));
-       
+        
+        //flexible shortcode
+        add_shortcode( 'thw_add_to_wishlist', array( $this, 'thw_add_to_wishlist_button_flexible_shortcode') );
+
         add_action( 'wp', array( $this, 'hook_wishlist_loop_button_position' ) );
         add_action( 'wp', array( $this, 'hook_wishlist_single_button_position' ) );
         
@@ -34,14 +37,12 @@ class TH_Wishlist_Frontend {
         add_action( 'wp_ajax_thw_add_all_to_cart', array( $this, 'add_all_to_cart_ajax' ) );
         add_action( 'wp_ajax_nopriv_thw_add_all_to_cart', array( $this, 'add_all_to_cart_ajax' ) );
         
-
-    
     }
 
     public function enqueue_styles_scripts() {
         
-        wp_enqueue_style( 'thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),'1.0.0');
-        wp_enqueue_script( 'thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), '1.0.0', true );
+        wp_enqueue_style( 'thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),'1.0.2');
+        wp_enqueue_script( 'thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), '1.0.1', true );
         
         $wishlist_page_id = isset($this->th_wishlist_option['th_wcwl_wishlist_page_id']) ? $this->th_wishlist_option['th_wcwl_wishlist_page_id'] : 0;
         $thw_redirect_to_cart = isset($this->th_wishlist_option['thw_redirect_to_cart']) ? $this->th_wishlist_option['thw_redirect_to_cart'] : '';
@@ -54,10 +55,11 @@ class TH_Wishlist_Frontend {
             'add_all_nonce'       => wp_create_nonce( 'thw-add-all-nonce' ),
             'wishlist_page_url'   => $wishlist_page_id ? get_permalink( $wishlist_page_id ) : '',
             'i18n_added'          => isset($this->th_wishlist_option['thw_browse_wishlist_text']) ? $this->th_wishlist_option['thw_browse_wishlist_text'] : __('Browse Wishlist', 'th-wishlist'),
-            'i18n_error'          => __( 'An error occurred. Please try again.', 'th-wishlist' ),
+            'i18n_error'          => __('An error occurred. Please try again.', 'th-wishlist' ),
             'i18n_empty_wishlist' => __('Your wishlist is currently empty.', 'th-wishlist'),
             'redirect_to_cart'    => $thw_redirect_to_cart === '1',
             'cart_url'            => wc_get_cart_url(),
+            'icon_style'          => isset($this->th_wishlist_option['thw_button_display_style']) ? $this->th_wishlist_option['thw_button_display_style'] : 'icon_text',
         ) );
     }
 
@@ -92,13 +94,14 @@ class TH_Wishlist_Frontend {
     }
 
     $display_style = isset($this->th_wishlist_option['thw_button_display_style']) ? $this->th_wishlist_option['thw_button_display_style'] : 'icon_text';
-
+    $btnclasses ='';
     if ( $display_style === 'icon_only_no_style' ) {
         $classes[] = 'no-style';
     }elseif ( $display_style === 'icon_text' ) {
         $classes[] = 'th-icon-text';
     }elseif( $display_style === 'icon' ) {
         $classes[] = 'th-icon';
+        $btnclasses = 'th-button';
     }elseif( $display_style === 'text' ) {
         $classes[] = 'th-text';
     }else{
@@ -134,8 +137,9 @@ class TH_Wishlist_Frontend {
     ?>
 
     <div class="thw-add-to-wishlist-button-wrap <?php echo esc_attr($wrap_class);?> ">
-    <button class="thw-add-to-wishlist-button button <?php echo esc_attr($class_attr);?>" data-product-id="<?php echo esc_attr($product_id);?>" data-variation-id="<?php echo esc_attr($variation_id);?>"><?php echo $icon_html; ?><?php echo $text_html;?></button>
+    <button class="thw-add-to-wishlist-button  <?php echo esc_attr($btnclasses); ?> <?php echo esc_attr($class_attr);?>" data-product-id="<?php echo esc_attr($product_id);?>" data-variation-id="<?php echo esc_attr($variation_id);?>"><?php echo $icon_html; ?><?php echo $text_html;?></button>
     </div>
+
     <?php 
         return ob_get_clean();
     }
@@ -324,19 +328,31 @@ class TH_Wishlist_Frontend {
         echo '<form class="thw-wishlist-form">';
         echo '<table class="thw-wishlist-table"><thead><tr>';
 
-        $headers = [
+        // Default column labels.
+        $default_labels = [
             'checkbox' => '<input type="checkbox" id="thw-select-all" />',
-            'thumbnail' => '&nbsp;',
+            'thumbnail' => __('Image', 'th-wishlist'),
             'name' => __('Product', 'th-wishlist'),
             'price' => __('Price', 'th-wishlist'),
             'stock' => __('Stock Status', 'th-wishlist'),
             'quantity' => __('Quantity', 'th-wishlist'),
-            'add_to_cart' => '&nbsp;',
+            'add_to_cart' => __('Button', 'th-wishlist'),
             'date' => __('Date Added', 'th-wishlist'),
-            'remove' => '&nbsp;',
+            'remove' => __('Remove', 'th-wishlist'),
         ];
-        foreach($columns as $key) {
-            if (isset($headers[$key])) echo '<th class="product-'.$key.'">'.$headers[$key].'</th>';
+
+        // Get saved labels from options.
+        $saved_labels = isset( $this->th_wishlist_option['th_wishlist_table_column_labels'] ) 
+            ? $this->th_wishlist_option['th_wishlist_table_column_labels'] 
+            : [];
+
+        foreach ( $columns as $key ) {
+            if ( isset( $default_labels[ $key ] ) ) {
+                $label = $key === 'checkbox' 
+                    ? $default_labels['checkbox'] // keep checkbox raw HTML
+                    : ( ! empty( $saved_labels[ $key ] ) ? esc_html( $saved_labels[ $key ] ) : esc_html( $default_labels[ $key ] ) );
+                echo '<th class="product-' . esc_attr( $key ) . '">' . $label . '</th>';
+            }
         }
 
         echo '</tr></thead><tbody>';
@@ -514,6 +530,116 @@ class TH_Wishlist_Frontend {
         }
         wp_send_json_success(['message' => 'Products added to cart.']);
     }
+
+    //....................................................../
+    //global and flexible shorcode to add wishlist any where
+    //....................................................../
+   public function thw_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
+
+    // For Example to Use Shorcode in Flexible add to cart wishlist
+    // [thw_add_to_wishlist product_id="10" custom_icon='<svg viewBox="0 0 20 20" fill="currentColor"><path d="..."/></svg>'];
+    
+    global $product;
+
+    // Default product ID from global $product
+    $default_product_id = ( isset( $product ) && is_a( $product, 'WC_Product' ) ) ? $product->get_id() : 0;
+
+    // Merge shortcode attributes
+    $atts = shortcode_atts( [
+        'product_id'    => $default_product_id,
+        'add_text'      => isset( $this->th_wishlist_option['thw_add_to_wishlist_text'] ) ? $this->th_wishlist_option['thw_add_to_wishlist_text'] : __( 'Add to Wishlist', 'th-wishlist' ),
+        'browse_text'   => isset( $this->th_wishlist_option['thw_browse_wishlist_text'] ) ? $this->th_wishlist_option['thw_browse_wishlist_text'] : __( 'Browse Wishlist', 'th-wishlist' ),
+        'icon_style'    => isset( $this->th_wishlist_option['thw_button_display_style'] ) ? $this->th_wishlist_option['thw_button_display_style'] : 'icon_text',
+        'custom_icon'   => isset( $this->th_wishlist_option['thw_custom_icon_url'] ) ? $this->th_wishlist_option['thw_custom_icon_url'] : '',
+    ], $atts, 'thw_add_to_wishlist' );
+
+    // Load product using passed product_id
+    $product = wc_get_product( $atts['product_id'] );
+    if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
+        return ''; // Invalid product
+    }
+
+    if ( isset( $this->th_wishlist_option['thw_require_login'] ) && $this->th_wishlist_option['thw_require_login'] === '1' && ! is_user_logged_in() ) {
+        return '<a href="' . esc_url( get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ) ) . '" class="button thw-login-required">' . __( 'Login to add to wishlist', 'th-wishlist' ) . '</a>';
+    }
+
+    $wishlist = TH_Wishlist_Data::get_or_create_wishlist();
+    $product_id = $product->get_id();
+    $variation_id = $product->is_type( 'variation' ) ? $product->get_id() : 0;
+    $in_wishlist = $wishlist ? TH_Wishlist_Data::is_product_in_wishlist( $wishlist->id, $product_id, $variation_id ) : false;
+
+    $text = $in_wishlist ? $atts['browse_text'] : $atts['add_text'];
+
+    $classes = [];
+    if ( $in_wishlist ) {
+        $classes[] = 'in-wishlist';
+    }
+
+    $btnclasses = '';
+    switch ( $atts['icon_style'] ) {
+        case 'icon_only_no_style':
+            $classes[] = 'no-style';
+            break;
+        case 'icon_text':
+            $classes[] = 'th-icon-text';
+            break;
+        case 'icon':
+            $classes[] = 'th-icon';
+            $btnclasses = 'th-button';
+            break;
+        case 'text':
+            $classes[] = 'th-text';
+            break;
+        default:
+            break;
+    }
+
+    $class_attr = implode( ' ', $classes );
+
+    $icon_html = '';
+    $text_html = '<span>' . esc_html( $text ) . '</span>';
+
+    if ( in_array( $atts['icon_style'], [ 'icon', 'icon_text', 'icon_only_no_style' ], true ) ) {
+    if ( ! empty( $atts['custom_icon'] ) ) {
+        if ( filter_var( $atts['custom_icon'], FILTER_VALIDATE_URL ) ) {
+            // Image URL
+            $icon_html = '<img src="' . esc_url( $atts['custom_icon'] ) . '" class="thw-icon" alt="Wishlist Icon" />';
+        } elseif ( strpos( $atts['custom_icon'], '<svg' ) !== false || strpos( $atts['custom_icon'], '<span' ) !== false ) {
+            // Raw HTML (SVG or Dashicons span)
+            $icon_html = '<span class="thw-icon">' . $atts['custom_icon'] . '</span>';
+        } else {
+            // Fallback to default icon
+            $icon_html = '<span class="thw-icon"><span class="dashicons dashicons-heart"></span></span>';
+        }
+    } else {
+        $icon_html = '<span class="thw-icon"><span class="dashicons dashicons-heart"></span></span>';
+    }
+    }
+
+    if ( in_array( $atts['icon_style'], [ 'icon', 'icon_only_no_style' ], true ) ) {
+        $text_html = '';
+    }
+
+    if ( $atts['icon_style'] === 'text' ) {
+        $icon_html = '';
+    }
+
+    $wrap_class = is_singular( 'product' ) ? 'th-wishlist-single' : '';
+
+    ob_start();
+    ?>
+    <div class="thw-add-to-wishlist-button-wrap <?php echo esc_attr( $wrap_class ); ?>">
+        <button class="thw-add-to-wishlist-button <?php echo esc_attr( $btnclasses . ' ' . $class_attr ); ?>"
+                data-product-id="<?php echo esc_attr( $product_id ); ?>"
+                data-variation-id="<?php echo esc_attr( $variation_id ); ?>">
+            <?php echo $icon_html; ?>
+            <?php echo $text_html; ?>
+        </button>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+
 
 
 }
