@@ -51,6 +51,9 @@
 }
 .thw-column-label {
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 .thw-sortable-item input[type="checkbox"] {
     margin: 0 10px 0 0;
@@ -60,4 +63,7 @@
     background: #e6e6e6;
     border: 1px dashed #ccc;
     border-radius: 3px;
+}
+.thw-column-label input{
+width: fit-content;
 }

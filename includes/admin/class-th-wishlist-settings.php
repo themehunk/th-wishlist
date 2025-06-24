@@ -193,38 +193,50 @@ class TH_Wishlist_Settings {
                         </td>
                     </tr> -->
                     <tr>
+                       <?php 
+                       
+                       $labels = isset( $options['th_wishlist_table_column_labels'] ) ? $options['th_wishlist_table_column_labels'] : self::get_default_settings()['th_wishlist_table_column_labels'];
+                       
+                       ?>
                         <th scope="row"><?php esc_html_e( 'Wishlist Table Columns', 'th-wishlist' ); ?></th>
                         <td>
                             <p class="description"><?php esc_html_e( 'Check the columns to display and drag to reorder.', 'th-wishlist' ); ?></p>
                             <ul id="thw-sortable-columns" class="thw-sortable-columns">
-                                <?php
-                                foreach ( $saved_columns as $key ) {
-
-                                   
-                                    if ( isset( $all_columns[ $key ] ) ) {
-                                        ?>
-                                        <li class="thw-sortable-item">
-                                            <input type="checkbox" name="settings[th_wishlist_table_columns][]" value="<?php echo esc_attr( $key ); ?>" checked="checked" />
-                                            <span class="dashicons dashicons-menu thw-drag-handle"></span>
-                                            <span class="thw-column-label"><?php echo esc_html( $all_columns[ $key ] ); ?></span>
-                                        </li>
-                                        <?php
-                                    }
-                                }
-                                foreach ( $all_columns as $key => $label ) {
-                                    if ( ! in_array( $key, $saved_columns ) ) {
-                                         
-                                        ?>
-                                        <li class="thw-sortable-item">
-                                            <input type="checkbox" name="settings[th_wishlist_table_columns][]" value="<?php echo esc_attr( $key ); ?>" />
-                                            <span class="dashicons dashicons-menu thw-drag-handle"></span>
-                                            <span class="thw-column-label"><?php echo esc_html( $label ); ?></span>
-                                        </li>
-                                        <?php
-                                    }
-                                }
+                        <?php
+                        foreach ( $saved_columns as $key ) {
+                            if ( isset( $all_columns[ $key ] ) ) {
+                                $label = isset( $labels[ $key ] ) ? $labels[ $key ] : $all_columns[ $key ];
                                 ?>
-                            </ul>
+                                <li class="thw-sortable-item">
+                                    <input type="checkbox" name="settings[th_wishlist_table_columns][]" value="<?php echo esc_attr( $key ); ?>" checked="checked" />
+                                    <span class="dashicons dashicons-menu thw-drag-handle"></span>
+                                    <span class="thw-column-label">
+                                        <?php echo esc_html( $all_columns[ $key ] ); ?>:
+                                        <input type="text" name="settings[th_wishlist_table_column_labels][<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $label ); ?>" class="regular-text" />
+                                    </span>
+                                </li>
+                                <?php
+                            }
+                        }
+
+                // Render unchecked items with their editable labels
+                foreach ( $all_columns as $key => $label ) {
+                    if ( ! in_array( $key, $saved_columns ) ) {
+                        $custom_label = isset( $labels[ $key ] ) ? $labels[ $key ] : $label;
+                        ?>
+                        <li class="thw-sortable-item">
+                            <input type="checkbox" name="settings[th_wishlist_table_columns][]" value="<?php echo esc_attr( $key ); ?>" />
+                            <span class="dashicons dashicons-menu thw-drag-handle"></span>
+                            <span class="thw-column-label">
+                                <?php echo esc_html( $label ); ?>:
+                                <input type="text" name="settings[th_wishlist_table_column_labels][<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $custom_label ); ?>" class="regular-text" />
+                            </span>
+                        </li>
+                        <?php
+                    }
+    }
+    ?>
+</ul>
                         </td>
                     </tr>
                 </table>
@@ -260,6 +272,7 @@ class TH_Wishlist_Settings {
             'thw_show_social_share'       => 0,
             'thw_show_quantity'           => 0,
             'th_wishlist_table_columns'     => [ 'thumbnail', 'name', 'price', 'stock', 'add_to_cart', 'remove' ],
+            'th_wishlist_table_column_labels' => [],
         ];
     }
 }

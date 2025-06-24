@@ -30,8 +30,9 @@ class TH_Wishlist_Settings_Ajax {
 
         foreach ( $defaults as $key => $default_value ) {
             if ( $key === 'th_wishlist_table_columns' && isset( $data['th_wishlist_table_columns'] ) && is_array( $data['th_wishlist_table_columns'] ) ) {
-                // Handle the table columns array specifically
                 $sanitized['th_wishlist_table_columns'] = array_map( 'sanitize_text_field', $data['th_wishlist_table_columns'] );
+            } elseif ( $key === 'th_wishlist_table_column_labels' && isset( $data['th_wishlist_table_column_labels'] ) && is_array( $data['th_wishlist_table_column_labels'] ) ) {
+                $sanitized['th_wishlist_table_column_labels'] = array_map( 'sanitize_text_field', $data['th_wishlist_table_column_labels'] );
             } elseif ( isset( $data[ $key ] ) ) {
                 if ( is_array( $data[ $key ] ) ) {
                     $sanitized[ $key ] = array_map( 'sanitize_text_field', $data[ $key ] );

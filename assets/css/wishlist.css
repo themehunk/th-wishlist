@@ -9,11 +9,9 @@
 justify-content:start;
 }
 .thw-add-to-wishlist-button {
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
-    color: #ffffff;
+    color: #111;
     font-size: 14px;
     font-weight: normal;
-    padding: 12px 24px;
     border: none;
     border-radius: 25px;
     cursor: pointer;
@@ -21,11 +19,14 @@ justify-content:start;
     position: relative;
     overflow: hidden;
     box-shadow:none;
+    background: none;
 }
-.thw-add-to-wishlist-button:hover,.thw-add-to-wishlist-button.loading{
+.thw-add-to-wishlist-button:hover,
+.thw-add-to-wishlist-button.loading{
     opacity:0.7;
     box-shadow:none;
 }
+
 .thw-add-to-wishlist-button span {
     position: relative;
     z-index: 1;
@@ -47,12 +48,36 @@ justify-content:start;
     line-height: 1;
     
 }
+
+.thw-add-to-wishlist-button .dashicons-heart{
+    color: transparent;
+    -webkit-text-stroke: 1.5px #111;
+    text-stroke: 1.5px #111;
+}
+.thw-add-to-wishlist-button.in-wishlist .dashicons-heart {
+    color: #111;
+    -webkit-text-stroke:inherit;
+    text-stroke:inherit;
+}
+.thw-add-to-wishlist-button.th-button .dashicons-heart {
+    color: transparent;
+    -webkit-text-stroke: 1.5px #fff;
+    text-stroke: 1.5px #fff;
+}
+
+.thw-add-to-wishlist-button.th-button.in-wishlist .dashicons-heart {
+    color: #fff;
+    -webkit-text-stroke: inherit;
+    text-stroke: inherit;
+}
+
 .thw-add-to-wishlist-button.button:focus{
 outline:none;
 }
+
 .thw-add-to-wishlist-button img.thw-icon{
 height: 30px;
-    width: 30px;
+width: 30px;
 }
 
 .thw-add-to-wishlist-button.loading {
@@ -61,9 +86,7 @@ height: 30px;
 }
 
 .thw-add-to-wishlist-button.in-wishlist {
-    background-color: #e91e63 !important;
-    color: #fff !important;
-    border-color: #e91e63 !important;
+    
 }
 
 /* Icon Only (No Button Style) */
@@ -114,7 +137,7 @@ height: 30px;
 font-size:14px;
 font-weight: 500;
 }
-.thw-add-to-cart-cell .add_to_cart_button {
+.thw-add-to-cart-cell .add_to_cart_button,.thw-add-to-cart-cell .wp-element-button {
     padding: 6px 15px !important;
     display: inline-flex;
     font-size: 13px;
@@ -188,4 +211,20 @@ padding: 10px 25px;
 }
 .thw-add-to-cart-cell a.added_to_cart{
 margin-top:0;
+}
+
+.thw-add-to-wishlist-button.th-button{
+background:#111;
+padding:10px 25px;
+}
+.thw-wishlist-table td.product-remove{
+text-align:center;
+}
+.thw-wishlist-wrapper{
+width: 70%;
+  margin: auto;
+}
+
+.thw-wishlist-table a,.thw-wishlist-actions a{
+text-decoration:none!important;
 }
