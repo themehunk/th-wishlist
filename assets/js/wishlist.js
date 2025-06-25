@@ -122,3 +122,54 @@ jQuery(function($) {
         alert('Wishlist link copied to clipboard!');
     });
 });
+
+// redirect to cart or remove code
+jQuery(function ($) {
+    $(document).on('click', '.thw-add-to-cart-ajax', function (e) {
+        e.preventDefault();
+        const $btn = $(this);
+        const product_id = $btn.data('product-id');
+        const quantity = $btn.data('quantity') || 1;
+        const item_id = $btn.data('item-id');
+        const token = $btn.data('wishlist-token');
+        const $row = $('tr[data-item-id="' + item_id + '"]');
+        // Optional: disable button while processing
+        $btn.prop('disabled', true).addClass('loading');
+        $.ajax({
+            type: 'POST',
+            url: thw_wishlist_params.ajax_url,
+            data: {
+                action: 'thw_add_to_cart_and_manage',
+                product_id,
+                quantity,
+                item_id,
+                token,
+                nonce: thw_wishlist_params.redirect_nonce
+            },
+            success: function (response) {
+                if (response.success) {
+                    $row.fadeOut(300, function () {
+                        const $tbody = $row.closest('tbody');
+                        $row.remove();
+                        // Check if this was the last item
+                        if ($tbody.find('tr').length === 0) {
+                            const colspan = $btn.closest('table').find('thead th').length;
+                            $tbody.html('<tr><td colspan="' + colspan + '">' + thw_wishlist_params.i18n_empty_wishlist + '</td></tr>');
+                        }
+                        // Redirect only after animation (optional)
+                        if (thw_wishlist_params.redirect_to_cart) {
+                            window.location.href = thw_wishlist_params.cart_url;
+                        }
+                    });
+                } else {
+                    $btn.prop('disabled', false).removeClass('loading');
+                    alert(response.data.message || 'Error adding to cart.');
+                }
+            },
+            error: function () {
+                $btn.prop('disabled', false).removeClass('loading');
+                alert('Something went wrong.');
+            }
+        });
+    });
+});
