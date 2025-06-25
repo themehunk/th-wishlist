@@ -168,16 +168,10 @@ class TH_Wishlist_Settings {
                         <th scope="row"><?php esc_html_e( 'Redirect to Cart', 'th-wishlist' ); ?></th>
                         <td>
                             <input type="checkbox" name="settings[thw_redirect_to_cart]" value="1" <?php checked( isset( $options['thw_redirect_to_cart'] ) ? $options['thw_redirect_to_cart'] : 0, 1 ); ?> />
-                            <span class="description"><?php esc_html_e( 'Redirect to the cart page after adding item(s) from the wishlist.', 'th-wishlist' ); ?></span>
+                            <span class="description"><?php esc_html_e( 'Remove Product in Wishlist table and Redirect to the cart page after adding item(s) from the wishlist.', 'th-wishlist' ); ?></span>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row"><?php esc_html_e( 'Show "Add all to cart"', 'th-wishlist' ); ?></th>
-                        <td>
-                            <input type="checkbox" name="settings[thw_show_add_all_to_cart]" value="1" <?php checked( isset( $options['thw_show_add_all_to_cart'] ) ? $options['thw_show_add_all_to_cart'] : 0, 1 ); ?> />
-                            <span class="description"><?php esc_html_e( 'Requires the "Checkbox" column to be enabled.', 'th-wishlist' ); ?></span>
-                        </td>
-                    </tr>
+                    
                     <tr>
                         <th scope="row"><?php esc_html_e( 'Show Social Share Buttons', 'th-wishlist' ); ?></th>
                         <td>
@@ -268,7 +262,7 @@ class TH_Wishlist_Settings {
             'thw_show_in_loop'            => 1,
             'thw_in_loop_position'        => 'after_crt_btn',
             'thw_in_single_position'     => 'after_crt_btn',
-            'thw_show_add_all_to_cart'    => 0,
+            
             'thw_show_social_share'       => 0,
             'thw_show_quantity'           => 0,
             'th_wishlist_table_columns'     => [ 'thumbnail', 'name', 'price', 'stock', 'add_to_cart', 'remove' ],

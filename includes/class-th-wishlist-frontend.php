@@ -37,12 +37,14 @@ class TH_Wishlist_Frontend {
         add_action( 'wp_ajax_thw_add_all_to_cart', array( $this, 'add_all_to_cart_ajax' ) );
         add_action( 'wp_ajax_nopriv_thw_add_all_to_cart', array( $this, 'add_all_to_cart_ajax' ) );
         
+        add_action('wp_ajax_thw_add_to_cart_and_manage', array( $this, 'thw_add_to_cart_and_manage'));
+        add_action('wp_ajax_nopriv_thw_add_to_cart_and_manage', array( $this, 'thw_add_to_cart_and_manage'));
     }
 
     public function enqueue_styles_scripts() {
         
-        wp_enqueue_style( 'thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),'1.0.2');
-        wp_enqueue_script( 'thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), '1.0.1', true );
+        wp_enqueue_style( 'thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),'1.0.3');
+        wp_enqueue_script( 'thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), '1.0.3', true );
         
         $wishlist_page_id = isset($this->th_wishlist_option['th_wcwl_wishlist_page_id']) ? $this->th_wishlist_option['th_wcwl_wishlist_page_id'] : 0;
         $thw_redirect_to_cart = isset($this->th_wishlist_option['thw_redirect_to_cart']) ? $this->th_wishlist_option['thw_redirect_to_cart'] : '';
@@ -60,7 +62,8 @@ class TH_Wishlist_Frontend {
             'redirect_to_cart'    => $thw_redirect_to_cart === '1',
             'cart_url'            => wc_get_cart_url(),
             'icon_style'          => isset($this->th_wishlist_option['thw_button_display_style']) ? $this->th_wishlist_option['thw_button_display_style'] : 'icon_text',
-        ) );
+            'redirect_nonce'      => wp_create_nonce('thw_wishlist_redirect_nonce'),
+            ) );
     }
 
     public function thw_add_to_wishlist_button_shortcode() {
@@ -390,7 +393,7 @@ class TH_Wishlist_Frontend {
                             break;
                         case 'add_to_cart':
                              echo '<div class="thw-add-to-cart-cell">';
-                             $this->thw_render_add_to_cart_button( $_product , $item);
+                             echo $this->thw_render_add_to_cart_button( $_product , $item, $wishlist);
                              echo '</div>';
                             break;
                         case 'date':
@@ -412,7 +415,7 @@ class TH_Wishlist_Frontend {
 
         echo '<div class="thw-wishlist-actions">';
         
-        if ($this->th_wishlist_option['thw_show_add_all_to_cart'] === '1' && in_array('checkbox', $columns) && !empty($items)) {
+        if (in_array('checkbox', $columns) && !empty($items)) {
             echo '<button class="button wp-element-button add_to_cart_button  thw-add-all-to-cart">' . __('Add Selected to Cart', 'th-wishlist') . '</button>';
         }
 
@@ -475,17 +478,53 @@ class TH_Wishlist_Frontend {
     }
 
 
+    
+    public function thw_render_add_to_cart_button( $product, $item, $wishlist ) {
 
-    public function thw_render_add_to_cart_button( $custom_product, $item ) {
+    if ( $this->th_wishlist_option['thw_redirect_to_cart'] === '1' ) {
+        // Build add to cart button HTML
+        $button_attributes = [
+            'class' => 'button wp-element-button add_to_cart_button thw-add-to-cart-ajax',
+            'data-product-id' => esc_attr( $product->get_id() ),
+            'data-quantity' => esc_attr( $item->quantity ),
+            'data-item-id' => esc_attr( $item->id ),
+            'data-wishlist-token' => esc_attr( $wishlist->wishlist_token ),
+        ];
 
-	if ( ! $custom_product || ! is_a( $custom_product, 'WC_Product' ) ) {
-		return;
-	}
-	global $product;
-	$previous_product = $product;
-	$product = $custom_product;
-	woocommerce_template_loop_add_to_cart(array( 'quantity' => $item->quantity ));
-	$product = $previous_product;
+        $button_html = sprintf(
+            '<button %s>%s</button>',
+            implode(' ', array_map(
+                function( $key, $value ) { return sprintf( '%s="%s"', $key, $value ); },
+                array_keys( $button_attributes ),
+                $button_attributes
+            )),
+            esc_html__( 'Add to Cart', 'th-wishlist' )
+        );
+
+        $output = sprintf( '<div class="thw-add-to-cart-cell">%s</div>', $button_html );
+
+    }else{
+        
+        $custom_product = $product;
+
+        if ( ! $custom_product || ! is_a( $custom_product, 'WC_Product' ) ) {
+                return;
+            }
+
+            global $product;
+            $previous_product = $product;
+            $product = $custom_product;
+            // Capture WooCommerce add to cart template output
+            ob_start();
+            woocommerce_template_loop_add_to_cart( [ 'quantity' => $item->quantity ] );
+            $output = ob_get_clean();
+
+            // Restore global product
+            $product = $previous_product;
+
+            } 
+
+            return $output;
     }
    
     // AJAX Handlers
@@ -638,6 +677,41 @@ class TH_Wishlist_Frontend {
     </div>
     <?php
     return ob_get_clean();
+}
+
+
+// ajax mange table function
+public function thw_add_to_cart_and_manage() {
+
+    check_ajax_referer('thw_wishlist_redirect_nonce', 'nonce');
+
+    $product_id = absint($_POST['product_id']);
+    $quantity   = max(1, absint($_POST['quantity']));
+    $item_id    = absint($_POST['item_id']);
+    $token      = sanitize_text_field($_POST['token']);
+
+    if (!$product_id || !$item_id) {
+        wp_send_json_error(['message' => 'Invalid data']);
+    }
+
+    $product = wc_get_product($product_id);
+    if (!$product || !$product->is_purchasable() || !$product->is_in_stock()) {
+        wp_send_json_error(['message' => 'Product not available.']);
+    }
+
+    // Add product to cart
+    WC()->cart->add_to_cart($product_id, $quantity);
+
+    if (isset($this->th_wishlist_option['redirect_to_cart']) === '1') {
+        TH_Wishlist_Data::remove_item($item_id);
+    }
+
+    TH_Wishlist_Data::remove_item($item_id);
+
+    wp_send_json_success([
+        'cart_url' => wc_get_cart_url(),
+        'message'  => 'Product added and wishlist updated.'
+    ]);
 }
 
 

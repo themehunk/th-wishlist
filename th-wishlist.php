@@ -3,7 +3,7 @@
  * Plugin Name:       TH Wishlist
  * Plugin URI:        https://www.themehunk.com/
  * Description:       A modern wishlist plugin for WooCommerce. Allows users to add products to a wishlist, view, and manage them.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            themehunk
  * Author URI:        https://www.themehunk.com/
  * License:           GPL-2.0+
