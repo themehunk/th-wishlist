@@ -37,7 +37,7 @@ class TH_Wishlist_Admin {
                 'th-wishlist-admin',
                 THW_URL . 'assets/css/admin.css',
                 [],
-                '1.0'
+                THW_VERSION
             );
 
             // Enqueue custom admin scripts with localized data.

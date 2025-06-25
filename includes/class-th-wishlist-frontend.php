@@ -204,10 +204,14 @@ class TH_Wishlist_Frontend {
 
   public function hook_wishlist_single_button_position() {
 
-
+    $thw_show_in_product = isset( $this->th_wishlist_option['thw_show_in_product'] ) ? $this->th_wishlist_option['thw_show_in_product'] : '';
     $position = isset( $this->th_wishlist_option['thw_in_single_position'] ) ? $this->th_wishlist_option['thw_in_single_position'] : 'after_crt_btn';
 
-    if ( ! is_singular( 'product' ) ) {
+    if ( ! is_singular( 'product' )) {
+        return; 
+    }
+
+    if( $thw_show_in_product == '0' ){
         return; 
     }
 
@@ -216,14 +220,15 @@ class TH_Wishlist_Frontend {
        $this->add_button_for_blockified_template('single-product', $position);
        
     }else{
+
         switch ( $position ) {
-        case 'after_thumb':
+        case 'before_summ':
             // Hook before "Add to Cart" by using before item end
             add_action( 'woocommerce_before_single_product_summary', array( $this, 'add_to_wishlist_button' ), 21 );
             break;
 
         case 'after_crt_btn':
-            add_action( 'woocommerce_single_product_summary', array( $this, 'add_to_wishlist_button' ), 0 );
+            add_action( 'woocommerce_after_add_to_cart_button', array( $this, 'add_to_wishlist_button' ), 1 );
             break;
 
         case 'after_summ':
@@ -246,16 +251,17 @@ class TH_Wishlist_Frontend {
  * @param string $position Insertion position (e.g., 'after_crt_btn', 'after_thumb', 'after_summ').
  */
     public function add_button_for_blockified_template( $template, $position ) {
+        
         $hooked = false;
 
         switch ( $position ) {
             case 'after_crt_btn':
-                $block = ( 'single-product' === $template ) ? 'add-to-cart-form' : 'product-button';
-                add_filter( "render_block_woocommerce/$block", array( $this, 'inject_wishlist_in_block' ), 10, 3 );
+                //$block = ( 'single-product' === $template ) ? 'add-to-cart-form' : 'product-button';
+                add_filter( "render_block_woocommerce/add-to-cart-form", array( $this, 'inject_wishlist_in_block' ), 10, 3 );
                 $hooked = true;
                 break;
 
-            case 'after_thumb':
+            case 'before_summ':
                 add_filter( 'render_block_woocommerce/product-image-gallery', array( $this, 'inject_wishlist_in_block' ), 10, 3 );
                 $hooked = true;
                 break;
