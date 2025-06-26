@@ -109,7 +109,8 @@ display: flex;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transition: opacity 0.3s ease;
-    min-height: 450px;
+    height: 500px;
+    overflow: auto;
 }
 
 .thw-tab-content {
@@ -396,6 +397,71 @@ margin-bottom: 16px;
 width:180px;
 }
 
+
+/* radio image settings */
+.th-row-with-icon-radio{
+display:flex;
+align-items:center;
+}
+
+.thw-dashicon-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 0;
+}
+
+.thw-dashicon-option {
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+}
+
+.thw-dashicon-option input[type="radio"] {
+    display: none;
+}
+
+.thw-dashicon-option span {
+    font-size: 32px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    transition: all 0.2s;
+    display: block;
+}
+
+.thw-dashicon-option input[type="radio"]:checked + span {
+    border-color: #0073aa;
+    background: #f0f6fc;
+}
+
+.thw-dashicon-option span:hover {
+    border-color: #0073aa;
+}
+
+#thw-settings-form input.th_color_picker{
+    font-size: 0!important;
+    position: relative;
+    height: 3px!important;
+    width:45px!important;
+    cursor: pointer;
+    background-size: 0;
+    transition: all .3s;
+    border: 2px solid #eee;
+    margin:10px 0;
+}
+
+
+#thw-settings-form .th-row-flex{
+display: flex;
+justify-content:flex-start;
+}
+.th-color-picker{
+margin-right:1.5rem;
+}
 /* Responsive design */
 @media (max-width: 768px) {
     .thw-tabs-container {

@@ -57,6 +57,9 @@ class TH_Wishlist_Settings_Ajax {
             wp_send_json_error( __( 'Invalid permissions.', 'th-wishlist' ) );
         }
 
+        // Log sanitized data for debugging
+    error_log( 'TH_Wishlist_Settings: Saving sanitized settings: ' . print_r( $_POST['settings'], true ) );
+
         if ( isset( $_POST['settings'] ) && is_array( $_POST['settings'] ) ) {
             $sanitized_data = $this->sanitize_form_data( wp_unslash( $_POST['settings'] ) );
             update_option( 'th_wishlist_settings', $sanitized_data );

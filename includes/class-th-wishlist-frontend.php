@@ -720,6 +720,4 @@ public function thw_add_to_cart_and_manage() {
     ]);
 }
 
-
-
 }
