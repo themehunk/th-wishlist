@@ -129,20 +129,14 @@ public function settings_page() {
                                 <p class="description"><?php esc_html_e( 'Text shown when the product is already in the wishlist.', 'th-wishlist' ); ?></p>
                             </td>
                         </tr>
-                        <!-- <tr>
-                            <th scope="row"><?php esc_html_e( 'Use Custom Icon', 'th-wishlist' ); ?></th>
+                        <tr class="th-row-with-checkbox">
+                            <th scope="row"><?php esc_html_e( 'Theme Default Style', 'th-wishlist' ); ?></th>
                             <td>
-                                <input type="checkbox" id="thw_use_custom_icon" name="settings[thw_use_custom_icon]" value="1" <?php checked( isset( $options['thw_use_custom_icon'] ) ? $options['thw_use_custom_icon'] : 0, 1 ); ?> />
-                                <span class="description"><?php esc_html_e( 'Use a custom uploaded icon instead of the default heart.', 'th-wishlist' ); ?></span>
+                                <input type="checkbox" name="settings[thw_btn_style_theme]" value="1" <?php checked( isset( $options['thw_btn_style_theme'] ) ? $options['thw_btn_style_theme'] : 0, 1 ); ?> />
+                                <span class="description"><?php esc_html_e( 'Choose to Wishlist button style as theme', 'th-wishlist' ); ?></span>
                             </td>
-                        </tr> -->
-                        <!-- <tr class="thw-custom-icon-row">
-                            <th scope="row"><?php esc_html_e( 'Custom Wishlist Icon', 'th-wishlist' ); ?></th>
-                            <td>
-                                <input type="text" name="settings[thw_custom_icon_url]" id="thw_custom_icon_url" value="<?php echo esc_attr( isset( $options['thw_custom_icon_url'] ) ? $options['thw_custom_icon_url'] : '' ); ?>" class="regular-text" />
-                                <button type="button" class="button" id="thw_upload_icon_button"><?php esc_html_e( 'Upload Icon', 'th-wishlist' ); ?></button>
-                            </td>
-                        </tr> -->
+                        </tr>
+                        
                     </table>
                 </div>
                 <div id="loop" class="thw-tab-content">
@@ -261,7 +255,7 @@ public function settings_page() {
                         <td>
                             <?php 
                             $selected_icon = $options['th_wishlist_add_icon'];
-                            $addicondashicons = $this->thw_get_wishlist_icons_svg();
+                            $addicondashicons = thw_get_wishlist_icons_svg();
                             $th_wishlist_add_icon_color = isset( $options['th_wishlist_add_icon_color'] ) ? $options['th_wishlist_add_icon_color'] : '#111';
                             ?>
                             <p><?php esc_html_e( 'Choose add to wishlist icon', 'th-wishlist' ); ?></p>
@@ -287,7 +281,7 @@ public function settings_page() {
                         <td>
                             <?php 
                             $selected_brws_icon = $options['th_wishlist_brws_icon'];
-                            $brwsicondashicons = $this->thw_get_wishlist_icons_svg();
+                            $brwsicondashicons =  thw_get_wishlist_icons_svg();
                             $th_wishlist_brws_icon_color = isset( $options['th_wishlist_brws_icon_color'] ) ? $options['th_wishlist_brws_icon_color'] : '#111';
                             ?>
                              <p><?php esc_html_e( 'Choose Browse to wishlist icon', 'th-wishlist' ); ?></p>
@@ -509,7 +503,7 @@ public function settings_page() {
             'thw_button_display_style'     => 'icon_text',
             'thw_add_to_wishlist_text'     => __( 'Add to Wishlist', 'th-wishlist' ),
             'thw_browse_wishlist_text'     => __( 'Browse Wishlist', 'th-wishlist' ),
-            'thw_use_custom_icon'          => 0,
+            'thw_btn_style_theme'          => 0,
             'thw_custom_icon_url'          => '',
             'thw_show_in_loop'             => 1,
             'thw_show_in_product'          => 1,
@@ -519,47 +513,28 @@ public function settings_page() {
             'thw_show_quantity'            => 0,
             'th_wishlist_table_columns'       => [ 'thumbnail', 'name', 'price', 'stock', 'add_to_cart', 'remove' ],
             'th_wishlist_table_column_labels' => [],
-            'th_wishlist_add_icon' => 'heart-outline',
-            'th_wishlist_add_icon_color' => '#111',
-            'th_wishlist_brws_icon' => 'heart-filled',
+            'th_wishlist_add_icon'        => 'heart-outline',
+            'th_wishlist_add_icon_color'  => '#111',
+            'th_wishlist_brws_icon'       => 'heart-filled',
             'th_wishlist_brws_icon_color' => '#111',
-            'th_wishlist_btn_txt_color' => '',
-            'th_wishlist_btn_bg_color' => '',
-            'th_wishlist_table_bg_color' => '',
-            'th_wishlist_table_brd_color' => '',
-            'th_wishlist_table_txt_color' => '',
-            'th_wishlist_tb_btn_bg_color' => '',
+            'th_wishlist_btn_txt_color'   => '',
+            'th_wishlist_btn_bg_color'    => '',
+            'th_wishlist_table_bg_color'  => '',
+            'th_wishlist_table_brd_color'  => '',
+            'th_wishlist_table_txt_color'  => '',
+            'th_wishlist_tb_btn_bg_color'  => '',
             'th_wishlist_tb_btn_txt_color' => '',
+            'th_wishlist_shr_fb_color'     => '',
+            'th_wishlist_shr_fb_hvr_color' => '',
+            'th_wishlist_shr_x_color'     => '',
+            'th_wishlist_shr_x_hvr_color' => '',
+            'th_wishlist_shr_w_color' => '',
+            'th_wishlist_shr_w_hvr_color' => '',
+            'th_wishlist_shr_e_color' => '',
+            'th_wishlist_shr_e_hvr_color' => '',
+            'th_wishlist_shr_c_color' => '',
+            'th_wishlist_shr_c_hvr_color' => '',
+            
         ];
     }
-
-public function thw_get_wishlist_icons_svg() {
-    $addicondashicons = array(
-        'heart-outline' => array(
-            'name' => 'Heart Outline',
-            'svg' => '<svg class="th-wishlist-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>'
-        ),
-        'heart-filled' => array(
-            'name' => 'Heart Filled',
-            'svg' => '<svg class="th-wishlist-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"/></svg>'
-        ),
-        'star-outline' => array(
-            'name' => 'Star Outline',
-            'svg' => '<svg class="th-wishlist-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21L12 17.77L5.82 21L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>'
-        ),
-        'star-filled' => array(
-            'name' => 'Star Filled',
-            'svg' => '<svg class="th-wishlist-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21L12 17.77L5.82 21L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>'
-        ),
-        'bookmark-outline' => array(
-            'name' => 'Bookmark Outline',
-            'svg' => '<svg class="th-wishlist-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M6.32 2.577c2.83-.33 5.66-.33 8.49 0 1.497.174 2.57 1.46 2.57 2.93V21l-6.165-3.583-7.165 3.583V5.507c0-1.47 1.073-2.756 2.57-2.93Z"/></svg>'
-        ),
-        'bookmark-filled' => array(
-            'name' => 'Bookmark Filled',
-            'svg' => '<svg class="th-wishlist-icon-svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" fill-rule="evenodd" d="M6.32 2.577a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 0 1-1.085.67L12 18.089l-7.165 3.583A.75.75 0 0 1 3.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93Z"/></svg>'
-        ),
-    );
-    return $addicondashicons;
-}
 }

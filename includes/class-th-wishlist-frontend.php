@@ -26,6 +26,8 @@ class TH_Wishlist_Frontend {
 
         add_action( 'wp', array( $this, 'hook_wishlist_loop_button_position' ) );
         add_action( 'wp', array( $this, 'hook_wishlist_single_button_position' ) );
+
+        
         
         // AJAX handlers
         add_action( 'wp_ajax_thw_add_to_wishlist', array( $this, 'add_to_wishlist_ajax' ) );
@@ -36,15 +38,15 @@ class TH_Wishlist_Frontend {
         add_action( 'wp_ajax_nopriv_thw_update_item_quantity', array( $this, 'update_item_quantity_ajax' ) );
         add_action( 'wp_ajax_thw_add_all_to_cart', array( $this, 'add_all_to_cart_ajax' ) );
         add_action( 'wp_ajax_nopriv_thw_add_all_to_cart', array( $this, 'add_all_to_cart_ajax' ) );
-        
         add_action('wp_ajax_thw_add_to_cart_and_manage', array( $this, 'thw_add_to_cart_and_manage'));
         add_action('wp_ajax_nopriv_thw_add_to_cart_and_manage', array( $this, 'thw_add_to_cart_and_manage'));
     }
 
     public function enqueue_styles_scripts() {
         
-        wp_enqueue_style( 'thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),'1.0.3');
-        wp_enqueue_script( 'thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), '1.0.3', true );
+        wp_enqueue_style( 'thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),'1.0.7');
+        wp_enqueue_script( 'thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), '1.0.6', true );
+        wp_add_inline_style('thw-wishlist', th_wishlist_front_style());
         
         $wishlist_page_id = isset($this->th_wishlist_option['th_wcwl_wishlist_page_id']) ? $this->th_wishlist_option['th_wcwl_wishlist_page_id'] : 0;
         $thw_redirect_to_cart = isset($this->th_wishlist_option['thw_redirect_to_cart']) ? $this->th_wishlist_option['thw_redirect_to_cart'] : '';
@@ -63,6 +65,8 @@ class TH_Wishlist_Frontend {
             'cart_url'            => wc_get_cart_url(),
             'icon_style'          => isset($this->th_wishlist_option['thw_button_display_style']) ? $this->th_wishlist_option['thw_button_display_style'] : 'icon_text',
             'redirect_nonce'      => wp_create_nonce('thw_wishlist_redirect_nonce'),
+            'th_wishlist_brws_icon' => $this->th_wishlist_option['th_wishlist_brws_icon'],
+            'icons' => thw_get_wishlist_icons_svg(),
             ) );
     }
 
@@ -113,19 +117,28 @@ class TH_Wishlist_Frontend {
 
     // Convert to string for HTML
     $class_attr = implode( ' ', $classes );
-
     $icon_html = '';
     $text_html = '<span>' . esc_html($text) . '</span>';
 
-    if (in_array($display_style, ['icon', 'icon_text', 'icon_only_no_style'])) {
-        if (isset($this->th_wishlist_option['thw_use_custom_icon']) && $this->th_wishlist_option['thw_use_custom_icon'] === '1' && !empty($this->th_wishlist_option['thw_custom_icon_url'])) {
-            $icon_html = '<img src="' . esc_url($this->th_wishlist_option['thw_custom_icon_url']) . '" class="thw-icon" alt="Wishlist Icon" />';
-        } else {
-            $icon_html = '<span class="thw-icon">
-            <span class="dashicons dashicons-heart"></span>
-            </span>';
+    $icons = thw_get_wishlist_icons_svg();
+    if($in_wishlist){
+        //get icon brws to wishlist
+        $th_wishlist_brws_icon = $this->th_wishlist_option['th_wishlist_brws_icon'];
+        // Default to heart-outline if no valid icon is selected
+        $selected_brwsicon = isset($icons[$th_wishlist_brws_icon]) ? $th_wishlist_brws_icon : 'heart-filled';
+        if (in_array($display_style, ['icon', 'icon_text', 'icon_only_no_style'])) {
+        $icon_html = '<span class="thw-icon browse">' . $icons[$selected_brwsicon]['svg'] . '</span>';
         }
+   }else{
+    //get icon add to wishlist
+    $th_wishlist_add_icon = $this->th_wishlist_option['th_wishlist_add_icon'];
+    // Default to heart-outline if no valid icon is selected
+    $selected_addicon = isset($icons[$th_wishlist_add_icon]) ? $th_wishlist_add_icon : 'heart-outline';
+    if (in_array($display_style, ['icon', 'icon_text', 'icon_only_no_style'])) {
+    $icon_html = '<span class="thw-icon add">' . $icons[$selected_addicon]['svg'] . '</span>';
     }
+
+   }
 
     if (in_array($display_style, ['icon', 'icon_only_no_style'])) {
         $text_html = '';
@@ -136,16 +149,26 @@ class TH_Wishlist_Frontend {
     }
 
     $wrap_class = is_singular('product') ? 'th-wishlist-single' : '';
+
+    $thw_btn_style_theme = isset($this->th_wishlist_option['thw_btn_style_theme']) ? $this->th_wishlist_option['thw_btn_style_theme'] : '0';
     
+    if($thw_btn_style_theme == '1'){
+        $themedefault = 'thw-btn-theme-style';
+    }else{
+        $themedefault = 'thw-btn-custom-style';
+    }
     ?>
 
-    <div class="thw-add-to-wishlist-button-wrap <?php echo esc_attr($wrap_class);?> ">
+    <div class="thw-add-to-wishlist-button-wrap <?php echo esc_attr($wrap_class);?>  <?php echo esc_attr($themedefault);?>">
+    <?php if($display_style === 'icon' ){ ?>
     <button class="thw-add-to-wishlist-button  <?php echo esc_attr($btnclasses); ?> <?php echo esc_attr($class_attr);?>" data-product-id="<?php echo esc_attr($product_id);?>" data-variation-id="<?php echo esc_attr($variation_id);?>"><?php echo $icon_html; ?><?php echo $text_html;?></button>
+    <?php }else{ ?>
+        <a class="thw-add-to-wishlist-button  <?php echo esc_attr($btnclasses); ?> <?php echo esc_attr($class_attr);?>" data-product-id="<?php echo esc_attr($product_id);?>" data-variation-id="<?php echo esc_attr($variation_id);?>"><?php echo $icon_html; ?><?php echo $text_html;?></a>
+    <?php  } ?>
     </div>
-
     <?php 
-        return ob_get_clean();
-    }
+    return ob_get_clean();
+  }
 
    public function add_to_wishlist_button() {
     echo do_shortcode('[th_wcwl_wishlist_button]');
@@ -331,8 +354,15 @@ class TH_Wishlist_Frontend {
 
         $items = TH_Wishlist_Data::get_wishlist_items($wishlist->id);
         $columns = $this->th_wishlist_option['th_wishlist_table_columns'];
+        $thw_btn_style_theme = isset($this->th_wishlist_option['thw_btn_style_theme']) ? $this->th_wishlist_option['thw_btn_style_theme'] : '0';
+    
+        if($thw_btn_style_theme == '1'){
+            $themedefault = 'thw-table-theme-style';
+        }else{
+            $themedefault = 'thw-table-custom-style';
+        }
 
-        echo '<div class="thw-wishlist-wrapper">';
+        echo '<div class="thw-wishlist-wrapper '.$themedefault.'">';
         echo '<h2>' . esc_html($wishlist->wishlist_name) . '</h2>';
         echo '<form class="thw-wishlist-form">';
         echo '<table class="thw-wishlist-table"><thead><tr>';

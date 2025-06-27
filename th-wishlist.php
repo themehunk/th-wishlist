@@ -92,13 +92,17 @@ final class TH_Wishlist {
      * Include required core files.
      */
     public function includes() {
+
         require_once THW_DIR . 'includes/class-th-wishlist-settings-manager.php';
         require_once THW_DIR . 'includes/class-th-wishlist-admin.php';
         require_once THW_DIR . 'includes/class-th-wishlist-install.php';
         require_once THW_DIR . 'includes/class-th-wishlist-data.php';
+        require_once THW_DIR . 'includes/th-wishlist-front-style.php';
         require_once THW_DIR . 'includes/class-th-wishlist-frontend.php';
         require_once THW_DIR . 'includes/class-th-wishlist-list-table.php';
         require_once THW_DIR . 'includes/th-wishlist-function.php';
+        
+        
     }
 
     /**

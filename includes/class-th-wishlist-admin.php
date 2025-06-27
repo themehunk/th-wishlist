@@ -37,7 +37,7 @@ class TH_Wishlist_Admin {
                 'th-wishlist-admin',
                 THW_URL . 'assets/css/admin.css',
                 [],
-                '1.0.3'
+                '1.0.4'
             );
 
              wp_enqueue_style(
@@ -59,7 +59,7 @@ class TH_Wishlist_Admin {
                 'th-wishlist-admin',
                 THW_URL . 'assets/js/admin.js',
                 [ 'jquery', 'wp-color-picker', 'jquery-ui-sortable' ],
-                '1.1.0',
+                '1.1.6',
                 true
             );
 
