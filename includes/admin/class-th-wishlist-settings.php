@@ -271,7 +271,7 @@ public function settings_page() {
                             </div>
                             <div class="th-color-picker">
                             <p><?php esc_html_e( 'Add to Wishlist Icon color', 'th-wishlist' ); ?></p>
-                            <input type="text" name="settings[th_wishlist_add_icon_color]"  value="<?php echo esc_attr( $th_wishlist_brws_icon_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_add_icon_color ); ?>" />
+                            <input type="text" name="settings[th_wishlist_add_icon_color]"  value="<?php echo esc_attr( $th_wishlist_add_icon_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_add_icon_color ); ?>" />
                             <div>
                         </td>
                         
@@ -368,7 +368,24 @@ public function settings_page() {
                         </td>
                      </tr>
                    </table>
-<h3 class="thws-content-title"><?php esc_html_e( 'Share Button', 'th-wishlist' ); ?></h3>
+                    <?php 
+                    $th_wishlist_shr_fb_color = isset( $options['th_wishlist_shr_fb_color'] ) ? $options['th_wishlist_shr_fb_color'] : '';
+                    $th_wishlist_shr_fb_hvr_color = isset( $options['th_wishlist_shr_fb_hvr_color'] ) ? $options['th_wishlist_shr_fb_hvr_color'] : '';
+                    $th_wishlist_shr_x_color = isset( $options['th_wishlist_shr_x_color'] ) ? $options['th_wishlist_shr_x_color'] : '';
+                    $th_wishlist_shr_x_hvr_color = isset( $options['th_wishlist_shr_x_hvr_color'] ) ? $options['th_wishlist_shr_x_hvr_color'] : '';
+
+                    $th_wishlist_shr_w_color = isset( $options['th_wishlist_shr_w_color'] ) ? $options['th_wishlist_shr_w_color'] : '';
+                    $th_wishlist_shr_w_hvr_color = isset( $options['th_wishlist_shr_w_hvr_color'] ) ? $options['th_wishlist_shr_w_hvr_color'] : '';
+
+                    $th_wishlist_shr_c_color = isset( $options['th_wishlist_shr_c_color'] ) ? $options['th_wishlist_shr_c_color'] : '';
+                    $th_wishlist_shr_c_hvr_color = isset( $options['th_wishlist_shr_c_hvr_color'] ) ? $options['th_wishlist_shr_c_hvr_color'] : '';
+
+                    $th_wishlist_shr_e_color = isset( $options['th_wishlist_shr_e_color'] ) ? $options['th_wishlist_shr_e_color'] : '';
+                    $th_wishlist_shr_e_hvr_color = isset( $options['th_wishlist_shr_e_hvr_color'] ) ? $options['th_wishlist_shr_e_hvr_color'] : '';
+                    ?>
+
+
+                   <h3 class="thws-content-title"><?php esc_html_e( 'Share Button', 'th-wishlist' ); ?></h3>
                    <table class="form-table">
                      <tr class="th-row-with-icon-radio">
                         <th scope="row"><?php esc_html_e( 'Facebook', 'th-wishlist' ); ?></th>

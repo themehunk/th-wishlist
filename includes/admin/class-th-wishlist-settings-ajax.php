@@ -51,6 +51,7 @@ class TH_Wishlist_Settings_Ajax {
      * Save settings via AJAX.
      */
     public function save_settings() {
+        
         check_ajax_referer( 'th_wishlist_nonce', '_wpnonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
@@ -58,7 +59,6 @@ class TH_Wishlist_Settings_Ajax {
         }
 
         // Log sanitized data for debugging
-    error_log( 'TH_Wishlist_Settings: Saving sanitized settings: ' . print_r( $_POST['settings'], true ) );
 
         if ( isset( $_POST['settings'] ) && is_array( $_POST['settings'] ) ) {
             $sanitized_data = $this->sanitize_form_data( wp_unslash( $_POST['settings'] ) );
