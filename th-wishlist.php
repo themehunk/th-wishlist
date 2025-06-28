@@ -3,7 +3,7 @@
  * Plugin Name:       TH Wishlist
  * Plugin URI:        https://www.themehunk.com/
  * Description:       A modern wishlist plugin for WooCommerce. Allows users to add products to a wishlist, view, and manage them.
- * Version:           1.0.1
+ * Version:           1.0.8
  * Author:            themehunk
  * Author URI:        https://www.themehunk.com/
  * License:           GPL-2.0+
@@ -92,13 +92,17 @@ final class TH_Wishlist {
      * Include required core files.
      */
     public function includes() {
+
         require_once THW_DIR . 'includes/class-th-wishlist-settings-manager.php';
         require_once THW_DIR . 'includes/class-th-wishlist-admin.php';
         require_once THW_DIR . 'includes/class-th-wishlist-install.php';
         require_once THW_DIR . 'includes/class-th-wishlist-data.php';
+        require_once THW_DIR . 'includes/th-wishlist-front-style.php';
         require_once THW_DIR . 'includes/class-th-wishlist-frontend.php';
         require_once THW_DIR . 'includes/class-th-wishlist-list-table.php';
         require_once THW_DIR . 'includes/th-wishlist-function.php';
+        
+        
     }
 
     /**

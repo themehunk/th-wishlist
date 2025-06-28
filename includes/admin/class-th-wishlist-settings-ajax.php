@@ -51,11 +51,14 @@ class TH_Wishlist_Settings_Ajax {
      * Save settings via AJAX.
      */
     public function save_settings() {
+        
         check_ajax_referer( 'th_wishlist_nonce', '_wpnonce' );
 
         if ( ! current_user_can( 'manage_options' ) ) {
             wp_send_json_error( __( 'Invalid permissions.', 'th-wishlist' ) );
         }
+
+        // Log sanitized data for debugging
 
         if ( isset( $_POST['settings'] ) && is_array( $_POST['settings'] ) ) {
             $sanitized_data = $this->sanitize_form_data( wp_unslash( $_POST['settings'] ) );

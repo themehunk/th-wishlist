@@ -37,15 +37,29 @@ class TH_Wishlist_Admin {
                 'th-wishlist-admin',
                 THW_URL . 'assets/css/admin.css',
                 [],
-                '1.0'
+                '1.0.4'
+            );
+
+             wp_enqueue_style(
+                'pickr-style',
+                THW_URL . 'assets/css/pickr.min.css',
+                [],
+                '1.0.0'
             );
 
             // Enqueue custom admin scripts with localized data.
             wp_enqueue_script(
+                'pickr-script',
+                THW_URL . 'assets/js/pickr.min.js',
+                ['jquery'],
+                '1.5.1',
+                true
+            );
+            wp_enqueue_script(
                 'th-wishlist-admin',
                 THW_URL . 'assets/js/admin.js',
                 [ 'jquery', 'wp-color-picker', 'jquery-ui-sortable' ],
-                THW_VERSION,
+                '1.1.6',
                 true
             );
 

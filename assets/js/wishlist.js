@@ -25,6 +25,16 @@ jQuery(function($) {
                     $button.find('span').last().text(thw_wishlist_params.i18n_added);
                     }
                     $button.addClass('in-wishlist');
+                    // Update SVG icon based on wishlist status
+                        if (['icon', 'icon_text', 'icon_only_no_style'].includes(thw_wishlist_params.icon_style)) {
+                            // Assume thw_wishlist_params.icons contains the SVG icon data (e.g., from PHP)
+                            var icons = thw_wishlist_params.icons; // Ensure this is passed from PHP to JS
+                            var selected_brwsicon = thw_wishlist_params.th_wishlist_brws_icon || 'heart-filled'; // Default to heart-filled
+                            var icon_html = '<span class="thw-icon browse">' + (icons[selected_brwsicon]?.svg || icons['heart-filled'].svg) + '</span>';
+
+                            // Replace the current icon with the browse wishlist icon
+                            $button.find('.thw-icon').replaceWith(icon_html);
+                        }
                 } else {
                     alert(thw_wishlist_params.i18n_error);
                 }
