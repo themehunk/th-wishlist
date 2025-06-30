@@ -42,8 +42,8 @@ class TH_Wishlist_Frontend {
 
     public function enqueue_styles_scripts() {
         
-        wp_enqueue_style('thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),'1.0.7');
-        wp_enqueue_script('thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), '1.0.6', true );
+        wp_enqueue_style('thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),THW_VERSION);
+        wp_enqueue_script('thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), THW_VERSION, true );
         wp_add_inline_style('thw-wishlist', th_wishlist_front_style());
         
         $wishlist_page_id = isset($this->th_wishlist_option['th_wcwl_wishlist_page_id']) ? $this->th_wishlist_option['th_wcwl_wishlist_page_id'] : 0;

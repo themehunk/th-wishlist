@@ -125,12 +125,12 @@ final class TH_Wishlist {
             add_action( 'admin_notices', array( $this, 'woocommerce_missing_notice' ) );
             return;
         }
-
         // Instantiate classes
         TH_Wishlist_Settings_Manager::get_instance();
         new TH_Wishlist_Frontend();
         new TH_Wishlist_Admin();
-    }
+        
+        }
 
          /**
          * Add the settings link to the plugin row
@@ -148,9 +148,7 @@ final class TH_Wishlist {
 
                       return $links;
         }
-
-
-    /**
+        /**
          * Displays an admin notice if WooCommerce is not installed or active.
          */
         public function woocommerce_missing_notice() {
@@ -158,7 +156,6 @@ final class TH_Wishlist {
             if ( ! is_admin() ) {
                 return;
             }
-
             // Use the WordPress notice classes for consistent styling
             ?>
             <div class="notice notice-error is-dismissible">
