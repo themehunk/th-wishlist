@@ -37,13 +37,13 @@ class TH_Wishlist_Tracking {
      */
     public static function tracking_page() {
         // The list table class should be included before it's instantiated.
-        require_once THW_DIR . 'includes/class-th-wishlist-list-table.php';
+        require_once THW_DIR . 'includes/admin/class-th-wishlist-list-table.php';
 
         $wishlist_table = new TH_Wishlist_List_Table();
         $wishlist_table->prepare_items();
         ?>
         <div class="wrap">
-            <h1 class="wp-heading-inline"><?php _e('Wishlists', 'th-wishlist'); ?></h1>
+            <h1 class="wp-heading-inline"><?php esc_html_e('TH Wishlists', 'th-wishlist'); ?></h1>
             <form method="post">
                 <?php
                 // Display search box, filters, and the table
