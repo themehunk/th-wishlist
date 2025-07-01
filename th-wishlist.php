@@ -161,7 +161,7 @@ final class TH_Wishlist {
             <div class="notice notice-error is-dismissible">
                 <p>
                     <?php
-                    // Use esc_html__ for translation and escape the plugin name and link
+                    // translators: 1: Plugin name (TH Wishlist), 2: WooCommerce plugin link.
                     printf(
                         esc_html__( '%1$s requires %2$s to be installed and active.', 'th-wishlist' ),
                         esc_html__( 'TH Wishlist', 'th-wishlist' ), // Translatable plugin name

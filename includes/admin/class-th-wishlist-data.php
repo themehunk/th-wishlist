@@ -15,6 +15,7 @@ class TH_Wishlist_Data {
      * Handles both logged-in users and guests using long-lived cookies.
      */
     public static function get_or_create_wishlist() {
+        
         global $wpdb;
 
         if ( is_user_logged_in() ) {
@@ -100,22 +101,29 @@ class TH_Wishlist_Data {
         $wishlists = wp_cache_get( $cache_key, 'th_wishlist' );
 
         if ( false === $wishlists ) {
-            $allowed_orderby = [ 'id', 'wishlist_name', 'user_id', 'created_at' ];
-            $orderby = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'id';
-            $order = strtoupper( $args['order'] ) === 'ASC' ? 'ASC' : 'DESC';
+    $allowed_orderby = [ 'id', 'wishlist_name', 'user_id', 'created_at' ];
+    $orderby = in_array( $args['orderby'], $allowed_orderby, true ) ? $args['orderby'] : 'id';
+    $order = strtoupper( $args['order'] ) === 'ASC' ? 'ASC' : 'DESC';
 
-            $sql = "SELECT w.*, u.user_login as username, COUNT(i.id) as item_count
-                    FROM {$wpdb->prefix}thw_wishlists w
-                    LEFT JOIN {$wpdb->users} u ON w.user_id = u.ID
-                    LEFT JOIN {$wpdb->prefix}thw_wishlist_items i ON w.id = i.wishlist_id
-                    GROUP BY w.id
-                    ORDER BY %s %s
-                    LIMIT %d OFFSET %d";
-
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Direct query required for custom table.
-            $wishlists = $wpdb->get_results( $wpdb->prepare( $sql, $orderby, $order, $args['per_page'], $offset ), ARRAY_A );
-            wp_cache_set( $cache_key, $wishlists, 'th_wishlist', HOUR_IN_SECONDS );
-        }
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Direct query required for custom table.
+    $wishlists = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT w.*, u.user_login as username, COUNT(i.id) as item_count
+             FROM {$wpdb->prefix}thw_wishlists w
+             LEFT JOIN {$wpdb->users} u ON w.user_id = u.ID
+             LEFT JOIN {$wpdb->prefix}thw_wishlist_items i ON w.id = i.wishlist_id
+             GROUP BY w.id
+             ORDER BY %s %s
+             LIMIT %d OFFSET %d",
+            $orderby,
+            $order,
+            $args['per_page'],
+            $offset
+        ),
+        ARRAY_A
+    );
+    wp_cache_set( $cache_key, $wishlists, 'th_wishlist', HOUR_IN_SECONDS );
+}
 
         return $wishlists;
     }

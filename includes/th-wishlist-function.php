@@ -119,7 +119,7 @@ function thw_get_wishlist_icons_svg() {
  * @param string $text_domain The text domain for translations (optional).
  * @return string Sanitized SVG markup or fallback message.
  */
-function thw_sanitize_svg_output( $svg, $text_domain = 'th-wishlist' ) {
+function thw_sanitize_svg_output( $svg ) {
     // Check if SVG data exists
     if ( ! empty( $svg ) ) {
         // Define allowed SVG tags and attributes
@@ -150,5 +150,5 @@ function thw_sanitize_svg_output( $svg, $text_domain = 'th-wishlist' ) {
     }
 
     // Fallback for missing SVG
-    return esc_html__( 'No icon available', $text_domain );
+    return esc_html__( 'No icon available', 'th-wishlist' );
 }
