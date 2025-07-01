@@ -42,8 +42,8 @@ class TH_Wishlist_Frontend {
 
     public function enqueue_styles_scripts() {
         
-        wp_enqueue_style('thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),'1.0.7');
-        wp_enqueue_script('thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), '1.0.6', true );
+        wp_enqueue_style('thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),THW_VERSION);
+        wp_enqueue_script('thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), THW_VERSION, true );
         wp_add_inline_style('thw-wishlist', th_wishlist_front_style());
         
         $wishlist_page_id = isset($this->th_wishlist_option['th_wcwl_wishlist_page_id']) ? $this->th_wishlist_option['th_wcwl_wishlist_page_id'] : 0;
@@ -351,7 +351,6 @@ class TH_Wishlist_Frontend {
 
     public function wishlist_page_shortcode() {
     global $product;
-
     $output = '';
     $wishlist = null;
     $wishlist_token = isset( $_GET['wishlist_token'] ) ? sanitize_text_field( wp_unslash( $_GET['wishlist_token'] ) ) : null;
@@ -830,37 +829,49 @@ class TH_Wishlist_Frontend {
 }
 
 // ajax mange table function
+/**
+ * Handle adding product to cart and managing wishlist via AJAX.
+ */
 public function thw_add_to_cart_and_manage() {
+    
+    check_ajax_referer( 'thw_wishlist_redirect_nonce', 'nonce' );
 
-    check_ajax_referer('thw_wishlist_redirect_nonce', 'nonce');
-
-    $product_id = absint($_POST['product_id']);
-    $quantity   = max(1, absint($_POST['quantity']));
-    $item_id    = absint($_POST['item_id']);
-    $token      = sanitize_text_field($_POST['token']);
-
-    if (!$product_id || !$item_id) {
-        wp_send_json_error(['message' => 'Invalid data']);
+    // Validate that required POST variables exist
+    if ( ! isset( $_POST['product_id'], $_POST['quantity'], $_POST['item_id'], $_POST['token'] ) ) {
+        wp_send_json_error( [ 'message' => __( 'Missing required data.', 'th-wishlist' ) ] );
     }
 
-    $product = wc_get_product($product_id);
-    if (!$product || !$product->is_purchasable() || !$product->is_in_stock()) {
-        wp_send_json_error(['message' => 'Product not available.']);
+    // Sanitize inputs
+    $product_id = absint( wp_unslash( $_POST['product_id'] ) );
+    $quantity   = max( 1, absint( wp_unslash( $_POST['quantity'] ) ) );
+    $item_id    = absint( wp_unslash( $_POST['item_id'] ) );
+    $token      = sanitize_text_field( wp_unslash( $_POST['token'] ) );
+
+    // Validate product_id and item_id
+    if ( ! $product_id || ! $item_id ) {
+        wp_send_json_error( [ 'message' => __( 'Invalid product or item ID.', 'th-wishlist' ) ] );
+    }
+
+    // Verify product exists and is purchasable
+    $product = wc_get_product( $product_id );
+    if ( ! $product || ! $product->is_purchasable() || ! $product->is_in_stock() ) {
+        wp_send_json_error( [ 'message' => __( 'Product not available.', 'th-wishlist' ) ] );
     }
 
     // Add product to cart
-    WC()->cart->add_to_cart($product_id, $quantity);
+    WC()->cart->add_to_cart( $product_id, $quantity );
 
-    if (isset($this->th_wishlist_option['redirect_to_cart']) === '1') {
-        TH_Wishlist_Data::remove_item($item_id);
+    // Remove item from wishlist based on settings
+    if ( isset( $this->th_wishlist_option['redirect_to_cart'] ) && '1' === $this->th_wishlist_option['redirect_to_cart'] ) {
+        TH_Wishlist_Data::remove_item( $item_id );
+    } else {
+        TH_Wishlist_Data::remove_item( $item_id ); // Remove item regardless if condition is met
     }
 
-    TH_Wishlist_Data::remove_item($item_id);
-
-    wp_send_json_success([
+    wp_send_json_success( [
         'cart_url' => wc_get_cart_url(),
-        'message'  => 'Product added and wishlist updated.'
-    ]);
+        'message'  => __( 'Product added and wishlist updated.', 'th-wishlist' )
+    ] );
 }
 
 }

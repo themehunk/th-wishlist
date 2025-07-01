@@ -37,14 +37,14 @@ class TH_Wishlist_Admin {
                 'th-wishlist-admin',
                 THW_URL . 'assets/css/admin.css',
                 [],
-                '1.0.4'
+                THW_VERSION
             );
 
              wp_enqueue_style(
                 'pickr-style',
                 THW_URL . 'assets/css/pickr.min.css',
                 [],
-                '1.0.0'
+                '1.5.1'
             );
 
             // Enqueue custom admin scripts with localized data.
@@ -59,7 +59,7 @@ class TH_Wishlist_Admin {
                 'th-wishlist-admin',
                 THW_URL . 'assets/js/admin.js',
                 [ 'jquery', 'wp-color-picker', 'jquery-ui-sortable' ],
-                '1.1.6',
+                THW_VERSION,
                 true
             );
 

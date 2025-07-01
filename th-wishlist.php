@@ -2,13 +2,15 @@
 /**
  * Plugin Name:       TH Wishlist
  * Plugin URI:        https://www.themehunk.com/
- * Description:       A modern wishlist plugin for WooCommerce. Allows users to add products to a wishlist, view, and manage them.
- * Version:           1.0.8
+ * Description:       TH Wishlist is a powerful and user-friendly wishlist plugin for WooCommerce that lets your customers save their favorite products for later and helps boost conversions by keeping users engaged with the products they love.
+ * Version:           1.0.0
  * Author:            themehunk
  * Author URI:        https://www.themehunk.com/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       th-wishlist
+ * Tested up to:      6.8.1
+ * Requires at least: 5.0
  * Domain Path:       /languages
  * WC requires at least: 3.0
  * WC tested up to: 8.9
@@ -92,17 +94,14 @@ final class TH_Wishlist {
      * Include required core files.
      */
     public function includes() {
-
+        require_once THW_DIR . 'includes/admin/class-th-wishlist-list-table.php';
+        require_once THW_DIR . 'includes/admin/class-th-wishlist-data.php';
+        require_once THW_DIR . 'includes/admin/class-th-wishlist-admin.php';
+        require_once THW_DIR . 'includes/admin/class-th-wishlist-install.php';
         require_once THW_DIR . 'includes/class-th-wishlist-settings-manager.php';
-        require_once THW_DIR . 'includes/class-th-wishlist-admin.php';
-        require_once THW_DIR . 'includes/class-th-wishlist-install.php';
-        require_once THW_DIR . 'includes/class-th-wishlist-data.php';
-        require_once THW_DIR . 'includes/th-wishlist-front-style.php';
         require_once THW_DIR . 'includes/class-th-wishlist-frontend.php';
-        require_once THW_DIR . 'includes/class-th-wishlist-list-table.php';
+        require_once THW_DIR . 'includes/th-wishlist-front-style.php';
         require_once THW_DIR . 'includes/th-wishlist-function.php';
-        
-        
     }
 
     /**
@@ -114,6 +113,7 @@ final class TH_Wishlist {
 
         // Initialize classes
         add_action( 'plugins_loaded', array( $this, 'init' ) );
+        add_filter('plugin_action_links_'.THW_PLUGIN_BASENAME, array( $this,'th_wishlist_plugin_action_links'), 10, 1);
     }
 
     /**
@@ -125,19 +125,53 @@ final class TH_Wishlist {
             add_action( 'admin_notices', array( $this, 'woocommerce_missing_notice' ) );
             return;
         }
-
         // Instantiate classes
         TH_Wishlist_Settings_Manager::get_instance();
         new TH_Wishlist_Frontend();
         new TH_Wishlist_Admin();
-    }
+        
+        }
 
-    /**
-     * WooCommerce missing notice.
-     */
-    public function woocommerce_missing_notice() {
-        echo '<div class="error"><p>' . sprintf( __( 'TH Wishlist requires %s to be installed and active.', 'th-wishlist' ), '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>' ) . '</p></div>';
-    }
+         /**
+         * Add the settings link to the plugin row
+         *
+         * @param array $links - Links for the plugin
+         * @return array - Links
+         */
+        public function th_wishlist_plugin_action_links($links) {
+
+                      $settings_page = add_query_arg(array('page' => 'thw-wishlist'), admin_url('admin.php'));
+
+                      $settings_link = '<a href="'.esc_url($settings_page).'">'.esc_html__('Settings', 'th-wishlist' ).'</a>';
+
+                      array_unshift($links, $settings_link); 
+
+                      return $links;
+        }
+        /**
+         * Displays an admin notice if WooCommerce is not installed or active.
+         */
+        public function woocommerce_missing_notice() {
+            // Ensure this is only called in the admin area
+            if ( ! is_admin() ) {
+                return;
+            }
+            // Use the WordPress notice classes for consistent styling
+            ?>
+            <div class="notice notice-error is-dismissible">
+                <p>
+                    <?php
+                    // Use esc_html__ for translation and escape the plugin name and link
+                    printf(
+                        esc_html__( '%1$s requires %2$s to be installed and active.', 'th-wishlist' ),
+                        esc_html__( 'TH Wishlist', 'th-wishlist' ), // Translatable plugin name
+                        '<a href="' . esc_url( 'https://woocommerce.com/' ) . '" target="_blank">' . esc_html__( 'WooCommerce', 'th-wishlist' ) . '</a>'
+                    );
+                    ?>
+                </p>
+            </div>
+            <?php
+        }
 }
 
 endif;

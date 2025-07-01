@@ -112,3 +112,43 @@ function thw_get_wishlist_icons_svg() {
     );
     return $addicondashicons;
 }
+/**
+ * Sanitizes and outputs SVG markup for safe rendering in WordPress.
+ *
+ * @param string $svg        The SVG markup to sanitize.
+ * @param string $text_domain The text domain for translations (optional).
+ * @return string Sanitized SVG markup or fallback message.
+ */
+function thw_sanitize_svg_output( $svg, $text_domain = 'th-wishlist' ) {
+    // Check if SVG data exists
+    if ( ! empty( $svg ) ) {
+        // Define allowed SVG tags and attributes
+        $allowed_svg_tags = array(
+            'svg'  => array(
+                'class'        => true,
+                'width'        => true,
+                'height'       => true,
+                'viewbox'      => true,
+                'fill'         => true,
+                'stroke'       => true,
+                'stroke-width' => true,
+                'xmlns'        => true,
+            ),
+            'path' => array(
+                'd'              => true,
+                'fill'           => true,
+                'stroke'         => true,
+                'stroke-linecap' => true,
+                'stroke-linejoin' => true,
+                'clip-rule'      => true,
+                'fill-rule'      => true,
+            ),
+        );
+
+        // Sanitize and return SVG
+        return wp_kses( $svg, $allowed_svg_tags );
+    }
+
+    // Fallback for missing SVG
+    return esc_html__( 'No icon available', $text_domain );
+}

@@ -50,24 +50,27 @@ class TH_Wishlist_Settings_Ajax {
     /**
      * Save settings via AJAX.
      */
-    public function save_settings() {
-        
-        check_ajax_referer( 'th_wishlist_nonce', '_wpnonce' );
+        public function save_settings() {
+            
+            check_ajax_referer( 'th_wishlist_nonce', '_wpnonce' );
 
-        if ( ! current_user_can( 'manage_options' ) ) {
-            wp_send_json_error( __( 'Invalid permissions.', 'th-wishlist' ) );
+            if ( ! current_user_can( 'manage_options' ) ) {
+                wp_send_json_error( __( 'Invalid permissions.', 'th-wishlist' ) );
+            }
+
+            if ( isset( $_POST['settings'] ) && is_array( $_POST['settings'] ) ) {
+                // Unslash and sanitize the settings array
+                $raw_settings = wp_unslash( $_POST['settings'] );
+                $sanitized_data = $this->sanitize_form_data( $raw_settings );
+                
+                if ( ! empty( $sanitized_data ) ) {
+                    update_option( 'th_wishlist_settings', $sanitized_data );
+                    wp_send_json_success( __( 'Settings saved successfully!', 'th-wishlist' ) );
+                }
+            }
+
+            wp_send_json_error( __( 'Error saving settings. Invalid data.', 'th-wishlist' ) );
         }
-
-        // Log sanitized data for debugging
-
-        if ( isset( $_POST['settings'] ) && is_array( $_POST['settings'] ) ) {
-            $sanitized_data = $this->sanitize_form_data( wp_unslash( $_POST['settings'] ) );
-            update_option( 'th_wishlist_settings', $sanitized_data );
-            wp_send_json_success( __( 'Settings saved successfully!', 'th-wishlist' ) );
-        }
-
-        wp_send_json_error( __( 'Error saving settings. Invalid data.', 'th-wishlist' ) );
-    }
 
     /**
      * Reset settings to defaults via AJAX.
