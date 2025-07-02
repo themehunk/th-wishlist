@@ -60,7 +60,7 @@ public function settings_page() {
             <div class="thw-title-content">
                 <div id="logo">
 						<a href="https://themehunk.com/" target="_blank">
-						<img src="http://localhost:8888/wp1/wp-content/plugins/th-advance-product-search-pro/images//tapsp-logo.png" alt="tapsp-logo">
+						<img src="<?php echo esc_url(THW_URL.'assets/images/th-logo.png') ?>" alt="th-logo">
 					</a>
 					</div>
             <h3><?php esc_html_e( 'TH Wishlist', 'th-wishlist' ); ?></h3>
@@ -85,7 +85,7 @@ public function settings_page() {
                                 <?php
                                 wp_dropdown_pages( [
                                     'name'              => 'settings[th_wcwl_wishlist_page_id]',
-                                    'selected'          => isset( $options['th_wcwl_wishlist_page_id'] ) ? $options['th_wcwl_wishlist_page_id'] : 0,
+                                    'selected'          => isset( $options['th_wcwl_wishlist_page_id'] ) ? absint($options['th_wcwl_wishlist_page_id']) : 0,
                                     'show_option_none'  => esc_html__( 'Select a page', 'th-wishlist' ),
                                 ] );
                                 ?>
@@ -261,7 +261,7 @@ public function settings_page() {
                             <div class="thw-dashicon-picker" id="thw-wishlist-icon">
                                 <?php foreach ( $addicondashicons as $icon_key => $icon_data ) : 
                                 // Sanitize SVG output
-                                $sanitized_svg = thw_sanitize_svg_output( $icon_data['svg'], 'th-wishlist' );
+                                $sanitized_svg = thw_sanitize_svg_output($icon_data['svg']);
                                 // Output icon option
                                 echo sprintf(
                                     '<label class="thw-dashicon-option">' .
@@ -273,7 +273,6 @@ public function settings_page() {
                                     esc_attr( $icon_data['name'] ),
                                     $sanitized_svg
                                 );  endforeach; 
-        
                                 ?>
                             </div>
                             <div class="th-color-picker">
@@ -295,7 +294,7 @@ public function settings_page() {
                              <div class="thw-dashicon-picker" id="thw-wishlist-icon">
                              <?php foreach ( $brwsicondashicons as $icon_key => $icon_data ) : 
                                 // Sanitize SVG output
-                                $sanitized_svg = thw_sanitize_svg_output( $icon_data['svg'], 'th-wishlist' );
+                                $sanitized_svg = thw_sanitize_svg_output( $icon_data['svg']);
                                 // Output icon option
                                 echo sprintf(
                                     '<label class="thw-dashicon-option">' .

@@ -9,13 +9,13 @@ Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-TH Wishlist Plugin, is a feature-rich and easy-to-use wishlist plugin designed specifically for WooCommerce stores. It allows your customers to create and manage personalized wishlists, improving their shopping experience while increasing engagement and conversions on your site.
-With TH Wishlist Plugin, shoppers can save their favorite products for later with just a click—encouraging return visits and reducing cart abandonment. Whether they’re planning a future purchase or sharing gift ideas with friends and family, wishlists help keep your store top-of-mind.
-The plugin integrates seamlessly with your WooCommerce store and offers flexible customization options, so you can match the wishlist buttons and pages with your theme’s look and feel. Store owners also benefit from insights into customer preferences, helping to tailor marketing campaigns and product offerings.
+A modern wishlist plugin for WooCommerce. Allows users to add products to a wishlist, view, and manage them.
 
 == Description ==
 
-A modern wishlist plugin for WooCommerce. Allows users to add products to a wishlist, view, and manage them.
+TH Wishlist Plugin, is a feature-rich and easy-to-use wishlist plugin designed specifically for WooCommerce stores. It allows your customers to create and manage personalized wishlists, improving their shopping experience while increasing engagement and conversions on your site.
+With TH Wishlist Plugin, shoppers can save their favorite products for later with just a click—encouraging return visits and reducing cart abandonment. Whether they’re planning a future purchase or sharing gift ideas with friends and family, wishlists help keep your store top-of-mind.
+The plugin integrates seamlessly with your WooCommerce store and offers flexible customization options, so you can match the wishlist buttons and pages with your theme’s look and feel. Store owners also benefit from insights into customer preferences, helping to tailor marketing campaigns and product offerings.
 
 [Docs]( https://themehunk.com/docs/th-wishlist) | [More Details](https://themehunk.com/th-wishlist/) | [support](https://themehunk.com/contact-us/).
 
