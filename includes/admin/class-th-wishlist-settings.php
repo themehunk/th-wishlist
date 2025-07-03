@@ -248,7 +248,27 @@ public function settings_page() {
                 <div id="style" class="thw-tab-content">
                   <h3 class="thws-content-title"><?php esc_html_e( 'Wishlist Button', 'th-wishlist' ); ?></h3>
                   <table class="form-table">
-                    
+                    <?php $allowed_svg_tags = array(
+                                'svg'  => array(
+                                    'class'        => true,
+                                    'width'        => true,
+                                    'height'       => true,
+                                    'viewbox'      => true,
+                                    'fill'         => true,
+                                    'stroke'       => true,
+                                    'stroke-width' => true,
+                                    'xmlns'        => true,
+                                ),
+                                'path' => array(
+                                    'd'              => true,
+                                    'fill'           => true,
+                                    'stroke'         => true,
+                                    'stroke-linecap' => true,
+                                    'stroke-linejoin'=> true,
+                                    'clip-rule'      => true,
+                                    'fill-rule'      => true,
+                                ),
+                            );?>
                     <tr class="th-row-with-icon-radio">
                         <th scope="row"><?php esc_html_e( 'Add to Wishlist Icon', 'th-wishlist' ); ?></th>
                         <td>
@@ -258,23 +278,17 @@ public function settings_page() {
                             $th_wishlist_add_icon_color = isset( $options['th_wishlist_add_icon_color'] ) ? $options['th_wishlist_add_icon_color'] : '#111';
                             ?>
                             <p><?php esc_html_e( 'Choose add to wishlist icon', 'th-wishlist' ); ?></p>
-                            <div class="thw-dashicon-picker" id="thw-wishlist-icon">
-                                <?php foreach ( $addicondashicons as $icon_key => $icon_data ) : 
-                                // Sanitize SVG output
-                                $sanitized_svg = thw_sanitize_svg_output($icon_data['svg']);
-                                // Output icon option
-                                echo sprintf(
-                                    '<label class="thw-dashicon-option">' .
-                                        '<input type="radio" name="settings[th_wishlist_add_icon]" value="%s" %s />' .
-                                        '<span title="%s">%s</span>' .
-                                    '</label>',
-                                    esc_attr( $icon_key ),
-                                    checked( $selected_icon, $icon_key, false ),
-                                    esc_attr( $icon_data['name'] ),
-                                    $sanitized_svg
-                                );  endforeach; 
-                                ?>
-                            </div>
+                           <?php foreach ( $addicondashicons as $icon_key => $icon_data ) : ?>
+                                <label class="thw-dashicon-option">
+                                    <input type="radio"
+                                        name="settings[th_wishlist_add_icon]"
+                                        value="<?php echo esc_attr( $icon_key ); ?>"
+                                        <?php checked( $selected_icon, $icon_key ); ?> />
+                                    <span title="<?php echo esc_attr( $icon_data['name'] ); ?>">
+                                        <?php echo wp_kses( $icon_data['svg'], $allowed_svg_tags ); ?>
+                                    </span>
+                                </label>
+                            <?php endforeach; ?>
                             <div class="th-color-picker">
                             <p><?php esc_html_e( 'Add to Wishlist Icon color', 'th-wishlist' ); ?></p>
                             <input type="text" name="settings[th_wishlist_add_icon_color]"  value="<?php echo esc_attr( $th_wishlist_add_icon_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_add_icon_color ); ?>" />
@@ -289,25 +303,23 @@ public function settings_page() {
                             $selected_brws_icon = $options['th_wishlist_brws_icon'];
                             $brwsicondashicons =  thw_get_wishlist_icons_svg();
                             $th_wishlist_brws_icon_color = isset( $options['th_wishlist_brws_icon_color'] ) ? $options['th_wishlist_brws_icon_color'] : '#111';
+                            
                             ?>
                              <p><?php esc_html_e( 'Choose Browse to wishlist icon', 'th-wishlist' ); ?></p>
                              <div class="thw-dashicon-picker" id="thw-wishlist-icon">
-                             <?php foreach ( $brwsicondashicons as $icon_key => $icon_data ) : 
-                                // Sanitize SVG output
-                                $sanitized_svg = thw_sanitize_svg_output( $icon_data['svg']);
-                                // Output icon option
-                                echo sprintf(
-                                    '<label class="thw-dashicon-option">' .
-                                        '<input type="radio" name="settings[th_wishlist_brws_icon]" value="%s" %s />' .
-                                        '<span title="%s">%s</span>' .
-                                    '</label>',
-                                    esc_attr( $icon_key ),
-                                    checked( $selected_brws_icon, $icon_key, false ),
-                                    esc_attr( $icon_data['name'] ),
-                                    $sanitized_svg
-                                );  endforeach; 
-        
-                                ?>
+                             <?php foreach ( $brwsicondashicons as $icon_key => $icon_data ) : ?>
+                            <label class="thw-dashicon-option">
+                                <input type="radio"
+                                    name="settings[th_wishlist_brws_icon]"
+                                    value="<?php echo esc_attr( $icon_key ); ?>"
+                                    <?php checked( $selected_brws_icon, $icon_key ); ?> />
+                                <span title="<?php echo esc_attr( $icon_data['name'] ); ?>">
+                                    <?php
+                                    echo wp_kses( $icon_data['svg'], $allowed_svg_tags );
+                                    ?>
+                                </span>
+                            </label>
+                           <?php endforeach; ?>
 
                             </div>
                             <div class="th-color-picker">

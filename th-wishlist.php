@@ -180,7 +180,7 @@ endif;
  * Main instance of TH_Wishlist.
  * Returns the main instance of THW.
  */
-function THW() {
+function THW(){
     return TH_Wishlist::instance();
 }
 

@@ -113,6 +113,7 @@ class TH_Wishlist_List_Table extends WP_List_Table {
             $actions['view'] = sprintf(
                 '<a href="%s" target="_blank" aria-label="%s">View</a>',
                 add_query_arg( 'wishlist_token', $item['wishlist_token'], $wishlist_page_url ),
+                /* translators: %s : Wishlist Name */
                 esc_attr( sprintf( __( 'View %s', 'th-wishlist' ), $item['wishlist_name'] ) )
             );
         }
@@ -125,6 +126,7 @@ class TH_Wishlist_List_Table extends WP_List_Table {
             absint( $item['id'] ),
             esc_attr( $delete_nonce ),
             esc_js( __( 'Are you sure you want to permanently delete this wishlist?', 'th-wishlist' ) ),
+            /* translators: %s : Wishlist Name */
             esc_attr( sprintf( __( 'Delete %s', 'th-wishlist' ), $item['wishlist_name'] ) )
         );
         
