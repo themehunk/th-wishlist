@@ -3,7 +3,7 @@ Contributors: ThemeHunk
 Author URI: : https://www.themehunk.com/
 Tags: woocommerce, TH Wishlist
 Requires at least: 5.0
-Tested up to: 6.8.1
+Tested up to: 6.8
 Stable tag: 1.0.0
 Requires PHP: 7.0
 License: GPLv2 or later

@@ -140,11 +140,10 @@ width: 30px;
 }
 
 .thw-wishlist-table td{
-font-size:14px;
+font-size:12px;
 font-weight: 500;
 }
 .thw-add-to-cart-cell .add_to_cart_button,.thw-add-to-cart-cell .wp-element-button {
-    padding: 6px 15px !important;
     display: inline-flex;
     font-size: 13px;
 }
