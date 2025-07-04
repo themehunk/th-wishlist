@@ -161,7 +161,10 @@ class TH_Wishlist_Frontend {
     }
 
     // Wrapper classes
-    $wrap_class = is_singular('product') ? 'th-wishlist-single' : '';
+    $wrap_class = '';
+    if (is_singular('product') && get_queried_object_id() == $product->get_id()) {
+    $wrap_class = 'th-wishlist-single';
+    }
     $themedefault = !empty($this->th_wishlist_option['thw_btn_style_theme']) && '1' === $this->th_wishlist_option['thw_btn_style_theme'] 
         ? 'thw-btn-theme-style' 
         : 'thw-btn-custom-style';
@@ -217,10 +220,6 @@ class TH_Wishlist_Frontend {
 	}
 
     $position = isset( $this->th_wishlist_option['thw_in_loop_position'] ) ? $this->th_wishlist_option['thw_in_loop_position'] : 'after_crt_btn';
-
-    if ( is_admin() || is_singular( 'product' ) ) {
-        return; 
-    }
 
     switch ( $position ) {
 
