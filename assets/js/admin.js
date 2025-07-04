@@ -101,9 +101,7 @@ jQuery(document).ready(function($) {
             }
         });
     });
-});
 
-jQuery(document).ready(function($) {
     function myColorPicker() {
         let value_ = this;
         const inputElement = $(value_);
