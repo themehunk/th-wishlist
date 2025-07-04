@@ -131,10 +131,9 @@ jQuery(function($) {
         $temp.remove();
         alert('Wishlist link copied to clipboard!');
     });
-});
 
-// redirect to cart or remove code
-jQuery(function ($) {
+    // redirect to cart or remove code
+
     $(document).on('click', '.thw-add-to-cart-ajax', function (e) {
         e.preventDefault();
         const $btn = $(this);

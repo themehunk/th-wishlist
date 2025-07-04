@@ -42,7 +42,7 @@ class TH_Wishlist_Frontend {
 
     public function enqueue_styles_scripts() {
         
-        wp_enqueue_style('thw-wishlist', THW_URL . 'assets/css/wishlist.css', array(),THW_VERSION);
+        wp_enqueue_style('thw-wishlist', THW_URL . 'assets/css/wishlist.css', array());
         wp_enqueue_script('thw-wishlist', THW_URL . 'assets/js/wishlist.js', array( 'jquery' ), THW_VERSION, true );
         wp_add_inline_style('thw-wishlist', th_wishlist_front_style());
         
@@ -87,7 +87,7 @@ class TH_Wishlist_Frontend {
         $myaccount_page_id = get_option('woocommerce_myaccount_page_id');
         $myaccount_url = $myaccount_page_id ? esc_url(get_permalink($myaccount_page_id)) : wp_login_url();
         $output .= sprintf(
-            '<a href="%s" class="button thw-login-required">%s</a>',
+            '<div class="thw-add-to-wishlist-button-wrap"><a href="%s" class="thw-login-required">%s</a></div>',
             $myaccount_url,
             esc_html__('Login to add to wishlist', 'th-wishlist')
         );
@@ -388,8 +388,9 @@ class TH_Wishlist_Frontend {
         );
         return $output;
     }
-
+    
     $items = TH_Wishlist_Data::get_wishlist_items( $wishlist->id );
+
     $columns = !empty( $this->th_wishlist_option['th_wishlist_table_columns'] ) 
         ? $this->th_wishlist_option['th_wishlist_table_columns'] 
         : [];
@@ -750,11 +751,11 @@ class TH_Wishlist_Frontend {
         $myaccount_page_id = get_option( 'woocommerce_myaccount_page_id' );
         $myaccount_url = $myaccount_page_id ? esc_url( get_permalink( $myaccount_page_id ) ) : wp_login_url();
         return sprintf(
-            '<a href="%s" class="button thw-login-required">%s</a>',
+            '<div class="thw-add-to-wishlist-button-wrap"><a href="%s" class="thw-login-required">%s</a></div>',
             $myaccount_url,
             esc_html__( 'Login to add to wishlist', 'th-wishlist' )
-        );
-    }
+            );
+        }
 
     $wishlist = TH_Wishlist_Data::get_or_create_wishlist();
     $product_id = $product->get_id();
