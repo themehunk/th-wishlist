@@ -82,13 +82,19 @@ public function settings_page() {
                         <tr>
                             <th scope="row"><?php esc_html_e( 'Wishlist Page', 'th-wishlist' ); ?></th>
                             <td>
-                                <?php
-                                wp_dropdown_pages( [
-                                    'name'              => 'settings[th_wcwl_wishlist_page_id]',
-                                    'selected'          => isset( $options['th_wcwl_wishlist_page_id'] ) ? absint($options['th_wcwl_wishlist_page_id']) : 0,
-                                    'show_option_none'  => esc_html__( 'Select a page', 'th-wishlist' ),
-                                ] );
-                                ?>
+                            <?php
+                          
+    // Retrieve the stored wishlist page ID, default to empty string if not set
+   $selected_page_id = isset($options['th_wcwl_wishlist_page_id']) && !empty($options['th_wcwl_wishlist_page_id']) 
+    ? absint($options['th_wcwl_wishlist_page_id']) 
+    : get_option('th_wcwl_wishlist_page_id');
+                            
+                                wp_dropdown_pages([
+                                    'name'              => 'settings[th_wcwl_wishlist_page_id]', // Corrected to match form structure
+                                    'selected'          => absint($selected_page_id), // Sanitize as integer
+                                    'show_option_none'  => esc_html__('Select a page', 'th-wishlist'), // Escaped for safety
+                                ]);
+                                ?>                       
                                 <p class="description"><?php esc_html_e( 'The page where the `[th_wcwl_wishlist]` shortcode is located.', 'th-wishlist' ); ?></p>
                             </td>
                         </tr>
@@ -541,7 +547,7 @@ public function settings_page() {
      */
     public static function get_default_settings() {
         return [
-            'th_wcwl_wishlist_page_id'     => 0,
+            'th_wcwl_wishlist_page_id' =>'',
             'thw_require_login'            => 0,
             'thw_redirect_to_cart'         => 0,
             'thw_button_display_style'     => 'icon_text',
