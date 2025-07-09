@@ -148,4 +148,65 @@ jQuery(document).ready(function($) {
 
     // Attach Pickr to inputs with class color_picker
     $(document).on('click', 'input.th_color_picker', myColorPicker);
+
+   //icon picker change color
+   $(document).ready(function () {
+    function initColorPicker($colorInput, radioName) {
+        let lastVal = $colorInput.val().trim();
+
+        const applyColorToAllIcons = (color) => {
+            const $radios = $('input[name="' + radioName + '"]');
+
+            $radios.each(function () {
+                const $svg = $(this).closest('label').find('svg.th-wishlist-icon-svg');
+
+                if ($svg.length) {
+                    $svg.css({ fill: '', stroke: '' }); // reset both
+
+                    if ($svg.attr('fill') === 'currentColor') {
+                        $svg.css('fill', color); // for filled icons
+                    } else {
+                        $svg.css('stroke', color); // for outline icons
+                    }
+                }
+            });
+        };
+
+        // Apply immediately on load
+        if (/^#(?:[0-9a-f]{3}){1,2}$/i.test(lastVal) || /^rgba?\([\d\s,\.]+\)$/i.test(lastVal)) {
+            applyColorToAllIcons(lastVal);
+        }
+
+        // Watch for changes
+        setInterval(function () {
+            const currentVal = $colorInput.val().trim();
+            if (currentVal !== lastVal &&
+                (/^#(?:[0-9a-f]{3}){1,2}$/i.test(currentVal) || /^rgba?\([\d\s,\.]+\)$/i.test(currentVal))) {
+                lastVal = currentVal;
+                applyColorToAllIcons(currentVal);
+            }
+        }, 200);
+
+        // Also update icons on radio change (to refresh styles)
+        $('input[name="' + radioName + '"]').on('change', function () {
+            const currentVal = $colorInput.val().trim();
+            if (/^#(?:[0-9a-f]{3}){1,2}$/i.test(currentVal) || /^rgba?\([\d\s,\.]+\)$/i.test(currentVal)) {
+                applyColorToAllIcons(currentVal);
+            }
+        });
+
+        // Force apply on load
+        setTimeout(() => {
+            $('input[name="' + radioName + '"]:checked').trigger('change');
+        }, 50);
+    }
+
+    // Init both color pickers with their respective radio groups
+    initColorPicker($('input[name="settings[th_wishlist_add_icon_color]"]'), 'settings[th_wishlist_add_icon]');
+    initColorPicker($('input[name="settings[th_wishlist_brws_icon_color]"]'), 'settings[th_wishlist_brws_icon]');
 });
+
+
+});
+
+
