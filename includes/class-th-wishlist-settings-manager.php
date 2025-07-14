@@ -3,15 +3,15 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class TH_Wishlist_Settings_Manager {
+class THWL_Manager {
     
     private static $instance = null;
     private $settings = [];
 
     private function __construct() {
 
-        require_once THW_DIR . 'includes/admin/class-th-wishlist-settings.php';
-        $this->settings = get_option( 'th_wishlist_settings', TH_Wishlist_Settings::get_default_settings() );
+        require_once THWL_DIR . 'includes/admin/class-th-wishlist-settings.php';
+        $this->settings = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
     }
 
     public static function get_instance() {
@@ -30,6 +30,6 @@ class TH_Wishlist_Settings_Manager {
     }
 
     public function refresh_settings() {
-        $this->settings = get_option( 'th_wishlist_settings', TH_Wishlist_Settings::get_default_settings() );
+        $this->settings = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
     }
 }

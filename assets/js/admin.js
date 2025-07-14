@@ -41,11 +41,11 @@ jQuery(document).ready(function($) {
         var $form = $(this);
         var $notice = $('#thw-settings-notice');
         var data = $form.serializeArray();
-        data.push({ name: 'action', value: 'th_wishlist_save_settings' });
+        data.push({ name: 'action', value: 'thwl_save_settings' });
         data.push({ name: '_wpnonce', value: $form.data('nonce') });
   
         $.ajax({
-            url: thWishlistAdmin.ajax_url,
+            url: thwlAdmin.ajax_url,
             type: 'POST',
             data: data,
             beforeSend: function() {
@@ -56,7 +56,7 @@ jQuery(document).ready(function($) {
                 setTimeout(function() { $notice.fadeOut(); }, 3000);
             },
             error: function() {
-                $notice.removeClass('success').addClass('error').text(thWishlistAdmin.i18n.save_error).show();
+                $notice.removeClass('success').addClass('error').text(thwlAdmin.i18n.save_error).show();
                 setTimeout(function() { $notice.fadeOut(); }, 3000);
             },
             complete: function() {
@@ -67,18 +67,18 @@ jQuery(document).ready(function($) {
 
     // Reset settings via AJAX
     $('#thw-reset-settings').on('click', function() {
-        if (!confirm(thWishlistAdmin.i18n.confirm_reset)) {
+        if (!confirm(thwlAdmin.i18n.confirm_reset)) {
             return;
         }
         var $button = $(this);
         var $notice = $('#thw-settings-notice');
         var data = {
-            action: 'th_wishlist_reset_settings',
+            action: 'thwl_reset_settings',
             _wpnonce: $button.data('nonce')
         };
 
         $.ajax({
-            url: thWishlistAdmin.ajax_url,
+            url: thwlAdmin.ajax_url,
             type: 'POST',
             data: data,
             beforeSend: function() {
@@ -93,7 +93,7 @@ jQuery(document).ready(function($) {
                 }
             },
             error: function() {
-                $notice.removeClass('success').addClass('error').text(thWishlistAdmin.i18n.reset_error).show();
+                $notice.removeClass('success').addClass('error').text(thwlAdmin.i18n.reset_error).show();
                 setTimeout(function() { $notice.fadeOut(); }, 3000);
             },
             complete: function() {

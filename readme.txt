@@ -4,7 +4,7 @@ Author URI: : https://www.themehunk.com/
 Tags: woocommerce, TH Wishlist
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -57,8 +57,18 @@ Yes, You can translate our plugin to desired language.
 
 == Changelog ==
 
+= 1.0.1 =
+* Fix : Prefix issue fixed.
+* Update : Thirdy party library update.
+
 = 1.0.0 =
 * Initial release
+
+== Third Party ==
+* Library:Pickr  
+* Version:1.9.1  
+* License:[MIT License](https://github.com/Simonwep/pickr/blob/master/LICENSE)  
+* Source: [https://github.com/Simonwep/pickr](https://github.com/Simonwep/pickr)
 
 == Upgrade Notice ==
 

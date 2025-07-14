@@ -4,9 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-if ( ! function_exists( 'th_is_wc_block_template' ) ) {
+if ( ! function_exists( 'thwl_is_wc_block_template' ) ) {
 
-	function th_is_wc_block_template( string $template_name ): bool {
+	    function thwl_is_wc_block_template( string $template_name ): bool {
         
 		static $cache = array();
 
@@ -44,7 +44,7 @@ if ( ! function_exists( 'th_is_wc_block_template' ) ) {
 					return has_block( 'woocommerce/checkout', $content );
 				default:
 					return ! has_block( 'woocommerce/legacy-template', $content );
-			}
+			    }
 		};
 
 		// If the template exists
@@ -83,7 +83,7 @@ if ( ! function_exists( 'th_is_wc_block_template' ) ) {
 }
 
 // get icon
-function thw_get_wishlist_icons_svg() {
+function thwl_get_wishlist_icons_svg() {
     $addicondashicons = array(
         'heart-outline' => array(
             'name' => 'Heart Outline',
