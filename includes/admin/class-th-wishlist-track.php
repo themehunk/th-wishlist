@@ -6,9 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handles the settings page for TH Wishlist.
  *
- * @class TH_Wishlist_Tracking
+ * @class THWL_Tracking
  */
-class TH_Wishlist_Tracking {
+class THWL_Tracking {
 
     /**
      * Constructor.
@@ -23,11 +23,11 @@ class TH_Wishlist_Tracking {
      */
     public function admin_menu() {
         add_submenu_page(
-            'thw-wishlist',
+            'thwl-wishlist',
             __( 'Wishlists Tracking', 'th-wishlist' ),
             __( 'Wishlists', 'th-wishlist' ),
             'manage_options',
-            'thw-wishlists-tracking',
+            'thwl-wishlists-tracking',
             array( $this, 'tracking_page' )
         );
     }
@@ -37,9 +37,9 @@ class TH_Wishlist_Tracking {
      */
     public static function tracking_page() {
         // The list table class should be included before it's instantiated.
-        require_once THW_DIR . 'includes/admin/class-th-wishlist-list-table.php';
+        require_once THWL_DIR . 'includes/admin/class-th-wishlist-list-table.php';
 
-        $wishlist_table = new TH_Wishlist_List_Table();
+        $wishlist_table = new THWL_Table();
         $wishlist_table->prepare_items();
         ?>
         <div class="wrap">

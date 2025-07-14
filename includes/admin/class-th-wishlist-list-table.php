@@ -10,9 +10,9 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 /**
  * Renders the list table for wishlists on the admin screen.
  *
- * @class TH_Wishlist_List_Table
+ * @class THWL_Table
  */
-class TH_Wishlist_List_Table extends WP_List_Table {
+class THWL_Table extends WP_List_Table {
 
     public function __construct() {
         parent::__construct( [
@@ -35,7 +35,7 @@ class TH_Wishlist_List_Table extends WP_List_Table {
 
         $per_page = 20;
         $current_page = $this->get_pagenum();
-        $total_items = TH_Wishlist_Data::get_wishlist_count();
+        $total_items = THWL_Data::get_wishlist_count();
 
         $this->set_pagination_args( [
             'total_items' => $total_items,
@@ -54,7 +54,7 @@ class TH_Wishlist_List_Table extends WP_List_Table {
             $order = 'desc';
         }
 
-        $this->items = TH_Wishlist_Data::get_wishlists( [
+        $this->items = THWL_Data::get_wishlists( [
             'per_page' => $per_page,
             'paged'    => $current_page,
             'orderby'  => $orderby,
@@ -106,7 +106,7 @@ class TH_Wishlist_List_Table extends WP_List_Table {
      */
     protected function column_wishlist_name( $item ) {
         $actions = [];
-        $wishlist_page_url = get_permalink( get_option( 'th_wcwl_wishlist_page_id' ) );
+        $wishlist_page_url = get_permalink( get_option( 'thwl_page_id' ) );
 
         // Always show the view link for the admin, as long as a wishlist page is set.
         if ( $wishlist_page_url ) {
@@ -119,7 +119,7 @@ class TH_Wishlist_List_Table extends WP_List_Table {
         }
 
         $delete_nonce = wp_create_nonce( 'thw_delete_wishlist' );
-        $page = 'thw-wishlists-tracking';
+        $page = 'thwl-wishlists-tracking';
         $actions['delete'] = sprintf(
             '<a href="?page=%s&action=delete&wishlist=%d&_wpnonce=%s" onclick="return confirm(\'%s\')" aria-label="%s">Delete</a>',
             esc_attr( $page ),
@@ -191,7 +191,7 @@ class TH_Wishlist_List_Table extends WP_List_Table {
             if ( ! wp_verify_nonce( $nonce, 'thw_delete_wishlist' ) ) {
                 wp_die( esc_html__( 'Security check failed.', 'th-wishlist' ) );
             }
-            TH_Wishlist_Data::delete_wishlist( absint( $_GET['wishlist'] ) );
+           THWL_Data::delete_wishlist( absint( $_GET['wishlist'] ) );
             wp_safe_redirect( wp_get_referer() );
             exit;
         }
@@ -207,7 +207,7 @@ class TH_Wishlist_List_Table extends WP_List_Table {
             }
             $delete_ids = array_map( 'absint', (array) wp_unslash( $_POST['wishlist'] ) );
             foreach ( $delete_ids as $id ) {
-                TH_Wishlist_Data::delete_wishlist( $id );
+                THWL_Data::delete_wishlist( $id );
             }
             wp_safe_redirect( wp_get_referer() );
             exit;

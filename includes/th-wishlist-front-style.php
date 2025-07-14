@@ -5,9 +5,9 @@ if (!defined('ABSPATH')) {
 /**
  * Generate dynamic front-end styles
  */
-function th_wishlist_front_style() {
+function thwl_front_style() {
     $custom_css = '';
-    $th_wishlist_option = get_option( 'th_wishlist_settings', TH_Wishlist_Settings::get_default_settings() );
+    $th_wishlist_option = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
     $th_wishlist_add_icon_color = $th_wishlist_option['th_wishlist_add_icon_color'];
     $th_wishlist_brws_icon_color = $th_wishlist_option['th_wishlist_brws_icon_color'];
     $th_wishlist_btn_txt_color = $th_wishlist_option['th_wishlist_btn_txt_color'];

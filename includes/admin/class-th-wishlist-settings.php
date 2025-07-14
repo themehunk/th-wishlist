@@ -6,9 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handles the settings page for TH Wishlist.
  *
- * @class TH_Wishlist_Settings
+ * @class THWL_Settings
  */
-class TH_Wishlist_Settings {
+class THWL_Settings {
 
     /**
      * Constructor.
@@ -25,14 +25,12 @@ class TH_Wishlist_Settings {
             __( 'TH Wishlist', 'th-wishlist' ),
             __( 'TH Wishlist', 'th-wishlist' ),
             'manage_options',
-            'thw-wishlist',
+            'thwl-wishlist',
             array( $this, 'settings_page' ),
             'dashicons-heart',
             56
         );
     }
-
-
 /**
  * Render the settings page with vertical tabs.
  */
@@ -49,9 +47,9 @@ public function settings_page() {
         'date'        => __( 'Date Added', 'th-wishlist' ),
         'remove'      => __( 'Remove', 'th-wishlist' ),
     ];
-    $options = get_option( 'th_wishlist_settings', self::get_default_settings() );
+    $options = get_option( 'thwl_settings', self::thwl_get_default_settings() );
     $saved_columns = isset( $options['th_wishlist_table_columns'] ) ? $options['th_wishlist_table_columns'] : $default_columns;
-    $labels = isset( $options['th_wishlist_table_column_labels'] ) ? $options['th_wishlist_table_column_labels'] : self::get_default_settings()['th_wishlist_table_column_labels'];
+    $labels = isset( $options['th_wishlist_table_column_labels'] ) ? $options['th_wishlist_table_column_labels'] : self::thwl_get_default_settings()['th_wishlist_table_column_labels'];
 ?>
 <div class="wrap">
     <div id="thw-settings-notice"></div>
@@ -60,7 +58,7 @@ public function settings_page() {
             <div class="thw-title-content">
                 <div id="logo">
 						<a href="https://themehunk.com/" target="_blank">
-						<img src="<?php echo esc_url(THW_URL.'assets/images/th-logo.png') ?>" alt="th-logo">
+						<img src="<?php echo esc_url(THWL_URL.'assets/images/th-logo.png') ?>" alt="th-logo">
 					</a>
 					</div>
             <h3><?php esc_html_e( 'TH Wishlist', 'th-wishlist' ); ?></h3>
@@ -74,7 +72,7 @@ public function settings_page() {
                 <li class="thw-tab" data-tab="style"><?php esc_html_e( 'Style Customization', 'th-wishlist' ); ?></li>
             </ul>
         </div>
-        <form id="thw-settings-form" data-nonce="<?php echo esc_attr( wp_create_nonce( 'th_wishlist_nonce' ) ); ?>">
+        <form id="thw-settings-form" data-nonce="<?php echo esc_attr( wp_create_nonce( 'thwl_wishlist_nonce' ) ); ?>">
             <div class="thw-tabs-content">
                 <div id="general" class="thw-tab-content active">
                     <h3 class="thws-content-title"><?php esc_html_e( 'General Settings', 'th-wishlist' ); ?></h3>
@@ -82,14 +80,19 @@ public function settings_page() {
                         <tr>
                             <th scope="row"><?php esc_html_e( 'Wishlist Page', 'th-wishlist' ); ?></th>
                             <td>
-                                <?php
-                                wp_dropdown_pages( [
-                                    'name'              => 'settings[th_wcwl_wishlist_page_id]',
-                                    'selected'          => isset( $options['th_wcwl_wishlist_page_id'] ) ? absint($options['th_wcwl_wishlist_page_id']) : 0,
-                                    'show_option_none'  => esc_html__( 'Select a page', 'th-wishlist' ),
-                                ] );
-                                ?>
-                                <p class="description"><?php esc_html_e( 'The page where the `[th_wcwl_wishlist]` shortcode is located.', 'th-wishlist' ); ?></p>
+                            <?php
+                          
+    // Retrieve the stored wishlist page ID, default to empty string if not set
+   $selected_page_id = isset($options['thwl_page_id']) && !empty($options['thwl_page_id']) 
+    ? absint($options['thwl_page_id']) 
+    : get_option('thwl_page_id');
+                                wp_dropdown_pages([
+                                    'name'              => 'settings[thwl_page_id]', // Corrected to match form structure
+                                    'selected'          => absint($selected_page_id), // Sanitize as integer
+                                    'show_option_none'  => esc_html__('Select a page', 'th-wishlist'), // Escaped for safety
+                                ]);
+                                ?>                       
+                                <p class="description"><?php esc_html_e( 'The page where the `[thwl_wishlist]` shortcode is located.', 'th-wishlist' ); ?></p>
                             </td>
                         </tr>
                         <tr class="th-row-with-checkbox">
@@ -187,7 +190,7 @@ public function settings_page() {
                     </table>
                 </div>
                 <div id="wishlist" class="thw-tab-content">
-                     <h3 class="thws-content-title"><?php esc_html_e( 'Wishlist Page', 'th-wishlist' ); ?></h3>
+                    <h3 class="thws-content-title"><?php esc_html_e( 'Wishlist Page', 'th-wishlist' ); ?></h3>
                     <table class="form-table">
                         <tr class="th-row-with-checkbox">
                             <th scope="row"><?php esc_html_e( 'Redirect to Cart', 'th-wishlist' ); ?></th>
@@ -242,7 +245,7 @@ public function settings_page() {
                                     ?>
                                 </ul>
                             </td>
-                        </trалу>
+                        </tr>
                     </table>
                 </div>
                 <div id="style" class="thw-tab-content">
@@ -274,7 +277,7 @@ public function settings_page() {
                         <td>
                             <?php 
                             $selected_icon = $options['th_wishlist_add_icon'];
-                            $addicondashicons = thw_get_wishlist_icons_svg();
+                            $addicondashicons = thwl_get_wishlist_icons_svg();
                             $th_wishlist_add_icon_color = isset( $options['th_wishlist_add_icon_color'] ) ? $options['th_wishlist_add_icon_color'] : '#111';
                             ?>
                             <p><?php esc_html_e( 'Choose add to wishlist icon', 'th-wishlist' ); ?></p>
@@ -301,14 +304,13 @@ public function settings_page() {
                         <td>
                             <?php 
                             $selected_brws_icon = $options['th_wishlist_brws_icon'];
-                            $brwsicondashicons =  thw_get_wishlist_icons_svg();
+                            $brwsicondashicons =  thwl_get_wishlist_icons_svg();
                             $th_wishlist_brws_icon_color = isset( $options['th_wishlist_brws_icon_color'] ) ? $options['th_wishlist_brws_icon_color'] : '#111';
-                            
                             ?>
                              <p><?php esc_html_e( 'Choose Browse to wishlist icon', 'th-wishlist' ); ?></p>
                              <div class="thw-dashicon-picker" id="thw-wishlist-icon">
                              <?php foreach ( $brwsicondashicons as $icon_key => $icon_data ) : ?>
-                            <label class="thw-dashicon-option">
+                             <label class="thw-dashicon-option">
                                 <input type="radio"
                                     name="settings[th_wishlist_brws_icon]"
                                     value="<?php echo esc_attr( $icon_key ); ?>"
@@ -319,8 +321,7 @@ public function settings_page() {
                                     ?>
                                 </span>
                             </label>
-                           <?php endforeach; ?>
-
+                            <?php endforeach; ?>
                             </div>
                             <div class="th-color-picker">
                             <p><?php esc_html_e( 'Browse Wishlist Icon color', 'th-wishlist' ); ?></p>
@@ -484,7 +485,7 @@ public function settings_page() {
             </div>
             <p>
                 <button type="submit" class="button button-primary"><?php esc_html_e( 'Save Settings', 'th-wishlist' ); ?></button>
-                <button type="button" class="button" id="thw-reset-settings" data-nonce="<?php echo esc_attr( wp_create_nonce( 'th_wishlist_nonce' ) ); ?>"><?php esc_html_e( 'Reset to Defaults', 'th-wishlist' ); ?></button>
+                <button type="button" class="button" id="thw-reset-settings" data-nonce="<?php echo esc_attr( wp_create_nonce( 'thwl_wishlist_nonce' ) ); ?>"><?php esc_html_e( 'Reset to Defaults', 'th-wishlist' ); ?></button>
             </p>
         </form>
         <div class="thw-notes">
@@ -539,9 +540,9 @@ public function settings_page() {
      *
      * @return array
      */
-    public static function get_default_settings() {
+    public static function thwl_get_default_settings() {
         return [
-            'th_wcwl_wishlist_page_id'     => 0,
+            'thwl_page_id' =>'',
             'thw_require_login'            => 0,
             'thw_redirect_to_cart'         => 0,
             'thw_button_display_style'     => 'icon_text',

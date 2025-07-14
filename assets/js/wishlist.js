@@ -8,35 +8,35 @@ jQuery(function($) {
         var variation_id = $button.data('variation-id');
 
         if ($button.hasClass('in-wishlist')) {
-            if (thw_wishlist_params.wishlist_page_url) {
-                window.location.href = thw_wishlist_params.wishlist_page_url;
+            if (thwl_wishlist_params.wishlist_page_url) {
+                window.location.href = thwl_wishlist_params.wishlist_page_url;
             }
             return;
         }
 
         $.ajax({
             type: 'POST',
-            url: thw_wishlist_params.ajax_url,
-            data: { action: 'thw_add_to_wishlist', nonce: thw_wishlist_params.add_nonce, product_id: product_id, variation_id: variation_id },
+            url: thwl_wishlist_params.ajax_url,
+            data: { action: 'thwl_add_to_wishlist', nonce: thwl_wishlist_params.add_nonce, product_id: product_id, variation_id: variation_id },
             beforeSend: function() { $button.addClass('loading'); },
             success: function(response) {
                 if (response.success) {
-                    if (thw_wishlist_params.icon_style !== 'icon') {
-                    $button.find('span').last().text(thw_wishlist_params.i18n_added);
+                    if (thwl_wishlist_params.icon_style !== 'icon') {
+                    $button.find('span').last().text(thwl_wishlist_params.i18n_added);
                     }
                     $button.addClass('in-wishlist');
                     // Update SVG icon based on wishlist status
-                        if (['icon', 'icon_text', 'icon_only_no_style'].includes(thw_wishlist_params.icon_style)) {
-                            // Assume thw_wishlist_params.icons contains the SVG icon data (e.g., from PHP)
-                            var icons = thw_wishlist_params.icons; // Ensure this is passed from PHP to JS
-                            var selected_brwsicon = thw_wishlist_params.th_wishlist_brws_icon || 'heart-filled'; // Default to heart-filled
+                        if (['icon', 'icon_text', 'icon_only_no_style'].includes(thwl_wishlist_params.icon_style)) {
+                            // Assume thwl_wishlist_params.icons contains the SVG icon data (e.g., from PHP)
+                            var icons = thwl_wishlist_params.icons; // Ensure this is passed from PHP to JS
+                            var selected_brwsicon = thwl_wishlist_params.th_wishlist_brws_icon || 'heart-filled'; // Default to heart-filled
                             var icon_html = '<span class="thw-icon browse">' + (icons[selected_brwsicon]?.svg || icons['heart-filled'].svg) + '</span>';
 
                             // Replace the current icon with the browse wishlist icon
                             $button.find('.thw-icon').replaceWith(icon_html);
                         }
                 } else {
-                    alert(thw_wishlist_params.i18n_error);
+                    alert(thwl_wishlist_params.i18n_error);
                 }
             },
             complete: function() { $button.removeClass('loading'); }
@@ -51,15 +51,15 @@ jQuery(function($) {
 
         $.ajax({
             type: 'POST',
-            url: thw_wishlist_params.ajax_url,
-            data: { action: 'thw_remove_from_wishlist', nonce: thw_wishlist_params.remove_nonce, item_id: item_id },
+            url: thwl_wishlist_params.ajax_url,
+            data: { action: 'thwl_remove_from_wishlist', nonce: thwl_wishlist_params.remove_nonce, item_id: item_id },
             beforeSend: function() { $row.css('opacity', '0.5'); },
             success: function(response) {
                 if (response.success) {
                     $row.fadeOut(300, function() {
                         if ($row.siblings().length === 0) {
                             var colspan = $row.children().length;
-                            $row.closest('tbody').html('<tr><td colspan="' + colspan + '">' + thw_wishlist_params.i18n_empty_wishlist + '</td></tr>');
+                            $row.closest('tbody').html('<tr><td colspan="' + colspan + '">' + thwl_wishlist_params.i18n_empty_wishlist + '</td></tr>');
                         }
                         $row.remove();
                     });
@@ -83,7 +83,7 @@ jQuery(function($) {
             $button.attr('data-quantity', quantity);
         }
 
-        $.post(thw_wishlist_params.ajax_url, { action: 'thw_update_item_quantity', nonce: thw_wishlist_params.update_qty_nonce, item_id: item_id, quantity: quantity });
+        $.post(thwl_wishlist_params.ajax_url, { action: 'thwl_update_item_quantity', nonce: thwl_wishlist_params.update_qty_nonce, item_id: item_id, quantity: quantity });
     });
 
     // Select/Deselect all
@@ -107,12 +107,12 @@ jQuery(function($) {
 
         $.ajax({
             type: 'POST',
-            url: thw_wishlist_params.ajax_url,
-            data: { action: 'thw_add_all_to_cart', nonce: thw_wishlist_params.add_all_nonce, items: items },
+            url: thwl_wishlist_params.ajax_url,
+            data: { action: 'thwl_add_all_to_cart', nonce: thwl_wishlist_params.add_all_nonce, items: items },
             beforeSend: function() { $button.addClass('loading'); },
             success: function() {
-                if (thw_wishlist_params.redirect_to_cart) {
-                    window.location.href = thw_wishlist_params.cart_url;
+                if (thwl_wishlist_params.redirect_to_cart) {
+                    window.location.href = thwl_wishlist_params.cart_url;
                 } else {
                     $button.text('Added to Cart!');
                 }
@@ -146,14 +146,14 @@ jQuery(function($) {
         $btn.prop('disabled', true).addClass('loading');
         $.ajax({
             type: 'POST',
-            url: thw_wishlist_params.ajax_url,
+            url: thwl_wishlist_params.ajax_url,
             data: {
-                action: 'thw_add_to_cart_and_manage',
+                action: 'thwl_add_to_cart_and_manage',
                 product_id,
                 quantity,
                 item_id,
                 token,
-                nonce: thw_wishlist_params.redirect_nonce
+                nonce: thwl_wishlist_params.redirect_nonce
             },
             success: function (response) {
                 if (response.success) {
@@ -163,11 +163,11 @@ jQuery(function($) {
                         // Check if this was the last item
                         if ($tbody.find('tr').length === 0) {
                             const colspan = $btn.closest('table').find('thead th').length;
-                            $tbody.html('<tr><td colspan="' + colspan + '">' + thw_wishlist_params.i18n_empty_wishlist + '</td></tr>');
+                            $tbody.html('<tr><td colspan="' + colspan + '">' + thwl_wishlist_params.i18n_empty_wishlist + '</td></tr>');
                         }
                         // Redirect only after animation (optional)
-                        if (thw_wishlist_params.redirect_to_cart) {
-                            window.location.href = thw_wishlist_params.cart_url;
+                        if (thwl_wishlist_params.redirect_to_cart) {
+                            window.location.href = thwl_wishlist_params.cart_url;
                         }
                     });
                 } else {

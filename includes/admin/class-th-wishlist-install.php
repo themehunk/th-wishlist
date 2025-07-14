@@ -6,9 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Installation-related functions and hooks for TH Wishlist.
  *
- * @class TH_Wishlist_Install
+ * @class THWL_Install
  */
-class TH_Wishlist_Install {
+class THWL_Install {
 
     /**
      * Hook in tabs.
@@ -29,7 +29,7 @@ class TH_Wishlist_Install {
 
         // Wishlist table with new 'privacy' column
         $sql = "
-            CREATE TABLE {$wpdb->prefix}thw_wishlists (
+            CREATE TABLE {$wpdb->prefix}thwl_wishlists (
               id BIGINT(20) NOT NULL AUTO_INCREMENT,
               user_id BIGINT(20) NULL,
               session_id VARCHAR(255) NULL,
@@ -45,7 +45,7 @@ class TH_Wishlist_Install {
 
         // Wishlist items table
         $sql = "
-            CREATE TABLE {$wpdb->prefix}thw_wishlist_items (
+            CREATE TABLE {$wpdb->prefix}thwl_wishlist_items (
               id BIGINT(20) NOT NULL AUTO_INCREMENT,
               wishlist_id BIGINT(20) NOT NULL,
               product_id BIGINT(20) NOT NULL,
@@ -64,12 +64,12 @@ class TH_Wishlist_Install {
      * Create the wishlist page.
      */
     private static function create_page() {
-        if ( get_option( 'th_wcwl_wishlist_page_id' ) || get_page_by_path( 'wishlist' ) ) {
+        if ( get_option( 'thwl_page_id' ) || get_page_by_path( 'wishlist' ) ) {
             return;
         }
         $wishlist_page = array(
             'post_title'     => 'Wishlist',
-            'post_content'   => '[th_wcwl_wishlist]',
+            'post_content'   => '[thwl_wishlist]',
             'post_status'    => 'publish',
             'post_author'    => 1,
             'post_type'      => 'page',
@@ -77,7 +77,7 @@ class TH_Wishlist_Install {
         );
         $page_id = wp_insert_post( $wishlist_page );
         if ( $page_id ) {
-            update_option( 'th_wcwl_wishlist_page_id', $page_id );
+            update_option( 'thwl_page_id', $page_id );
         }
     }
 }
