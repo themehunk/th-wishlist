@@ -23,8 +23,8 @@ class THWL_Data {
             $wishlist = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}thwl_wishlists WHERE user_id = %d AND is_default = 1", $user_id ) );
 
             // Check for a guest wishlist cookie and merge it
-            if ( isset($_COOKIE['thw_guest_uniqid']) ) {
-                $guest_token = sanitize_text_field($_COOKIE['thw_guest_uniqid']);
+            if ( isset($_COOKIE['thwl_guest_uniqid']) ) {
+                $guest_token = sanitize_text_field($_COOKIE['thwl_guest_uniqid']);
                 $guest_wishlist = $wpdb->get_row( $wpdb->prepare("SELECT * FROM {$wpdb->prefix}thwl_wishlists WHERE session_id = %s", $guest_token) );
                 
                 if($guest_wishlist) {
@@ -43,7 +43,7 @@ class THWL_Data {
                         $wpdb->delete("{$wpdb->prefix}thwl_wishlists", ['id' => $guest_wishlist->id]);
                     }
                 }
-                setcookie('thw_guest_uniqid', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN);
+                setcookie('thwl_guest_uniqid', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN);
             }
             
             if ( ! $wishlist ) {
@@ -54,7 +54,7 @@ class THWL_Data {
 
         } else {
             // --- Handle Guest User ---
-            $guest_uniqid = isset( $_COOKIE['thw_guest_uniqid'] ) ? sanitize_text_field( $_COOKIE['thw_guest_uniqid'] ) : null;
+            $guest_uniqid = isset( $_COOKIE['thwl_guest_uniqid'] ) ? sanitize_text_field( $_COOKIE['thwl_guest_uniqid'] ) : null;
             $wishlist = null;
 
             if ( ! empty( $guest_uniqid ) ) {
@@ -67,7 +67,7 @@ class THWL_Data {
                 $wpdb->insert("{$wpdb->prefix}thwl_wishlists", [ 'session_id' => $new_uniqid, 'wishlist_name' => __( 'My Wishlist', 'th-wishlist' ), 'wishlist_token' => wp_generate_password( 32, false ), 'is_default' => 1, 'privacy' => 'public' ]);
                 $wishlist = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}thwl_wishlists WHERE id = %d", $wpdb->insert_id ) );
                 
-                setcookie('thw_guest_uniqid', $new_uniqid, time() + (86400 * 365), COOKIEPATH, COOKIE_DOMAIN);
+                setcookie('thwl_guest_uniqid', $new_uniqid, time() + (86400 * 365), COOKIEPATH, COOKIE_DOMAIN);
             }
         }
         
