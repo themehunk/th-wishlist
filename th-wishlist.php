@@ -6,7 +6,7 @@
  * Version:           1.0.1
  * Author:            themehunk
  * Author URI:        https://www.themehunk.com
- * License:           GPL-2.0+
+ * License:           GPLv2 or later
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       th-wishlist
  * Tested up to:      6.8
