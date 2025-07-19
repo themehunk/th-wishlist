@@ -3,7 +3,7 @@
  * Plugin Name:       TH Wishlist
  * Plugin URI:        https://themehunk.com/wishlist
  * Description:       TH Wishlist is a powerful and user-friendly wishlist plugin for WooCommerce that lets your customers save their favorite products for later and helps boost conversions by keeping users engaged with the products they love.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            themehunk
  * Author URI:        https://www.themehunk.com
  * License:           GPL-2.0+
@@ -14,6 +14,7 @@
  * Domain Path:       /languages
  * WC requires at least: 3.0
  * WC tested up to: 8.9
+ * Requires Plugins: woocommerce
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

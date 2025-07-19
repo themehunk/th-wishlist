@@ -513,28 +513,8 @@ public function settings_page() {
 
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const tabs = document.querySelectorAll('.thw-tab');
-            const contents = document.querySelectorAll('.thw-tab-content');
-
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // Remove active class from all tabs and contents
-                    tabs.forEach(t => t.classList.remove('active'));
-                    contents.forEach(c => c.classList.remove('active'));
-
-                    // Add active class to clicked tab and corresponding content
-                    this.classList.add('active');
-                    const tabId = this.getAttribute('data-tab');
-                    document.getElementById(tabId).classList.add('active');
-                });
-            });
-        });
-    </script>
 </div>
 <?php }
-
     /**
      * Get default settings.
      *
@@ -558,28 +538,27 @@ public function settings_page() {
             'thw_show_quantity'            => 0,
             'th_wishlist_table_columns'       => [ 'thumbnail', 'name', 'price', 'stock', 'add_to_cart', 'remove' ],
             'th_wishlist_table_column_labels' => [],
-            'th_wishlist_add_icon'        => 'heart-outline',
-            'th_wishlist_add_icon_color'  => '#111',
-            'th_wishlist_brws_icon'       => 'heart-filled',
-            'th_wishlist_brws_icon_color' => '#111',
-            'th_wishlist_btn_txt_color'   => '',
-            'th_wishlist_btn_bg_color'    => '',
-            'th_wishlist_table_bg_color'  => '',
+            'th_wishlist_add_icon'         => 'heart-outline',
+            'th_wishlist_add_icon_color'   => '#111',
+            'th_wishlist_brws_icon'        => 'heart-filled',
+            'th_wishlist_brws_icon_color'  => '#111',
+            'th_wishlist_btn_txt_color'    => '',
+            'th_wishlist_btn_bg_color'     => '',
+            'th_wishlist_table_bg_color'   => '',
             'th_wishlist_table_brd_color'  => '',
             'th_wishlist_table_txt_color'  => '',
             'th_wishlist_tb_btn_bg_color'  => '',
             'th_wishlist_tb_btn_txt_color' => '',
             'th_wishlist_shr_fb_color'     => '',
             'th_wishlist_shr_fb_hvr_color' => '',
-            'th_wishlist_shr_x_color'     => '',
-            'th_wishlist_shr_x_hvr_color' => '',
-            'th_wishlist_shr_w_color' => '',
-            'th_wishlist_shr_w_hvr_color' => '',
-            'th_wishlist_shr_e_color' => '',
-            'th_wishlist_shr_e_hvr_color' => '',
-            'th_wishlist_shr_c_color' => '',
-            'th_wishlist_shr_c_hvr_color' => '',
-            
+            'th_wishlist_shr_x_color'      => '',
+            'th_wishlist_shr_x_hvr_color'  => '',
+            'th_wishlist_shr_w_color'      => '',
+            'th_wishlist_shr_w_hvr_color'  => '',
+            'th_wishlist_shr_e_color'      => '',
+            'th_wishlist_shr_e_hvr_color'  => '',
+            'th_wishlist_shr_c_color'      => '',
+            'th_wishlist_shr_c_hvr_color'  => '', 
         ];
     }
 }

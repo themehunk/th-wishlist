@@ -8,10 +8,10 @@ if (!defined('ABSPATH')) {
 function thwl_front_style() {
     $custom_css = '';
     $th_wishlist_option = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
-    $th_wishlist_add_icon_color = $th_wishlist_option['th_wishlist_add_icon_color'];
-    $th_wishlist_brws_icon_color = $th_wishlist_option['th_wishlist_brws_icon_color'];
-    $th_wishlist_btn_txt_color = $th_wishlist_option['th_wishlist_btn_txt_color'];
-    $th_wishlist_btn_bg_color = $th_wishlist_option['th_wishlist_btn_bg_color'];
+    $th_wishlist_add_icon_color = esc_attr($th_wishlist_option['th_wishlist_add_icon_color']);
+    $th_wishlist_brws_icon_color = esc_attr($th_wishlist_option['th_wishlist_brws_icon_color']);
+    $th_wishlist_btn_txt_color = esc_attr($th_wishlist_option['th_wishlist_btn_txt_color']);
+    $th_wishlist_btn_bg_color = esc_attr($th_wishlist_option['th_wishlist_btn_bg_color']);
    
     // Button CSS
     $custom_css = ".thw-btn-custom-style .thw-add-to-wishlist-button .thw-icon{
@@ -27,8 +27,8 @@ function thwl_front_style() {
 
     // Table CSS
     // button
-    $th_wishlist_tb_btn_bg_color   = $th_wishlist_option['th_wishlist_tb_btn_bg_color'];
-    $th_wishlist_tb_btn_txt_color  = $th_wishlist_option['th_wishlist_tb_btn_txt_color'];
+    $th_wishlist_tb_btn_bg_color   = esc_attr($th_wishlist_option['th_wishlist_tb_btn_bg_color']);
+    $th_wishlist_tb_btn_txt_color  = esc_attr($th_wishlist_option['th_wishlist_tb_btn_txt_color']);
     
     $custom_css .= "
     .thw-table-custom-style .thw-wishlist-actions .thw-add-all-to-cart,
@@ -38,9 +38,9 @@ function thwl_front_style() {
     }";
 
     // Table
-    $th_wishlist_table_bg_color   = $th_wishlist_option['th_wishlist_table_bg_color'];
-    $th_wishlist_table_brd_color  = $th_wishlist_option['th_wishlist_table_brd_color'];
-    $th_wishlist_table_txt_color  = $th_wishlist_option['th_wishlist_table_txt_color'];
+    $th_wishlist_table_bg_color   = esc_attr($th_wishlist_option['th_wishlist_table_bg_color']);
+    $th_wishlist_table_brd_color  = esc_attr($th_wishlist_option['th_wishlist_table_brd_color']);
+    $th_wishlist_table_txt_color  = esc_attr($th_wishlist_option['th_wishlist_table_txt_color']);
     
     $custom_css .= "
     .thw-table-custom-style .thw-wishlist-table{
@@ -54,8 +54,8 @@ function thwl_front_style() {
     }";
 
     //facebook
-    $th_wishlist_shr_fb_color   = $th_wishlist_option['th_wishlist_shr_fb_color'];
-    $th_wishlist_shr_fb_hvr_color  = $th_wishlist_option['th_wishlist_shr_fb_hvr_color'];
+    $th_wishlist_shr_fb_color   = esc_attr($th_wishlist_option['th_wishlist_shr_fb_color']);
+    $th_wishlist_shr_fb_hvr_color  = esc_attr($th_wishlist_option['th_wishlist_shr_fb_hvr_color']);
     $custom_css .= "
     .thw-table-custom-style .thw-social-share a.thw-share-facebook{
     color:{$th_wishlist_shr_fb_color};
@@ -64,8 +64,8 @@ function thwl_front_style() {
     }";
 
     //twitter
-    $th_wishlist_shr_x_color      = $th_wishlist_option['th_wishlist_shr_x_color'];
-    $th_wishlist_shr_x_hvr_color  = $th_wishlist_option['th_wishlist_shr_x_hvr_color'];
+    $th_wishlist_shr_x_color      = esc_attr($th_wishlist_option['th_wishlist_shr_x_color']);
+    $th_wishlist_shr_x_hvr_color  = esc_attr($th_wishlist_option['th_wishlist_shr_x_hvr_color']);
     $custom_css .= "
     .thw-table-custom-style .thw-social-share a.thw-share-twitter{
     color:{$th_wishlist_shr_x_color};
@@ -74,8 +74,8 @@ function thwl_front_style() {
     }";
 
     //whatsapp
-    $th_wishlist_shr_w_color      = $th_wishlist_option['th_wishlist_shr_w_color'];
-    $th_wishlist_shr_w_hvr_color  = $th_wishlist_option['th_wishlist_shr_w_hvr_color'];
+    $th_wishlist_shr_w_color      = esc_attr($th_wishlist_option['th_wishlist_shr_w_color']);
+    $th_wishlist_shr_w_hvr_color  = esc_attr($th_wishlist_option['th_wishlist_shr_w_hvr_color']);
     $custom_css .= "
     .thw-table-custom-style .thw-social-share a.thw-share-whatsapp{
     color:{$th_wishlist_shr_w_color};
@@ -84,8 +84,8 @@ function thwl_front_style() {
     }";
 
     //email
-    $th_wishlist_shr_e_color      = $th_wishlist_option['th_wishlist_shr_e_color'];
-    $th_wishlist_shr_e_hvr_color  = $th_wishlist_option['th_wishlist_shr_e_hvr_color'];
+    $th_wishlist_shr_e_color      = esc_attr($th_wishlist_option['th_wishlist_shr_e_color']);
+    $th_wishlist_shr_e_hvr_color  = esc_attr($th_wishlist_option['th_wishlist_shr_e_hvr_color']);
     $custom_css .= "
     .thw-table-custom-style .thw-social-share a.thw-share-email{
     color:{$th_wishlist_shr_e_color};
@@ -94,8 +94,8 @@ function thwl_front_style() {
     }";
 
     //copyurl
-    $th_wishlist_shr_c_color      = $th_wishlist_option['th_wishlist_shr_c_color'];
-    $th_wishlist_shr_c_hvr_color  = $th_wishlist_option['th_wishlist_shr_c_hvr_color'];
+    $th_wishlist_shr_c_color      = esc_attr($th_wishlist_option['th_wishlist_shr_c_color']);
+    $th_wishlist_shr_c_hvr_color  = esc_attr($th_wishlist_option['th_wishlist_shr_c_hvr_color']);
     $custom_css .= "
     .thw-table-custom-style .thw-social-share a.thw-copy-link-button{
     color:{$th_wishlist_shr_c_color};
