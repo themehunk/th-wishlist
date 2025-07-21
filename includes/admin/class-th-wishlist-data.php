@@ -75,21 +75,46 @@ class THWL_Data {
     }
 
     public static function get_wishlists( $args = [] ) {
-        global $wpdb;
-        $defaults = [ 'per_page' => 20, 'paged' => 1, 'orderby' => 'id', 'order' => 'DESC' ];
-        $args = wp_parse_args( $args, $defaults );
-        $offset = ( $args['paged'] - 1 ) * $args['per_page'];
-        
-        $sql = "SELECT w.*, u.user_login as username, COUNT(i.id) as item_count
-                FROM {$wpdb->prefix}thwl_wishlists w
-                LEFT JOIN {$wpdb->users} u ON w.user_id = u.ID
-                LEFT JOIN {$wpdb->prefix}thwl_wishlist_items i ON w.id = i.wishlist_id
-                GROUP BY w.id
-                ORDER BY {$args['orderby']} {$args['order']}
-                LIMIT %d OFFSET %d";
-        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-        return $wpdb->get_results( $wpdb->prepare( $sql, $args['per_page'], $offset ), ARRAY_A );
-    }
+	global $wpdb;
+
+	$defaults = [
+		'per_page' => 20,
+		'paged'    => 1,
+		'orderby'  => 'id',
+		'order'    => 'DESC',
+	];
+	$args = wp_parse_args( $args, $defaults );
+
+	// Whitelist allowed orderby columns
+	$allowed_orderby = [
+		'id'         => 'w.id',
+		'user_login' => 'u.user_login',
+		'item_count' => 'item_count',
+	];
+
+	// Whitelist order directions
+	$allowed_order = [ 'ASC', 'DESC' ];
+
+	$orderby = isset( $allowed_orderby[ $args['orderby'] ] ) ? $allowed_orderby[ $args['orderby'] ] : 'w.id';
+	$order   = in_array( strtoupper( $args['order'] ), $allowed_order, true ) ? strtoupper( $args['order'] ) : 'DESC';
+
+	$offset = ( $args['paged'] - 1 ) * $args['per_page'];
+
+	$sql = "
+		SELECT w.*, u.user_login as username, COUNT(i.id) as item_count
+		FROM {$wpdb->prefix}thwl_wishlists w
+		LEFT JOIN {$wpdb->users} u ON w.user_id = u.ID
+		LEFT JOIN {$wpdb->prefix}thwl_wishlist_items i ON w.id = i.wishlist_id
+		GROUP BY w.id
+		ORDER BY {$orderby} {$order}
+		LIMIT %d OFFSET %d
+	";
+
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $orderby and $order are whitelisted above.
+	return $wpdb->get_results( $wpdb->prepare( $sql, $args['per_page'], $offset ), ARRAY_A );
+}
+
+
 
     public static function get_wishlist_count() {
         global $wpdb;

@@ -23,7 +23,7 @@ class THWL_Frontend {
         add_shortcode('thwl_wishlist_button', array( $this,'thwl_add_to_wishlist_button_shortcode'));
         
         //flexible shortcode
-        add_shortcode( 'thw_add_to_wishlist', array( $this, 'thwl_add_to_wishlist_button_flexible_shortcode') );
+        add_shortcode( 'thwl_add_to_wishlist', array( $this, 'thwl_add_to_wishlist_button_flexible_shortcode') );
         add_action( 'wp', array( $this, 'thwl_hook_wishlist_loop_button_position' ) );
         add_action( 'wp', array( $this, 'thwl_hook_wishlist_single_button_position' ) );
         
@@ -42,13 +42,15 @@ class THWL_Frontend {
 
     public function thwl_enqueue_styles_scripts() {
         
-        wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array());
-        wp_enqueue_script('thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ), THWL_VERSION, true );
+        wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),THWL_VERSION);
+        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),THWL_VERSION, array( 
+                'strategy'  => 'async',
+                'in_footer' => false,
+        ) );
+        wp_enqueue_script( 'thwl' );
         wp_add_inline_style('thwl', thwl_front_style());
-        
         $wishlist_page_id = isset($this->thwl_option['thwl_page_id']) ? $this->thwl_option['thwl_page_id'] : 0;
         $thw_redirect_to_cart = isset($this->thwl_option['thw_redirect_to_cart']) ? $this->thwl_option['thw_redirect_to_cart'] : '';
-        
         wp_localize_script( 'thwl', 'thwl_wishlist_params', array(
             'ajax_url'            => admin_url( 'admin-ajax.php' ),
             'add_nonce'           => wp_create_nonce( 'thwl-add-nonce' ),
@@ -328,7 +330,7 @@ class THWL_Frontend {
         }
 
         if ( $hooked ) {
-            do_action( 'th_wishlist_blockified_hook_attached', $template, $position );
+            do_action( 'thwl_wishlist_blockified_hook_attached', $template, $position );
         }
     }
 
@@ -349,14 +351,23 @@ class THWL_Frontend {
     }
 
     public function thwl_wishlist_page_shortcode() {
+        
     global $product;
     $output = '';
     $wishlist = null;
     $wishlist_token = isset( $_GET['wishlist_token'] ) ? sanitize_text_field( wp_unslash( $_GET['wishlist_token'] ) ) : null;
-
+    $nonce = isset( $_GET['wishlist_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['wishlist_nonce'] ) ) : null;
+    
     if ( $wishlist_token ) {
-        $shared_wishlist = THWL_Data::get_wishlist_by_token( $wishlist_token );
+        
+        if ( $wishlist_token && ! wp_verify_nonce( $nonce, 'thwl_wishlist_nonce_action' ) ) {
+        return;
+        }
+        if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+        }
 
+        $shared_wishlist = THWL_Data::get_wishlist_by_token( $wishlist_token );       
         if ( $shared_wishlist ) {
             $is_owner = is_user_logged_in() && $shared_wishlist->user_id === get_current_user_id();
 
@@ -714,7 +725,7 @@ class THWL_Frontend {
     //....................................................../
     //global and flexible shorcode to add wishlist any where
     //....................................................../
-   // [thw_add_to_wishlist product_id="10" custom_icon='<svg viewBox="0 0 20 20" fill="currentColor"><path d="..."/></svg>']
+   // [thwl_add_to_wishlist product_id="10" custom_icon='<svg viewBox="0 0 20 20" fill="currentColor"><path d="..."/></svg>']
    public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
     
     global $product;

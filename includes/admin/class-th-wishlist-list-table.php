@@ -112,7 +112,13 @@ class THWL_Table extends WP_List_Table {
         if ( $wishlist_page_url ) {
             $actions['view'] = sprintf(
                 '<a href="%s" target="_blank" aria-label="%s">View</a>',
-                add_query_arg( 'wishlist_token', $item['wishlist_token'], $wishlist_page_url ),
+                add_query_arg( 
+                    array(
+                        'wishlist_token' => $item['wishlist_token'],
+                        'wishlist_nonce' => wp_create_nonce( 'thwl_wishlist_nonce_action' ),
+                    ),
+                    $wishlist_page_url
+                 ),
                 /* translators: %s : Wishlist Name */
                 esc_attr( sprintf( __( 'View %s', 'th-wishlist' ), $item['wishlist_name'] ) )
             );
@@ -182,35 +188,74 @@ class THWL_Table extends WP_List_Table {
      * Process bulk actions.
      */
     public function process_bulk_action() {
-        // Single delete
+
+        // Check for delete action
         if ( 'delete' === $this->current_action() ) {
-            if ( ! isset( $_GET['wishlist'], $_REQUEST['_wpnonce'] ) ) {
-                wp_die( esc_html__( 'Invalid request.', 'th-wishlist' ) );
+
+             // Check user capabilities
+            if ( ! current_user_can( 'manage_options' ) ) {
+                wp_die( esc_html__( 'You are not allowed to perform this action.', 'th-wishlist' ) );
             }
-            $nonce = sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) );
-            if ( ! wp_verify_nonce( $nonce, 'thw_delete_wishlist' ) ) {
-                wp_die( esc_html__( 'Security check failed.', 'th-wishlist' ) );
+
+            // Validate the nonce early
+            if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'thw_delete_wishlist' ) ) {
+                wp_die( esc_html__( 'Security check failed. Invalid nonce.', 'th-wishlist' ) );
             }
-           THWL_Data::delete_wishlist( absint( $_GET['wishlist'] ) );
+
+            // Validate and sanitize input
+            $wishlist_id = isset( $_GET['wishlist'] ) ? absint( $_GET['wishlist'] ) : 0;
+
+            if ( ! $wishlist_id ) {
+                wp_die( esc_html__( 'Invalid wishlist ID.', 'th-wishlist' ) );
+            }
+
+            // Delete the wishlist
+            THWL_Data::delete_wishlist( $wishlist_id );
+
+            // Redirect to previous page
             wp_safe_redirect( wp_get_referer() );
             exit;
         }
 
         // Bulk delete
-        if ( ( isset( $_POST['action'] ) && 'bulk-delete' === $_POST['action'] ) || ( isset( $_POST['action2'] ) && 'bulk-delete' === $_POST['action2'] ) ) {
+        if (
+            ( isset( $_POST['action'] ) && 'bulk-delete' === $_POST['action'] ) ||
+            ( isset( $_POST['action2'] ) && 'bulk-delete' === $_POST['action2'] )
+        ) {
+
+            // Check user capabilities
+                if ( ! current_user_can( 'manage_options' ) ) {
+                    wp_die( esc_html__( 'You are not allowed to perform this action.', 'th-wishlist' ) );
+                }
+                
+            // Check required fields
             if ( ! isset( $_POST['wishlist'], $_POST['_wpnonce'] ) ) {
                 wp_die( esc_html__( 'Invalid bulk delete request.', 'th-wishlist' ) );
             }
-            $nonce = sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) );
-            if ( ! wp_verify_nonce( $nonce, 'thw_bulk_delete_wishlist' ) ) {
+
+            // Verify nonce
+            if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'thw_bulk_delete_wishlist' ) ) {
                 wp_die( esc_html__( 'Security check failed.', 'th-wishlist' ) );
             }
-            $delete_ids = array_map( 'absint', (array) wp_unslash( $_POST['wishlist'] ) );
-            foreach ( $delete_ids as $id ) {
-                THWL_Data::delete_wishlist( $id );
+
+                
+
+                // Sanitize and validate wishlist IDs
+                $delete_ids_raw = sanitize_text_field(wp_unslash( $_POST['wishlist'] ));
+                $delete_ids     = array_map( 'absint', (array) $delete_ids_raw );
+
+                if ( empty( $delete_ids ) ) {
+                    wp_die( esc_html__( 'No valid wishlist IDs provided.', 'th-wishlist' ) );
+                }
+
+                // Perform deletion
+                foreach ( $delete_ids as $id ) {
+                    THWL_Data::delete_wishlist( $id );
+                }
+
+                // Redirect back to previous page
+                wp_safe_redirect( wp_get_referer() );
+                exit;
             }
-            wp_safe_redirect( wp_get_referer() );
-            exit;
-        }
     }
 }

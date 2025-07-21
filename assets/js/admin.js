@@ -1,4 +1,15 @@
 jQuery(document).ready(function($) {
+    
+    // tab
+    $(document).on('click', '.thw-tab', function(e) {
+        e.preventDefault();
+        $('.thw-tab').removeClass('active');
+        $('.thw-tab-content').removeClass('active');
+        $(this).addClass('active');
+        const tabId = $(this).data('tab');
+        $('#' + tabId).addClass('active');
+    });
+
     // Media uploader for custom icon
     $('#thw_upload_icon_button').click(function(e) {
         e.preventDefault();
@@ -205,8 +216,7 @@ jQuery(document).ready(function($) {
     initColorPicker($('input[name="settings[th_wishlist_add_icon_color]"]'), 'settings[th_wishlist_add_icon]');
     initColorPicker($('input[name="settings[th_wishlist_brws_icon_color]"]'), 'settings[th_wishlist_brws_icon]');
 });
-
-
+   
 });
 
 
