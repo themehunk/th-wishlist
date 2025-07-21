@@ -219,8 +219,8 @@ class THWL_Table extends WP_List_Table {
 
         // Bulk delete
         if (
-            ( isset( $_POST['action'] ) && 'bulk-delete' === $_POST['action'] ) ||
-            ( isset( $_POST['action2'] ) && 'bulk-delete' === $_POST['action2'] )
+            ( isset( $_POST['action'] ) && 'bulk-delete' === sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) ||
+            ( isset( $_POST['action2'] ) && 'bulk-delete' === sanitize_text_field( wp_unslash( $_POST['action2'] ) ) )
         ) {
 
             // Check user capabilities
@@ -233,12 +233,10 @@ class THWL_Table extends WP_List_Table {
                 wp_die( esc_html__( 'Invalid bulk delete request.', 'th-wishlist' ) );
             }
 
-            // Verify nonce
-            if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'thw_bulk_delete_wishlist' ) ) {
-                wp_die( esc_html__( 'Security check failed.', 'th-wishlist' ) );
-            }
-
-                
+              // Verify nonce
+                if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'thw_bulk_delete_wishlist' ) ) {
+                    wp_die( esc_html__( 'Security check failed.', 'th-wishlist' ) );
+                }
 
                 // Sanitize and validate wishlist IDs
                 $delete_ids_raw = sanitize_text_field(wp_unslash( $_POST['wishlist'] ));
