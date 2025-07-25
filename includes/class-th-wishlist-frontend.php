@@ -18,8 +18,8 @@ class THWL_Frontend {
         // Use static method directly, no need to instantiate
         $this->thwl_option = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
 
-        add_action( 'wp_enqueue_scripts', array( $this, 'thwl_enqueue_styles_scripts' ) );
-        add_shortcode( 'thwl_wishlist', array( $this, 'thwl_wishlist_page_shortcode' ) );
+        add_action('wp_enqueue_scripts', array( $this, 'thwl_enqueue_styles_scripts' ) );
+        add_shortcode('thwl_wishlist', array( $this, 'thwl_wishlist_page_shortcode' ) );
         add_shortcode('thwl_wishlist_button', array( $this,'thwl_add_to_wishlist_button_shortcode'));
         
         //flexible shortcode
@@ -47,8 +47,9 @@ class THWL_Frontend {
                 'strategy'  => 'async',
                 'in_footer' => false,
         ) );
+        $dynamic_style = thwl_front_style();
         wp_enqueue_script( 'thwl' );
-        wp_add_inline_style('thwl', thwl_front_style());
+        wp_add_inline_style('thwl', $dynamic_style);
         $wishlist_page_id = isset($this->thwl_option['thwl_page_id']) ? $this->thwl_option['thwl_page_id'] : 0;
         $thw_redirect_to_cart = isset($this->thwl_option['thw_redirect_to_cart']) ? $this->thwl_option['thw_redirect_to_cart'] : '';
         wp_localize_script( 'thwl', 'thwl_wishlist_params', array(
