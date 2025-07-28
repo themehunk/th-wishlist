@@ -47,9 +47,8 @@ class THWL_Frontend {
                 'strategy'  => 'async',
                 'in_footer' => false,
         ) );
-        $dynamic_style = thwl_front_style();
         wp_enqueue_script( 'thwl' );
-        wp_add_inline_style('thwl', $dynamic_style);
+        wp_add_inline_style('thwl',thwl_front_style());
         $wishlist_page_id = isset($this->thwl_option['thwl_page_id']) ? $this->thwl_option['thwl_page_id'] : 0;
         $thw_redirect_to_cart = isset($this->thwl_option['thw_redirect_to_cart']) ? $this->thwl_option['thw_redirect_to_cart'] : '';
         wp_localize_script( 'thwl', 'thwl_wishlist_params', array(
