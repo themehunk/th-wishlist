@@ -10,7 +10,7 @@ function thwl_front_style() {
 
 	$th_wishlist_option = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
 
-	return $custom_css = "
+	$custom_css = "
 	.thw-btn-custom-style .thw-add-to-wishlist-button .thw-icon {
 	color: " . esc_html($th_wishlist_option['th_wishlist_add_icon_color']) . ";
 	}
@@ -71,4 +71,6 @@ function thwl_front_style() {
 		color: " . esc_html($th_wishlist_option['th_wishlist_shr_c_hvr_color']) . ";
 	}
 	";
+
+	return $custom_css;
 }
