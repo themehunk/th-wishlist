@@ -4,7 +4,7 @@ Author URI: : https://www.themehunk.com/
 Tags: woocommerce, TH Wishlist
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
@@ -56,6 +56,9 @@ You're free to contact us through mail, via our Contact form and Live chat suppo
 Yes, You can translate our plugin to desired language.
 
 == Changelog ==
+
+= 1.0.5 =
+* Fix : wp_add_inline_style escaping issue.
 
 = 1.0.4 =
 * Fix : escaping issue fixed.
