@@ -1,10 +1,10 @@
-====== TH Wishlist ========
+====== Wishlist for WooCommerce ========
 Contributors: ThemeHunk
 Author URI: : https://www.themehunk.com/
-Tags: woocommerce, TH Wishlist
+Tags:woocommerce, wishlist, woocommerce wishlist, shop, ecommerce
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.0
+Stable tag: 1.0.6
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
@@ -17,7 +17,7 @@ TH Wishlist Plugin, is a feature-rich and easy-to-use wishlist plugin designed s
 With TH Wishlist Plugin, shoppers can save their favorite products for later with just a click—encouraging return visits and reducing cart abandonment. Whether they’re planning a future purchase or sharing gift ideas with friends and family, wishlists help keep your store top-of-mind.
 The plugin integrates seamlessly with your WooCommerce store and offers flexible customization options, so you can match the wishlist buttons and pages with your theme’s look and feel. Store owners also benefit from insights into customer preferences, helping to tailor marketing campaigns and product offerings.
 
-[Docs]( https://themehunk.com/docs/th-wishlist) | [More Details](https://themehunk.com/th-wishlist/) | [support](https://themehunk.com/contact-us/).
+[Docs]( https://themehunk.com/docs/th-wishlist) | [More Details](https://themehunk.com/wishlist/) | [support](https://themehunk.com/contact-us/).
 
 **Key Features:-**
 
@@ -57,10 +57,28 @@ Yes, You can translate our plugin to desired language.
 
 == Changelog ==
 
-= 1.0.0 =
-* Fix : wp_add_inline_style escaping issue.
-* Update : Thirdy party library update.
+= 1.0.7 =
+* Fix: demo link fixed.
+* Fix: minor bug fixed.
 
+= 1.0.6 =
+* Update: wordpress release
+
+= 1.0.5 =
+* Fix : wp_add_inline_style escaping issue.
+
+= 1.0.4 =
+* Fix : escaping issue fixed.
+
+= 1.0.3 =
+* Fix : Prefix escaping fixed.
+
+= 1.0.2 =
+* Fix : Prefix issue fixed.
+
+= 1.0.1 =
+* Fix : Prefix issue fixed.
+* Update : Thirdy party library update.
 
 = 1.0.0 =
 * Initial release
@@ -73,8 +91,8 @@ Yes, You can translate our plugin to desired language.
 
 == Upgrade Notice ==
 
-= 1.0.0 =
-* Initial release
+= 1.0.6 =
+* wordpress Initial release
 
 
 Thanks for using our plugin, I am sure you will create a great TH Wishlist for your site. If you have any query then you can contact at our forum : https://www.support.themehunk.com/
