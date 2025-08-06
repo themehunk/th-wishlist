@@ -36,10 +36,66 @@ jQuery(function($) {
                             $button.find('.thw-icon').replaceWith(icon_html);
                         }
                 } else {
-                    alert(thwl_wishlist_params.i18n_error);
+                    console.log(thwl_wishlist_params.i18n_error);
                 }
             },
             complete: function() { $button.removeClass('loading'); }
+        });
+    });
+
+    //shortcode function
+    // Add to wishlist
+    $(document).on('click', '.thw-add-to-wishlist-button-wrap.thw-add-to-wishlist-shorcode .thw-add-to-wishlist-button:not(.thw-login-required)', function(e) {
+        e.preventDefault();
+        var $button = $(this);
+        var product_id = $button.data('product-id');
+        var variation_id = $button.data('variation-id');
+
+        if ($button.hasClass('in-wishlist')) {
+            if (thwl_wishlist_params.wishlist_page_url) {
+                window.location.href = thwl_wishlist_params.wishlist_page_url;
+            }
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: thwl_wishlist_params.ajax_url,
+            data: {
+                action: 'thwl_add_to_wishlist',
+                nonce: thwl_wishlist_params.add_nonce,
+                product_id: product_id,
+                variation_id: variation_id
+            },
+            beforeSend: function() {
+                $button.addClass('loading');
+            },
+            success: function(response) {
+                if (response.success) {
+                    // Update button text if not icon-only
+                    if (thwl_wishlist_params.icon_style !== 'icon') {
+                        $button.find('span').last().text(thwl_wishlist_params.i18n_added);
+                    }
+
+                    $button.addClass('in-wishlist');
+
+                    // Update icon using shortcode custom data attributes
+                    if (['icon', 'icon_text', 'icon_only_no_style'].includes(thwl_wishlist_params.icon_style)) {
+                        var browseIcon = $button.data('browse-icon');
+                        if (browseIcon) {
+                            // Decode any HTML entities like &lt;
+                            var decodedIcon = $('<textarea/>').html(browseIcon).text();
+                            var icon_html = '<span class="thw-icon browse"><span class="' + decodedIcon + '"></span></span>';
+                            $button.find('.thw-icon').replaceWith(icon_html);
+                        }
+                    }
+                } else {
+                    console.log(thwl_wishlist_params.i18n_error);
+                }
+            },
+            complete: function() {
+                $button.removeClass('loading');
+            }
         });
     });
 
