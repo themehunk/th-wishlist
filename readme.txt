@@ -33,7 +33,7 @@ The plugin integrates seamlessly with your WooCommerce store and offers flexible
 
 1. Upload the `th-wishlist.zip` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Get started from Dashboard > TH Search
+3. Get started from Dashboard > TH Wishlist
 
 == Frequently Asked Questions ==
 
@@ -55,14 +55,33 @@ You're free to contact us through mail, via our Contact form and Live chat suppo
 
 Yes, You can translate our plugin to desired language.
 
-== Changelog ==
+== Compatible Themes ==
 
-= 1.0.8 =
-* Fix: Save option issue fixed.
+This Wishlist Plugin by ThemeHunk is compatible with all themes. Below are some of the popular themes that work seamlessly with the plugin:
+
+* Shop Mania  
+* Zita
+* Top Store
+* Big Store
+* Open Shop
+* Astra
+* Neve
+* Kadence
+* OceanWP
+* Storefront
+* eStore
+* Woostify
+* Botiga
+* Shoptimizer
+* Many more..
+
+
+== Changelog ==
 
 = 1.0.7 =
 * Fix: demo link fixed.
 * Fix: minor bug fixed.
+* Fix: Save option issue fixed.
 
 = 1.0.6 =
 * Update: wordpress release
@@ -94,10 +113,12 @@ Yes, You can translate our plugin to desired language.
 
 == Upgrade Notice ==
 
-= 1.0.6 =
-* wordpress Initial release
+= 1.0.7 =
+* Fix: demo link fixed.
+* Fix: minor bug fixed.
+* Fix: Save option issue fixed.
 
 
-Thanks for using our plugin, I am sure you will create a great TH Wishlist for your site. If you have any query then you can contact at our forum : https://www.support.themehunk.com/
+Thanks for using our plugin, I am sure you will create a great TH Wishlist for your site. If you have any query then you can contact at our forum : https://themehunk.com/contact-us
 
 Thank You
