@@ -31,7 +31,6 @@ function thwl_hpos_compatibility() {
 }
 add_action( 'before_woocommerce_init', 'thwl_hpos_compatibility' );
 
-
 if ( ! class_exists( 'THWL_Wishlist' ) ) :
 /**
  * Main THWL_Wishlist Class.
@@ -86,7 +85,7 @@ final class THWL_Wishlist {
      * Set the plugin version from the plugin header.
      */
     private function thwl_set_version() {
-        $plugin_data = get_file_data(__FILE__, array('version' => 'version'), false);
+        $plugin_data = get_file_data( __FILE__, array( 'version' => 'version' ), false );
         $this->version = $plugin_data['version'];
     }
 
@@ -111,66 +110,76 @@ final class THWL_Wishlist {
         register_activation_hook( THWL_PLUGIN_FILE, array( 'THWL_Install', 'install' ) );
 
         // Initialize classes
-        add_action('plugins_loaded', array( $this, 'thwl_init' ) );
-        add_filter('plugin_action_links_'.THWL_PLUGIN_BASENAME, array( $this,'thwl_wishlist_plugin_action_links'), 10, 1);
+        add_action( 'plugins_loaded', array( $this, 'thwl_init' ) );
+
+        // Add plugin action links on init
+        add_action( 'init', array( $this, 'thwl_add_plugin_action_links' ) );
+    }
+
+    /**
+     * Add plugin action links filter on init.
+     */
+    public function thwl_add_plugin_action_links() {
+        add_filter( 'plugin_action_links_' . THWL_PLUGIN_BASENAME, array( $this, 'thwl_wishlist_plugin_action_links' ), 10, 1 );
     }
 
     /**
      * Init plugin when plugins are loaded.
      */
     public function thwl_init() {
-        // Check if WooCommerce is active
+        // Move WooCommerce check to init hook
+        add_action( 'init', array( $this, 'thwl_check_woocommerce' ) );
+    }
+
+    /**
+     * Check if WooCommerce is active and set up admin notice if not.
+     */
+    public function thwl_check_woocommerce() {
         if ( ! class_exists( 'WooCommerce' ) ) {
             add_action( 'admin_notices', array( $this, 'thwl_woocommerce_missing_notice' ) );
             return;
         }
-        // Instantiate classes
+        // Instantiate classes only if WooCommerce is active
         THWL_Manager::get_instance();
         new THWL_Frontend();
         new THWL_Admin();
-        
+    }
+
+    /**
+     * Add the settings link to the plugin row.
+     *
+     * @param array $links - Links for the plugin
+     * @return array - Links
+     */
+    public function thwl_wishlist_plugin_action_links( $links ) {
+        $settings_page = add_query_arg( array( 'page' => 'thwl-wishlist' ), admin_url( 'admin.php' ) );
+        $settings_link = '<a href="' . esc_url( $settings_page ) . '">' . esc_html__( 'Settings', 'th-wishlist' ) . '</a>';
+        array_unshift( $links, $settings_link );
+        return $links;
+    }
+
+    /**
+     * Displays an admin notice if WooCommerce is not installed or active.
+     */
+    public function thwl_woocommerce_missing_notice() {
+        if ( ! is_admin() ) {
+            return;
         }
-
-         /**
-         * Add the settings link to the plugin row
-         *
-         * @param array $links - Links for the plugin
-         * @return array - Links
-         */
-        public function thwl_wishlist_plugin_action_links($links) {
-
-                      $settings_page = add_query_arg(array('page' => 'thwl-wishlist'), admin_url('admin.php'));
-
-                      $settings_link = '<a href="'.esc_url($settings_page).'">'.esc_html__('Settings', 'th-wishlist' ).'</a>';
-
-                      array_unshift($links, $settings_link); 
-
-                      return $links;
-        }
-        /**
-         * Displays an admin notice if WooCommerce is not installed or active.
-         */
-        public function thwl_woocommerce_missing_notice() {
-            // Ensure this is only called in the admin area
-            if ( ! is_admin() ) {
-                return;
-            }
-            // Use the WordPress notice classes for consistent styling
-            ?>
-            <div class="notice notice-error is-dismissible">
-                <p>
+        ?>
+        <div class="notice notice-error is-dismissible">
+            <p>
                 <?php
-                    printf(
-                        /* translators: 1: Plugin name, 2: woocommerce link. */
-                        esc_html__( '%1$s requires %2$s to be installed and active.', 'th-wishlist' ),
-                        esc_html__( 'TH Wishlist', 'th-wishlist' ), // Translatable plugin name
-                        '<a href="' . esc_url( 'https://woocommerce.com/' ) . '" target="_blank">' . esc_html__( 'WooCommerce', 'th-wishlist' ) . '</a>'
-                    );
-                    ?>
-                </p>
-            </div>
-            <?php
-        }
+                printf(
+                    /* translators: 1: Plugin name, 2: woocommerce link. */
+                    esc_html__( '%1$s requires %2$s to be installed and active.', 'th-wishlist' ),
+                    esc_html__( 'TH Wishlist', 'th-wishlist' ),
+                    '<a href="' . esc_url( 'https://woocommerce.com/' ) . '" target="_blank">' . esc_html__( 'WooCommerce', 'th-wishlist' ) . '</a>'
+                );
+                ?>
+            </p>
+        </div>
+        <?php
+    }
 }
 
 endif;
@@ -179,7 +188,7 @@ endif;
  * Main instance of THWL_Wishlist.
  * Returns the main instance of THW.
  */
-function THWL(){
+function THWL() {
     return THWL_Wishlist::instance();
 }
 

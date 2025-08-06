@@ -44,7 +44,7 @@ class THWL_Frontend {
     public function thwl_enqueue_styles_scripts() {
         
         wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),THWL_VERSION);
-        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.2', array( 
+        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.2.4', array( 
                 'strategy'  => 'async',
                 'in_footer' => false,
         ) );
@@ -873,7 +873,7 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
         $selected_brwsicon = isset($icons[$th_wishlist_brws_icon]) ? $th_wishlist_brws_icon : 'heart-filled';
         $icon_html = sprintf('<span class="thw-icon browse">%s</span>', $icons[$selected_brwsicon]['svg']);
       }else{
-        $icon_html = sprintf('<span class="thw-icon browse">%s</span>', $atts['add_browse_icon']);
+        $icon_html = sprintf('<span class="thw-icon browse"><span class="%s"></span></span>', $atts['add_browse_icon']);
       }
 
     } else {
@@ -890,7 +890,7 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
             : '';
         $icon_html = sprintf( '<span class="thw-icon add">%s</span>', $icon_svg );
         }else{
-            $icon_html = sprintf( '<span class="thw-icon add">%s</span>', $atts['add_icon'] );
+            $icon_html = sprintf( '<span class="thw-icon add"><span class="%s"></span></span>', $atts['add_icon'] );
         }
     }
 
@@ -941,9 +941,7 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
     }else{
         $themedefault = 'thw-btn-custom-style';
     }
-	// $themedefault = !empty($this->thwl_option['thw_btn_style_theme']) && '1' === $this->thwl_option['thw_btn_style_theme'] 
-	// 	? 'thw-btn-theme-style' 
-	// 	: 'thw-btn-custom-style';
+
 	// Output button
 	$output = sprintf(
 		'<div class="thw-add-to-wishlist-button-wrap thw-add-to-wishlist-shorcode %s %s">',
@@ -951,7 +949,7 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 		esc_attr( $themedefault )
 	);
 	$output .= sprintf(
-		'<button class="thw-add-to-wishlist-button %s" data-product-id="%s" data-variation-id="%s" data-add-icon="%s" data-browse-icon="%s">%s%s</button>',
+		'<a class="thw-add-to-wishlist-button %s" data-product-id="%s" data-variation-id="%s" data-add-icon="%s" data-browse-icon="%s">%s%s</a>',
 		esc_attr( trim( $btnclasses . ' ' . $class_attr ) ),
 		esc_attr( $product_id ),
 		esc_attr( $variation_id ),
@@ -1009,6 +1007,6 @@ public function thwl_add_to_cart_and_manage() {
         'cart_url' => wc_get_cart_url(),
         'message'  => __( 'Product added and wishlist updated.', 'th-wishlist' )
     ] );
-}
+ }
 
 }

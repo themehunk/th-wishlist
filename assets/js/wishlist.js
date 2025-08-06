@@ -85,7 +85,7 @@ jQuery(function($) {
                         if (browseIcon) {
                             // Decode any HTML entities like &lt;
                             var decodedIcon = $('<textarea/>').html(browseIcon).text();
-                            var icon_html = '<span class="thw-icon browse">' + decodedIcon + '</span>';
+                            var icon_html = '<span class="thw-icon browse"><span class="' + decodedIcon + '"></span></span>';
                             $button.find('.thw-icon').replaceWith(icon_html);
                         }
                     }
