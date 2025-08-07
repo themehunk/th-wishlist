@@ -22,7 +22,7 @@ jQuery(function($) {
             success: function(response) {
                 if (response.success) {
                     if (thwl_wishlist_params.icon_style !== 'icon') {
-                    $button.find('span').last().text(thwl_wishlist_params.i18n_added);
+                    $button.find('span').last().text(thwl_wishlist_params.i18n_added).attr('class', 'thw-to-browse-text');
                     }
                     $button.addClass('in-wishlist');
                     // Update SVG icon based on wishlist status
@@ -45,13 +45,13 @@ jQuery(function($) {
 
     //shortcode function
     // Add to wishlist
-    $(document).on('click', '.thw-add-to-wishlist-button-wrap.thw-add-to-wishlist-shorcode .thw-add-to-wishlist-button:not(.thw-login-required)', function(e) {
+    $(document).on('click', '.thw-add-to-wishlist-button.is-shortcode:not(.thw-login-required)', function(e) {
         e.preventDefault();
-        var $button = $(this);
-        var product_id = $button.data('product-id');
-        var variation_id = $button.data('variation-id');
+        var $buttonS = $(this);
+        var product_id = $buttonS.data('product-id');
+        var variation_id = $buttonS.data('variation-id');
 
-        if ($button.hasClass('in-wishlist')) {
+        if ($buttonS.hasClass('in-wishlist')) {
             if (thwl_wishlist_params.wishlist_page_url) {
                 window.location.href = thwl_wishlist_params.wishlist_page_url;
             }
@@ -68,25 +68,38 @@ jQuery(function($) {
                 variation_id: variation_id
             },
             beforeSend: function() {
-                $button.addClass('loading');
+                $buttonS.addClass('loading');
             },
             success: function(response) {
+
                 if (response.success) {
+
                     // Update button text if not icon-only
                     if (thwl_wishlist_params.icon_style !== 'icon') {
-                        $button.find('span').last().text(thwl_wishlist_params.i18n_added);
+                        var browseText = $buttonS.attr('data-browse-text'); // use .attr instead of .data
+                        if (browseText) {
+                            $buttonS.find('span').last().text(browseText).attr('class', 'thw-to-browse-text');
+                        }else{
+                            $buttonS.find('span').last().attr('class', 'thw-to-browse-text');
+                        }
                     }
 
-                    $button.addClass('in-wishlist');
+                    $buttonS.addClass('in-wishlist');
 
                     // Update icon using shortcode custom data attributes
                     if (['icon', 'icon_text', 'icon_only_no_style'].includes(thwl_wishlist_params.icon_style)) {
-                        var browseIcon = $button.data('browse-icon');
+                        var browseIcon = $buttonS.data('browse-icon');
                         if (browseIcon) {
                             // Decode any HTML entities like &lt;
                             var decodedIcon = $('<textarea/>').html(browseIcon).text();
                             var icon_html = '<span class="thw-icon browse"><span class="' + decodedIcon + '"></span></span>';
-                            $button.find('.thw-icon').replaceWith(icon_html);
+                            $buttonS.find('.thw-icon').replaceWith(icon_html);
+                        }else{
+                            var icons = thwl_wishlist_params.icons; // Ensure this is passed from PHP to JS
+                            var selected_brwsicon = thwl_wishlist_params.th_wishlist_brws_icon || 'heart-filled'; // Default to heart-filled
+                            var icon_html = '<span class="thw-icon browse">' + (icons[selected_brwsicon]?.svg || icons['heart-filled'].svg) + '</span>';
+                            // Replace the current icon with the browse wishlist icon
+                            $buttonS.find('.thw-icon').replaceWith(icon_html);
                         }
                     }
                 } else {
@@ -94,7 +107,7 @@ jQuery(function($) {
                 }
             },
             complete: function() {
-                $button.removeClass('loading');
+                $buttonS.removeClass('loading');
             }
         });
     });
