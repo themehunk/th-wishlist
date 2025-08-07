@@ -44,7 +44,7 @@ class THWL_Frontend {
     public function thwl_enqueue_styles_scripts() {
         
         wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),THWL_VERSION);
-        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.2.4', array( 
+        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.2.5', array( 
                 'strategy'  => 'async',
                 'in_footer' => false,
         ) );
@@ -166,6 +166,7 @@ class THWL_Frontend {
         ? $this->thwl_option['thw_browse_wishlist_text'] 
         : esc_html__('Browse Wishlist', 'th-wishlist');
     $text = $in_wishlist ? $browse_text : $add_text;
+    $textCls = $in_wishlist ? 'thw-to-browse-text' : 'thw-to-add-text';
 
     // Classes array
     $classes = $in_wishlist ? ['in-wishlist'] : [];
@@ -193,8 +194,7 @@ class THWL_Frontend {
 
     $class_attr = implode(' ', array_filter($classes));
     $icon_html = '';
-    $text_html = sprintf('<span>%s</span>', esc_html($text));
-
+    $text_html = sprintf('<span class="%s">%s</span>',  esc_attr($textCls), esc_html($text));
 
     // Handle icons
     $icons = thwl_get_wishlist_icons_svg();
@@ -833,6 +833,7 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 	$variation_id = $product->is_type( 'variation' ) ? $product->get_id() : 0;
 	$in_wishlist = $wishlist ? THWL_Data::is_product_in_wishlist( $wishlist->id, $product_id, $variation_id ) : false;
 	$text = $in_wishlist ? $atts['browse_text'] : $atts['add_text'];
+    $textCls = $in_wishlist ? 'thw-to-browse-text' : 'thw-to-add-text';
 
 	// Build class & icon
     
@@ -859,7 +860,7 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 
 	$class_attr = implode( ' ', array_filter( $classes ) );
 	$icon_html = '';
-	$text_html = sprintf( '<span>%s</span>', esc_html( $text ) );
+	$text_html = sprintf('<span class="%s">%s</span>',  esc_attr($textCls), esc_html($text));
     $icons = thwl_get_wishlist_icons_svg();
 	// add Icon logic
 	if ( in_array( $atts['icon_style'], [ 'icon', 'icon_text', 'icon_only_no_style' ], true ) ) {
@@ -900,27 +901,14 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
     $browse_icon ='';
 
     if ( empty( $atts['add_browse_icon'] ) ) {
-        $th_wishlist_brws_icon = !empty($this->thwl_option['th_wishlist_brws_icon']) 
-            ? $this->thwl_option['th_wishlist_brws_icon'] 
-            : 'heart-filled';
-        $selected_brwsicon = isset($icons[$th_wishlist_brws_icon]) ? $th_wishlist_brws_icon : 'heart-filled';
-        $browse_icon = $icons[$selected_brwsicon]['svg'];
+        $browse_icon = '';
     }else{
         $browse_icon = $atts['add_browse_icon'];
     }
     
     if ( empty( $atts['add_icon'] ) ) {
         // Fallback to global option or default icon
-        $th_wishlist_add_icon = ! empty( $this->thwl_option['th_wishlist_add_icon'] )
-            ? $this->thwl_option['th_wishlist_add_icon']
-            : 'heart-outline';
-        $selected_addicon = isset( $icons[ $th_wishlist_add_icon ] )
-            ? $th_wishlist_add_icon
-            : 'heart-outline';
-        $icon_svg = isset( $icons[ $selected_addicon ]['svg'] )
-            ? $icons[ $selected_addicon ]['svg']
-            : '';
-        $add_icon = $icon_svg; 
+        $add_icon = ''; 
     }else{
         $add_icon = $atts['add_icon']; 
     }
@@ -949,8 +937,9 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 		esc_attr( $themedefault )
 	);
 	$output .= sprintf(
-		'<a class="thw-add-to-wishlist-button %s" data-product-id="%s" data-variation-id="%s" data-add-icon="%s" data-browse-icon="%s">%s%s</a>',
+		'<a class="thw-add-to-wishlist-button is-shortcode %s" data-browse-text="%s" data-product-id="%s" data-variation-id="%s" data-add-icon="%s" data-browse-icon="%s">%s%s</a>',
 		esc_attr( trim( $btnclasses . ' ' . $class_attr ) ),
+        esc_attr($atts['browse_text']),
 		esc_attr( $product_id ),
 		esc_attr( $variation_id ),
         esc_attr( htmlspecialchars( $add_icon ) ),

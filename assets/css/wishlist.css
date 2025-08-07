@@ -91,12 +91,8 @@ width: 30px;
     pointer-events: none;
 }
 
-.thw-add-to-wishlist-button.in-wishlist {
-    
-}
-
 /* Icon Only (No Button Style) */
-.thw-add-to-wishlist-button.no-style {
+/* .thw-add-to-wishlist-button.no-style {
     background: none !important;
     border: none !important;
     padding: 0 !important;
@@ -106,7 +102,7 @@ width: 30px;
 
 .thw-add-to-wishlist-button.no-style:hover {
     color: #c2185b !important;
-}
+} */
 
 .thw-add-to-wishlist-button.no-style .thw-icon {
     font-size: 1.5em;
@@ -131,7 +127,9 @@ width: 30px;
 .thw-wishlist-table,.thw-wishlist-form{
     width: 100%;
 }
-
+.thw-wishlist-form {
+   overflow-x: scroll;
+}
 .thw-wishlist-table th {
     font-weight: 700;
     padding: 9px 12px;
