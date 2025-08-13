@@ -418,14 +418,18 @@ class THWL_Frontend {
     $wishlist = null;
     $wishlist_token = isset( $_GET['wishlist_token'] ) ? sanitize_text_field( wp_unslash( $_GET['wishlist_token'] ) ) : null;
     $nonce = isset( $_GET['wishlist_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['wishlist_nonce'] ) ) : null;
-    
+    $wishlist_action = isset( $_GET['wishlist_action'] ) ? sanitize_text_field( $_GET['wishlist_action'] ) : '';
+    $is_view_only = ($wishlist_action === 'view');
+
     if ( $wishlist_token ) {
-        
-        if ( $wishlist_token && ! wp_verify_nonce( $nonce, 'thwl_wishlist_nonce_action' ) ) {
-        return;
-        }
-        if ( ! current_user_can( 'manage_options' ) ) {
-        return;
+        // Only verify nonce & capability if NOT view-only mode
+        if (!$is_view_only) {
+            if (!wp_verify_nonce($nonce, 'thwl_wishlist_nonce_action')) {
+                return;
+            }
+            if (!current_user_can('manage_options')) {
+                return;
+            }
         }
 
         $shared_wishlist = THWL_Data::get_wishlist_by_token( $wishlist_token );       
@@ -497,6 +501,11 @@ class THWL_Frontend {
         : [];
 
     foreach ( $columns as $key ) {
+
+        // In view-only mode, skip only the 'remove' column
+        if ($is_view_only && $key === 'remove') {
+            continue;
+        }
         if ( isset( $default_labels[$key] ) ) {
             $label = 'checkbox' === $key 
                 ? $default_labels['checkbox']
@@ -525,6 +534,11 @@ class THWL_Frontend {
             );
 
             foreach ( $columns as $key ) {
+
+                if ($is_view_only && $key === 'remove') {
+                continue;
+                }
+
                 $output .= sprintf( '<td class="product-%s">', esc_attr( $key ) );
                 switch ( $key ) {
                     case 'checkbox':
@@ -637,9 +651,11 @@ class THWL_Frontend {
     $output = '';
 
     $share_url = add_query_arg(
-        'wishlist_token',
-        $wishlist->wishlist_token,
-        get_permalink( $this->thwl_option['thwl_page_id'] )
+    array(
+        'wishlist_token'  => $wishlist->wishlist_token,
+        'wishlist_action' => 'view',
+    ),
+    get_permalink( $this->thwl_option['thwl_page_id'] )
     );
 
     $encoded_url = urlencode( $share_url );

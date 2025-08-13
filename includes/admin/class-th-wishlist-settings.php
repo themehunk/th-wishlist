@@ -203,7 +203,7 @@ public function settings_page() {
                             <th scope="row"><?php esc_html_e( 'Show Social Share Buttons', 'th-wishlist' ); ?></th>
                             <td>
                                 <input type="checkbox" name="settings[thw_show_social_share]" value="1" <?php checked( isset( $options['thw_show_social_share'] ) ? $options['thw_show_social_share'] : 0, 1 ); ?> />
-                                <span class="description"><?php esc_html_e( 'Allows logged-in users to share their wishlist.', 'th-wishlist' ); ?></span>
+                                <span class="description"><?php esc_html_e( 'Allows to share their wishlist.', 'th-wishlist' ); ?></span>
                             </td>
                         </tr>
                         <tr class="th-sort-row">
