@@ -112,3 +112,31 @@ function thwl_get_wishlist_icons_svg() {
     );
     return $addicondashicons;
 }
+
+/******************************************/
+// init code loop button or single button
+/******************************************/
+
+add_action('wp','thwl_hook_wishlist_loop_button_position');
+add_action('wp','thwl_hook_wishlist_single_button_position');
+
+function thwl_hook_wishlist_loop_button_position() {
+    if ( class_exists( 'THWL_Frontend' ) ) {
+        $object = new THWL_Frontend();
+        $object->thwl_hook_wishlist_loop_button_position();
+    }
+}
+
+function thwl_hook_wishlist_single_button_position() {
+    if ( class_exists( 'THWL_Frontend' ) ) {
+        $object = new THWL_Frontend();
+        $object->thwl_hook_wishlist_single_button_position();
+    }
+}
+
+/* How to remove it this hook in a site or theme 
+for loop button
+remove_action( 'wp', 'thwl_hook_wishlist_loop_button_position');
+for single page
+remove_action( 'wp', 'thwl_hook_wishlist_single_button_position');
+*/
