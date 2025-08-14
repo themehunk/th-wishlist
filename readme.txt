@@ -29,6 +29,28 @@ The plugin integrates seamlessly with your WooCommerce store and offers flexible
 ⭐ Lightweight and optimized for performance
 ⭐ Whether you’re running a small online store or a large eCommerce website, TH Wishlist helps build customer loyalty, boost user satisfaction, and increase sales—making it an essential tool for any WooCommerce store.
 
+
+**Theme Compatibility:-**
+
+This Wishlist Plugin by ThemeHunk is compatible with all themes. Below are some of the popular themes that work seamlessly with the plugin:
+
+* Shop Mania
+* Zita
+* Top Store
+* Big Store
+* Open Shop
+* Astra
+* Neve
+* Kadence
+* OceanWP
+* Storefront
+* eStore
+* Woostify
+* Botiga
+* Shoptimizer
+* Many more..
+
+
 == Installation ==
 
 1. Upload the `th-wishlist.zip` to the `/wp-content/plugins/` directory
@@ -54,26 +76,6 @@ You're free to contact us through mail, via our Contact form and Live chat suppo
 = Can I translate TH Wishlist plugin to Multi Language ? =
 
 Yes, You can translate our plugin to desired language.
-
-== Compatible Themes ==
-
-This Wishlist Plugin by ThemeHunk is compatible with all themes. Below are some of the popular themes that work seamlessly with the plugin:
-
-* Shop Mania  
-* Zita
-* Top Store
-* Big Store
-* Open Shop
-* Astra
-* Neve
-* Kadence
-* OceanWP
-* Storefront
-* eStore
-* Woostify
-* Botiga
-* Shoptimizer
-* Many more..
 
 
 == Changelog ==
@@ -111,11 +113,6 @@ This Wishlist Plugin by ThemeHunk is compatible with all themes. Below are some 
 = 1.0.0 =
 * Initial release
 
-== Third Party ==
-* Library:Pickr  
-* Version:1.9.1  
-* License:[MIT License](https://github.com/Simonwep/pickr/blob/master/LICENSE)  
-* Source: [https://github.com/Simonwep/pickr](https://github.com/Simonwep/pickr)
 
 == Upgrade Notice ==
 
