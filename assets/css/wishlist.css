@@ -88,7 +88,7 @@ width: 30px;
 
 .thw-add-to-wishlist-button.loading {
     opacity: 0.5;
-    pointer-events: none;
+    cursor:wait !important;
 }
 
 /* Icon Only (No Button Style) */
@@ -109,7 +109,6 @@ width: 30px;
     margin: 0;
 }
 
-
 /* Wishlist Table */
 .thw-wishlist-table {
     width: 100%;
@@ -128,7 +127,7 @@ width: 30px;
     width: 100%;
 }
 .thw-wishlist-form {
-   overflow-x: scroll;
+   overflow-x: auto;
 }
 .thw-wishlist-table th {
     font-weight: 700;
@@ -224,7 +223,7 @@ padding:10px 25px;
 text-align:center;
 }
 .thw-wishlist-wrapper{
-width: 70%;
+width:100%;
   margin: auto;
 }
 

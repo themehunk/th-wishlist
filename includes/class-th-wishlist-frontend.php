@@ -42,8 +42,8 @@ class THWL_Frontend {
 
     public function thwl_enqueue_styles_scripts() {
         
-        wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),THWL_VERSION);
-        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.2.5', array( 
+        wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),'1.0.1');
+        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),THWL_VERSION, array( 
                 'strategy'  => 'async',
                 'in_footer' => false,
         ) );
@@ -477,10 +477,10 @@ class THWL_Frontend {
         '<div class="thw-wishlist-wrapper %s">',
         esc_attr( $themedefault )
     );
-    $output .= sprintf(
-        '<h2>%s</h2>',
-        esc_html( $wishlist->wishlist_name )
-    );
+    // $output .= sprintf(
+    //     '<h2>%s</h2>',
+    //     esc_html( $wishlist->wishlist_name )
+    // );
     $output .= '<form class="thw-wishlist-form">';
     $output .= '<table class="thw-wishlist-table"><thead><tr>';
 

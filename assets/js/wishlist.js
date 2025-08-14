@@ -1,116 +1,87 @@
 jQuery(function($) {
-    // Add to wishlist
-    $(document).on('click', '.thw-add-to-wishlist-button:not(.thw-login-required)', function(e) {
-        e.preventDefault();
+    // Add to wishlist (normal + shortcode in one handler)
+$(document).on('click', '.thw-add-to-wishlist-button:not(.thw-login-required)', function (e) {
+    e.preventDefault();
 
-        var $button = $(this);
-        var product_id = $button.data('product-id');
-        var variation_id = $button.data('variation-id');
+    var $button = $(this);
+    var isShortcode = $button.hasClass('is-shortcode');
+    var product_id = $button.data('product-id');
+    var variation_id = $button.data('variation-id');
 
-        if ($button.hasClass('in-wishlist')) {
-            if (thwl_wishlist_params.wishlist_page_url) {
-                window.location.href = thwl_wishlist_params.wishlist_page_url;
-            }
-            return;
+    // If already in wishlist → go to wishlist page
+    if ($button.hasClass('in-wishlist')) {
+        if (thwl_wishlist_params.wishlist_page_url) {
+            window.location.href = thwl_wishlist_params.wishlist_page_url;
         }
+        return;
+    }
 
-        $.ajax({
-            type: 'POST',
-            url: thwl_wishlist_params.ajax_url,
-            data: { action: 'thwl_add_to_wishlist', nonce: thwl_wishlist_params.add_nonce, product_id: product_id, variation_id: variation_id },
-            beforeSend: function() { $button.addClass('loading'); },
-            success: function(response) {
-                if (response.success) {
-                    if (thwl_wishlist_params.icon_style !== 'icon') {
-                    $button.find('span').last().text(thwl_wishlist_params.i18n_added).attr('class', 'thw-to-browse-text');
-                    }
-                    $button.addClass('in-wishlist');
-                    // Update SVG icon based on wishlist status
-                        if (['icon', 'icon_text', 'icon_only_no_style'].includes(thwl_wishlist_params.icon_style)) {
-                            // Assume thwl_wishlist_params.icons contains the SVG icon data (e.g., from PHP)
-                            var icons = thwl_wishlist_params.icons; // Ensure this is passed from PHP to JS
-                            var selected_brwsicon = thwl_wishlist_params.th_wishlist_brws_icon || 'heart-filled'; // Default to heart-filled
-                            var icon_html = '<span class="thw-icon browse">' + (icons[selected_brwsicon]?.svg || icons['heart-filled'].svg) + '</span>';
+    $.ajax({
+        type: 'POST',
+        url: thwl_wishlist_params.ajax_url,
+        data: {
+            action: 'thwl_add_to_wishlist',
+            nonce: thwl_wishlist_params.add_nonce,
+            product_id: product_id,
+            variation_id: variation_id
+        },
+        beforeSend: function () {
+            $button.addClass('loading');
+        },
+        success: function (response) {
+            if (response.success) {
 
-                            // Replace the current icon with the browse wishlist icon
-                            $button.find('.thw-icon').replaceWith(icon_html);
-                        }
-                } else {
-                    console.log(thwl_wishlist_params.i18n_error);
-                }
-            },
-            complete: function() { $button.removeClass('loading'); }
-        });
-    });
-
-    //shortcode function
-    // Add to wishlist
-    $(document).on('click', '.thw-add-to-wishlist-button.is-shortcode:not(.thw-login-required)', function(e) {
-        e.preventDefault();
-        var $buttonS = $(this);
-        var product_id = $buttonS.data('product-id');
-        var variation_id = $buttonS.data('variation-id');
-
-        if ($buttonS.hasClass('in-wishlist')) {
-            if (thwl_wishlist_params.wishlist_page_url) {
-                window.location.href = thwl_wishlist_params.wishlist_page_url;
-            }
-            return;
-        }
-
-        $.ajax({
-            type: 'POST',
-            url: thwl_wishlist_params.ajax_url,
-            data: {
-                action: 'thwl_add_to_wishlist',
-                nonce: thwl_wishlist_params.add_nonce,
-                product_id: product_id,
-                variation_id: variation_id
-            },
-            beforeSend: function() {
-                $buttonS.addClass('loading');
-            },
-            success: function(response) {
-
-                if (response.success) {
-
-                    // Update button text if not icon-only
-                    if (thwl_wishlist_params.icon_style !== 'icon') {
-                        var browseText = $buttonS.attr('data-browse-text'); // use .attr instead of .data
+                // Update button text (different for shortcode vs normal)
+                if (thwl_wishlist_params.icon_style !== 'icon') {
+                    if (isShortcode) {
+                        // Shortcode-specific text
+                        var browseText = $button.attr('data-browse-text');
                         if (browseText) {
-                            $buttonS.find('span').last().text(browseText).attr('class', 'thw-to-browse-text');
-                        }else{
-                            $buttonS.find('span').last().attr('class', 'thw-to-browse-text');
+                            $button.find('span').last().text(browseText).attr('class', 'thw-to-browse-text');
+                        } else {
+                            $button.find('span').last().attr('class', 'thw-to-browse-text');
                         }
+                    } else {
+                        // Normal button text
+                        $button.find('span').last().text(thwl_wishlist_params.i18n_added).attr('class', 'thw-to-browse-text');
                     }
+                }
 
-                    $buttonS.addClass('in-wishlist');
+                $button.addClass('in-wishlist');
 
-                    // Update icon using shortcode custom data attributes
-                    if (['icon', 'icon_text', 'icon_only_no_style'].includes(thwl_wishlist_params.icon_style)) {
-                        var browseIcon = $buttonS.data('browse-icon');
+                // Update icon
+                if (['icon', 'icon_text', 'icon_only_no_style'].includes(thwl_wishlist_params.icon_style)) {
+                    if (isShortcode) {
+                        var browseIcon = $button.data('browse-icon');
                         if (browseIcon) {
-                            // Decode any HTML entities like &lt;
+                            // Decode &lt; etc.
                             var decodedIcon = $('<textarea/>').html(browseIcon).text();
                             var icon_html = '<span class="thw-icon browse"><span class="' + decodedIcon + '"></span></span>';
-                            $buttonS.find('.thw-icon').replaceWith(icon_html);
-                        }else{
-                            var icons = thwl_wishlist_params.icons; // Ensure this is passed from PHP to JS
-                            var selected_brwsicon = thwl_wishlist_params.th_wishlist_brws_icon || 'heart-filled'; // Default to heart-filled
+                            $button.find('.thw-icon').replaceWith(icon_html);
+                        } else {
+                            var icons = thwl_wishlist_params.icons;
+                            var selected_brwsicon = thwl_wishlist_params.th_wishlist_brws_icon || 'heart-filled';
                             var icon_html = '<span class="thw-icon browse">' + (icons[selected_brwsicon]?.svg || icons['heart-filled'].svg) + '</span>';
-                            // Replace the current icon with the browse wishlist icon
-                            $buttonS.find('.thw-icon').replaceWith(icon_html);
+                            $button.find('.thw-icon').replaceWith(icon_html);
                         }
+                    } else {
+                        var icons = thwl_wishlist_params.icons;
+                        var selected_brwsicon = thwl_wishlist_params.th_wishlist_brws_icon || 'heart-filled';
+                        var icon_html = '<span class="thw-icon browse">' + (icons[selected_brwsicon]?.svg || icons['heart-filled'].svg) + '</span>';
+                        $button.find('.thw-icon').replaceWith(icon_html);
                     }
-                } else {
-                    console.log(thwl_wishlist_params.i18n_error);
                 }
-            },
-            complete: function() {
-                $buttonS.removeClass('loading');
+
+            } else {
+                console.log(thwl_wishlist_params.i18n_error);
             }
-        });
+        },
+        complete: function () {
+            $button.removeClass('loading');
+        }
     });
+});
+
 
     // Remove from wishlist
     $(document).on('click', '.thw-remove-item', function(e) {

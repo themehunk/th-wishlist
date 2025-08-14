@@ -63,10 +63,26 @@ class THWL_Install {
     /**
      * Create the wishlist page.
      */
-    private static function create_page() {
-        if ( get_option( 'thwl_page_id' ) || get_page_by_path( 'wishlist' ) ) {
-            return;
+    /**
+ * Create or update the wishlist page.
+ */
+private static function create_page() {
+    $existing_page = get_page_by_path( 'wishlist' );
+
+    if ( $existing_page ) {
+        // Page exists
+        if ( strpos( $existing_page->post_content, '[thwl_wishlist]' ) === false ) {
+            // Shortcode not found → update page content
+            $updated_page = array(
+                'ID'           => $existing_page->ID,
+                'post_content' => '[thwl_wishlist]',
+            );
+            wp_update_post( $updated_page );
         }
+        // Ensure option is set
+        update_option( 'thwl_page_id', $existing_page->ID );
+    } else {
+        // Page does not exist → create new
         $wishlist_page = array(
             'post_title'     => 'Wishlist',
             'post_content'   => '[thwl_wishlist]',
@@ -80,4 +96,6 @@ class THWL_Install {
             update_option( 'thwl_page_id', $page_id );
         }
     }
+}
+
 }
