@@ -110,7 +110,10 @@ class THWL_Frontend {
                 color: " . esc_attr($th_wishlist_option['th_wishlist_shr_c_hvr_color']) . ";
         }");
 
-        $wishlist_page_id = isset($this->thwl_option['thwl_page_id']) ? $this->thwl_option['thwl_page_id'] : 0;
+        $wishlist_page_id = ! empty( $this->thwl_option['thwl_page_id'] ) 
+        ? $this->thwl_option['thwl_page_id'] 
+        : get_option( 'thwl_page_id' );
+
         $thw_redirect_to_cart = isset($this->thwl_option['thw_redirect_to_cart']) ? $this->thwl_option['thw_redirect_to_cart'] : '';
         wp_localize_script( 'thwl', 'thwl_wishlist_params', array(
             'ajax_url'            => admin_url( 'admin-ajax.php' ),
