@@ -32,8 +32,36 @@ class THWL_Settings {
         );
     }
 /**
- * Render the settings page with vertical tabs.
+ * Render Wishlist Settings Tabs
  */
+function thwl_render_settings_tabs() {
+
+    $tabs = [
+        'general'  => esc_html__( 'General Settings', 'th-wishlist' ),
+        'button'   => esc_html__( 'Wishlist Button', 'th-wishlist' ),
+        'loop'     => esc_html__( 'Loop Settings', 'th-wishlist' ),
+        'product'  => esc_html__( 'Product Page', 'th-wishlist' ),
+        'wishlist' => esc_html__( 'Wishlist Page', 'th-wishlist' ),
+        'style'    => esc_html__( 'Style Customization', 'th-wishlist' ),
+    ];
+    /**
+     * Allow Pro plugin or other addons to add new tabs.
+     */
+    $tabs = apply_filters( 'thwl_pro_settings_tabs', $tabs );
+    ?>
+    <ul class="thw-tabs-list">
+        <?php 
+        $first = true;
+        foreach ( $tabs as $id => $label ) : ?>
+            <li class="thw-tab <?php echo esc_attr($first) ? 'active' : ''; ?>" data-tab="<?php echo esc_attr( $id ); ?>">
+                <?php echo esc_html( $label ); ?>
+            </li>
+            <?php $first = false; ?>
+        <?php endforeach; ?>
+    </ul>
+    <?php
+}
+
 public function settings_page() {
     $default_columns = [ 'thumbnail', 'name', 'price', 'stock', 'add_to_cart', 'remove' ];
     $all_columns = [
@@ -63,14 +91,7 @@ public function settings_page() {
 					</div>
             <h3><?php esc_html_e( 'TH Wishlist', 'th-wishlist' ); ?></h3>
             </div>
-            <ul class="thw-tabs-list">
-                <li class="thw-tab active" data-tab="general"><?php esc_html_e( 'General Settings', 'th-wishlist' ); ?></li>
-                <li class="thw-tab" data-tab="button"><?php esc_html_e( 'Wishlist Button', 'th-wishlist' ); ?></li>
-                <li class="thw-tab" data-tab="loop"><?php esc_html_e( 'Loop Settings', 'th-wishlist' ); ?></li>
-                <li class="thw-tab" data-tab="product"><?php esc_html_e( 'Product Page', 'th-wishlist' ); ?></li>
-                <li class="thw-tab" data-tab="wishlist"><?php esc_html_e( 'Wishlist Page', 'th-wishlist' ); ?></li>
-                <li class="thw-tab" data-tab="style"><?php esc_html_e( 'Style Customization', 'th-wishlist' ); ?></li>
-            </ul>
+            <?php $this->thwl_render_settings_tabs(); ?>
         </div>
         <form id="thw-settings-form" data-nonce="<?php echo esc_attr( wp_create_nonce( 'thwl_wishlist_nonce' ) ); ?>">
             <div class="thw-tabs-content">
@@ -83,7 +104,7 @@ public function settings_page() {
                             <?php
                           
     // Retrieve the stored wishlist page ID, default to empty string if not set
-   $selected_page_id = isset($options['thwl_page_id']) && !empty($options['thwl_page_id']) 
+    $selected_page_id = isset($options['thwl_page_id']) && !empty($options['thwl_page_id']) 
     ? absint($options['thwl_page_id']) 
     : get_option('thwl_page_id');
                                 wp_dropdown_pages([
@@ -482,6 +503,7 @@ public function settings_page() {
                      </tr>
                    </table>
                 </div>
+              <?php do_action( 'thwl_after_pro_settings_fields' );?>
             </div>
             <p>
                 <button type="submit" class="button button-primary"><?php esc_html_e( 'Save Settings', 'th-wishlist' ); ?></button>
@@ -521,7 +543,7 @@ public function settings_page() {
      * @return array
      */
     public static function thwl_get_default_settings() {
-        return [
+        $defaults =  [
             'thwl_page_id' =>'',
             'thw_require_login'            => 0,
             'thw_redirect_to_cart'         => 0,
@@ -560,5 +582,6 @@ public function settings_page() {
             'th_wishlist_shr_c_color'      => '',
             'th_wishlist_shr_c_hvr_color'  => '', 
         ];
+        return apply_filters( 'thwl_default_settings', $defaults );
     }
 }
