@@ -68,9 +68,11 @@ class THWL_Ajax {
         $sanitized_data = $this->thwl_sanitize_form_data( wp_unslash( $_POST['settings'] ) );
         if ( ! empty( $sanitized_data ) ) {
             update_option( 'thwl_settings', $sanitized_data );
+            if ( isset( $sanitized_data['thwl_page_id'] ) ) {
+            update_option( 'thwl_page_id', absint( $sanitized_data['thwl_page_id'] ) );
+            }
             wp_send_json_success( __( 'Settings saved successfully!', 'th-wishlist' ) );
         }
-
         wp_send_json_error( __( 'Error saving settings. Invalid data.', 'th-wishlist' ) );
     }
 

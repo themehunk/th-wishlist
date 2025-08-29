@@ -72,7 +72,7 @@ class THWL_Install {
             'post_title'     => 'Wishlist',
             'post_content'   => '[thwl_wishlist]',
             'post_status'    => 'publish',
-            'post_author'    => 1,
+            // 'post_author'    => 1,
             'post_type'      => 'page',
             'comment_status' => 'closed',
         );
