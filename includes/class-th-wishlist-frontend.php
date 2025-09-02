@@ -242,9 +242,19 @@ class THWL_Frontend {
         esc_attr($themedefault)
     );
 
+
+    // for pro version
+    if(THWL_PRO_ACTIVE){
+    $thwp_multi_wishlist = isset( $this->thwl_option['thwp_multi_wishlist'] ) ? $this->thwl_option['thwp_multi_wishlist'] : 1;
+    $classMulti = ($thwp_multi_wishlist == 1) ? 'create-multi' : '';
+    }else{
+    $classMulti =''; 
+    }
+
     if ('icon' === $display_style) {
         $output .= sprintf(
-            '<button class="thw-add-to-wishlist-button %s %s" data-product-id="%s" data-variation-id="%s">%s%s</button>',
+            '<button class="thw-add-to-wishlist-button %s %s %s" data-product-id="%s" data-variation-id="%s">%s%s</button>',
+            esc_attr($classMulti),
             esc_attr($btnclasses),
             esc_attr($class_attr),
             esc_attr($product_id),
@@ -254,7 +264,8 @@ class THWL_Frontend {
         );
     } else {
         $output .= sprintf(
-            '<a class="thw-add-to-wishlist-button %s %s" data-product-id="%s" data-variation-id="%s">%s%s</a>',
+            '<a class="thw-add-to-wishlist-button %s %s %s" data-product-id="%s" data-variation-id="%s">%s%s</a>',
+            esc_attr($classMulti),
             esc_attr($btnclasses),
             esc_attr($class_attr),
             esc_attr($product_id),
@@ -415,7 +426,7 @@ class THWL_Frontend {
     }
 
     public function thwl_wishlist_page_shortcode() {
-    do_action('thwl_wishlist_view'); 
+    //do_action('thwl_wishlist_view'); 
     global $product;
     $output = '';
     $wishlist = null;
