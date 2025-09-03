@@ -15,11 +15,12 @@ class THWL_Frontend {
         // Use static method directly, no need to instantiate
         $this->thwl_option = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
         add_action('wp_enqueue_scripts', array( $this, 'thwl_enqueue_styles_scripts' ) );
+        
+        if ( ! ( defined( 'THWL_PRO_ACTIVE' ) && THWL_PRO_ACTIVE ) ) {
+        //global button
+        add_shortcode('thwl_wishlist_button', array( $this,'thwl_add_to_wishlist_button_shortcode'));
         //page shortcode
         add_shortcode('thwl_wishlist', array( $this, 'thwl_wishlist_page_shortcode' ) );
-        //global button
-        if ( ! ( defined( 'THWL_PRO_ACTIVE' ) && THWL_PRO_ACTIVE ) ) {
-        add_shortcode('thwl_wishlist_button', array( $this,'thwl_add_to_wishlist_button_shortcode'));
         }
         //flexible shortcode
         add_shortcode('thwl_add_to_wishlist', array( $this, 'thwl_add_to_wishlist_button_flexible_shortcode') );
