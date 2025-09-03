@@ -9,24 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class THWL_Frontend
  */
 class THWL_Frontend {
-
     // Declare the property to avoid dynamic property deprecation warning
     private $thwl_option;
-
     public function __construct() {
-
         // Use static method directly, no need to instantiate
         $this->thwl_option = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
-
         add_action('wp_enqueue_scripts', array( $this, 'thwl_enqueue_styles_scripts' ) );
         //page shortcode
         add_shortcode('thwl_wishlist', array( $this, 'thwl_wishlist_page_shortcode' ) );
         //global button
+        if ( ! ( defined( 'THWL_PRO_ACTIVE' ) && THWL_PRO_ACTIVE ) ) {
         add_shortcode('thwl_wishlist_button', array( $this,'thwl_add_to_wishlist_button_shortcode'));
+        }
         //flexible shortcode
-        add_shortcode( 'thwl_add_to_wishlist', array( $this, 'thwl_add_to_wishlist_button_flexible_shortcode') );
-        //add_action( 'wp', array( $this, 'thwl_hook_wishlist_loop_button_position' ) );
-        //add_action( 'wp', array( $this, 'thwl_hook_wishlist_single_button_position' ) );
+        add_shortcode('thwl_add_to_wishlist', array( $this, 'thwl_add_to_wishlist_button_flexible_shortcode') );
         // AJAX handlers
         add_action( 'wp_ajax_thwl_add_to_wishlist', array( $this, 'thwl_add_to_wishlist_ajax' ) );
         add_action( 'wp_ajax_nopriv_thwl_add_to_wishlist', array( $this, 'thwl_add_to_wishlist_ajax' ) );
@@ -43,7 +39,7 @@ class THWL_Frontend {
     public function thwl_enqueue_styles_scripts() {
         
         wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),'1.0.1');
-        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),THWL_VERSION, array( 
+        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.1.1', array( 
                 'strategy'  => 'async',
                 'in_footer' => false,
         ) );
@@ -147,7 +143,7 @@ class THWL_Frontend {
     $product_id = $product->get_id();
     $variation_id = $product->is_type('variation') ? $product->get_id() : 0;
     $in_wishlist = $wishlist ? THWL_Data::is_product_in_wishlist($wishlist->id, $product_id, $variation_id) : false;
-
+    $user_id = get_current_user_id();
     // Handle login requirement
     if (isset($this->thwl_option['thw_require_login']) && '1' === $this->thwl_option['thw_require_login'] && !is_user_logged_in()) {
         $myaccount_page_id = get_option('woocommerce_myaccount_page_id');
@@ -244,7 +240,7 @@ class THWL_Frontend {
 
 
     // for pro version
-    if(THWL_PRO_ACTIVE){
+    if ( defined( 'THWL_PRO_ACTIVE' ) && THWL_PRO_ACTIVE ){
     $thwp_multi_wishlist = isset( $this->thwl_option['thwp_multi_wishlist'] ) ? $this->thwl_option['thwp_multi_wishlist'] : 1;
     $classMulti = ($thwp_multi_wishlist == 1) ? 'create-multi' : '';
     }else{

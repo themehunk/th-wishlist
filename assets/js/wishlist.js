@@ -2,8 +2,10 @@ jQuery(function($) {
     // Add to wishlist (normal + shortcode in one handler)
 $(document).on('click', '.thw-add-to-wishlist-button:not(.thw-login-required)', function (e) {
     e.preventDefault();
-
     var $button = $(this);
+    if ($button.hasClass('create-multi')) {
+            return;
+    }
     var isShortcode = $button.hasClass('is-shortcode');
     var product_id = $button.data('product-id');
     var variation_id = $button.data('variation-id');
