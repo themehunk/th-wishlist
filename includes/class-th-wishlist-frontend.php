@@ -15,13 +15,10 @@ class THWL_Frontend {
         // Use static method directly, no need to instantiate
         $this->thwl_option = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
         add_action('wp_enqueue_scripts', array( $this, 'thwl_enqueue_styles_scripts' ) );
-        
-        if ( ! ( defined( 'THWL_PRO_ACTIVE' ) && THWL_PRO_ACTIVE ) ) {
         //global button
         add_shortcode('thwl_wishlist_button', array( $this,'thwl_add_to_wishlist_button_shortcode'));
         //page shortcode
         add_shortcode('thwl_wishlist', array( $this, 'thwl_wishlist_page_shortcode' ) );
-        }
         //flexible shortcode
         add_shortcode('thwl_add_to_wishlist', array( $this, 'thwl_add_to_wishlist_button_flexible_shortcode') );
         // AJAX handlers
@@ -239,19 +236,9 @@ class THWL_Frontend {
         esc_attr($themedefault)
     );
 
-
-    // for pro version
-    if ( defined( 'THWL_PRO_ACTIVE' ) && THWL_PRO_ACTIVE ){
-    $thwp_multi_wishlist = isset( $this->thwl_option['thwp_multi_wishlist'] ) ? $this->thwl_option['thwp_multi_wishlist'] : 1;
-    $classMulti = ($thwp_multi_wishlist == 1) ? 'create-multi' : '';
-    }else{
-    $classMulti =''; 
-    }
-
     if ('icon' === $display_style) {
         $output .= sprintf(
-            '<button class="thw-add-to-wishlist-button %s %s %s" data-product-id="%s" data-variation-id="%s">%s%s</button>',
-            esc_attr($classMulti),
+            '<button class="thw-add-to-wishlist-button %s %s" data-product-id="%s" data-variation-id="%s">%s%s</button>',
             esc_attr($btnclasses),
             esc_attr($class_attr),
             esc_attr($product_id),
@@ -261,8 +248,7 @@ class THWL_Frontend {
         );
     } else {
         $output .= sprintf(
-            '<a class="thw-add-to-wishlist-button %s %s %s" data-product-id="%s" data-variation-id="%s">%s%s</a>',
-            esc_attr($classMulti),
+            '<a class="thw-add-to-wishlist-button %s %s" data-product-id="%s" data-variation-id="%s">%s%s</a>',
             esc_attr($btnclasses),
             esc_attr($class_attr),
             esc_attr($product_id),
