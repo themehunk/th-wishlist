@@ -134,9 +134,77 @@ function thwl_hook_wishlist_single_button_position() {
     }
 }
 
-/* How to remove it this hook in a site or theme 
-for loop button
-remove_action( 'wp', 'thwl_hook_wishlist_loop_button_position');
-for single page
-remove_action( 'wp', 'thwl_hook_wishlist_single_button_position');
-*/
+/*******************************************/
+// Redirect wishlist page icon shorcode
+/********************************************/
+function thwl_wishlist_redirect_shortcode() {
+    $options = get_option( 'thwl_settings', [] );
+    // Get Wishlist page URL
+    $wishlist_url = thwl_wishlist_redirect_url();
+    // Load all available icons
+    $icons = function_exists( 'thwl_get_wishlist_icons_svg' ) ? thwl_get_wishlist_icons_svg() : [];
+    // Selected icon + color from settings
+	$options['thw_redirect_wishlist_page_icon'];
+    $selected_icon_key = ! empty( $options['thw_redirect_wishlist_page_icon'] )
+        ? $options['thw_redirect_wishlist_page_icon']
+        : 'heart-outline';
+
+    $icon_color = ! empty( $options['thw_redirect_wishlist_page_icon_color'] )
+        ? $options['thw_redirect_wishlist_page_icon_color']
+        : '#111';
+
+    // Allowed SVG tags for sanitization
+    $allowed_svg_tags = array(
+        'svg'  => array(
+            'class'        => true,
+            'width'        => true,
+            'height'       => true,
+            'viewbox'      => true,
+            'fill'         => true,
+            'stroke'       => true,
+            'stroke-width' => true,
+            'xmlns'        => true,
+        ),
+        'path' => array(
+            'd'              => true,
+            'fill'           => true,
+            'stroke'         => true,
+            'stroke-linecap' => true,
+            'stroke-linejoin'=> true,
+            'clip-rule'      => true,
+            'fill-rule'      => true,
+        ),
+    );
+
+    // Get icon SVG if available
+    $icon_html = '';
+    if ( isset( $icons[ $selected_icon_key ]['svg'] ) ) {
+        // Add color attribute
+        $icon_svg = str_replace(
+            '<svg',
+            '<svg',
+            $icons[ $selected_icon_key ]['svg']
+        );
+        $icon_html = sprintf(
+            '<span class="thwl-page-redirect-icon" style="display:inline-flex;">%s</span>',
+             wp_kses( $icon_svg, $allowed_svg_tags )
+        );
+    }
+
+    // Build final HTML
+    $html  = '<a style="display:inline-flex;" class="thwl-page-redirect-whishlist" href="' . esc_url( $wishlist_url ) . '">';
+    $html .= $icon_html; // Inject icon
+    $html .= '</a>';
+
+    return $html;
+}
+add_shortcode( 'thwl_wishlist_redirect', 'thwl_wishlist_redirect_shortcode' );
+
+function thwl_wishlist_redirect_url(){
+    $wishlist_page_id = '';
+    if ( class_exists( 'THWL_Wishlist' ) ){
+        $wishlist_page_id = get_option('thwl_page_id');
+    }
+    $wishlist_permalink = $wishlist_page_id ? get_the_permalink( $wishlist_page_id ) : home_url();
+    return $wishlist_permalink;
+}

@@ -78,6 +78,9 @@ This Wishlist Plugin by ThemeHunk is compatible with all themes. Below are some 
 
 == Changelog ==
 
+= 1.1.0 =
+* Update:Wishlist page redirect shortcode added.
+
 = 1.0.9 =
 * Fix:get wishlist page url issue fixed.
 * Update:Competible for pro plugin

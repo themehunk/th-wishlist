@@ -102,7 +102,18 @@ class THWL_Frontend {
             }
             .thw-table-custom-style .thw-social-share a.thw-copy-link-button:hover {
                 color: " . esc_attr($th_wishlist_option['th_wishlist_shr_c_hvr_color']) . ";
-        }");
+             }
+            .thwl-page-redirect-icon svg{
+                    height:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_size']) . "px;
+                    width:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_size']) . "px;
+                } 
+            .thwl-page-redirect-whishlist .thwl-page-redirect-icon{
+                    color:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_color']) . ";
+                }
+             .thwl-page-redirect-whishlist:hover .thwl-page-redirect-icon{
+                    color:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_color_hvr']) . ";
+                }      
+             ");
 
         $wishlist_page_id = ! empty( $this->thwl_option['thwl_page_id'] ) 
         ? $this->thwl_option['thwl_page_id'] 
