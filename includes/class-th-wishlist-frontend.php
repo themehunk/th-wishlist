@@ -420,7 +420,7 @@ class THWL_Frontend {
     }
 
     public function thwl_wishlist_page_shortcode() {
-    //do_action('thwl_wishlist_view'); 
+     
     global $product;
     $output = '';
     $wishlist = null;

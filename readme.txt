@@ -80,6 +80,7 @@ This Wishlist Plugin by ThemeHunk is compatible with all themes. Below are some 
 
 = 1.1.0 =
 * Update:Wishlist page redirect shortcode added.
+* Fix:In thwl-wishlists-tracking Table bulk delete not working.
 
 = 1.0.9 =
 * Fix:get wishlist page url issue fixed.
