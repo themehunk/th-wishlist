@@ -63,18 +63,27 @@ function thwl_render_settings_tabs() {
 }
 
 public function settings_page() {
-    $default_columns = [ 'thumbnail', 'name', 'price', 'stock', 'add_to_cart', 'remove' ];
-    $all_columns = [
-        'checkbox'    => __( 'Checkbox', 'th-wishlist' ),
-        'thumbnail'   => __( 'Image', 'th-wishlist' ),
-        'name'        => __( 'Name', 'th-wishlist' ),
-        'price'       => __( 'Price', 'th-wishlist' ),
-        'stock'       => __( 'Stock Status', 'th-wishlist' ),
-        'quantity'    => __( 'Quantity', 'th-wishlist' ),
-        'add_to_cart' => __( 'Add to Cart', 'th-wishlist' ),
-        'date'        => __( 'Date Added', 'th-wishlist' ),
-        'remove'      => __( 'Remove', 'th-wishlist' ),
-    ];
+    $all_columns = apply_filters( 'thwl_all_columns', [
+    'checkbox'    => __( 'Checkbox', 'th-wishlist' ),
+    'thumbnail'   => __( 'Image', 'th-wishlist' ),
+    'name'        => __( 'Name', 'th-wishlist' ),
+    'price'       => __( 'Price', 'th-wishlist' ),
+    'stock'       => __( 'Stock Status', 'th-wishlist' ),
+    'quantity'    => __( 'Quantity', 'th-wishlist' ),
+    'add_to_cart' => __( 'Add to Cart', 'th-wishlist' ),
+    'date'        => __( 'Date Added', 'th-wishlist' ),
+    'remove'      => __( 'Remove', 'th-wishlist' ),
+    ] );
+
+    $default_columns = apply_filters( 'thwl_default_columns', [
+        'thumbnail',
+        'name',
+        'price',
+        'stock',
+        'add_to_cart',
+        'remove'
+    ] );
+    
     $options = get_option( 'thwl_settings', self::thwl_get_default_settings() );
     $saved_columns = isset( $options['th_wishlist_table_columns'] ) ? $options['th_wishlist_table_columns'] : $default_columns;
     $labels = isset( $options['th_wishlist_table_column_labels'] ) ? $options['th_wishlist_table_column_labels'] : self::thwl_get_default_settings()['th_wishlist_table_column_labels'];

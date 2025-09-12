@@ -37,7 +37,7 @@ class THWL_Frontend {
     public function thwl_enqueue_styles_scripts() {
         
         wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),'1.0.1');
-        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.1.1', array( 
+        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.1.2', array( 
                 'strategy'  => 'async',
                 'in_footer' => false,
         ) );
@@ -536,7 +536,7 @@ class THWL_Frontend {
             }
 
             $output .= sprintf(
-                '<tr data-item-id="%s" data-product-id="%s">',
+                '<tr class="thwl-wishlist-item" data-item-id="%s" data-product-id="%s">',
                 esc_attr( $item->id ),
                 esc_attr( $_product->get_id() )
             );
