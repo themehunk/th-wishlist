@@ -154,7 +154,15 @@ font-weight: 500;
     width: 60px;
     text-align: center;
 }
-
+.thw-qty {
+    width: 70px;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+}
 .thw-wishlist-table .product-remove a {
     color: red;
     font-size: 20px;

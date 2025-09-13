@@ -216,6 +216,24 @@ jQuery(document).ready(function($) {
     initColorPicker($('input[name="settings[th_wishlist_add_icon_color]"]'), 'settings[th_wishlist_add_icon]');
     initColorPicker($('input[name="settings[th_wishlist_brws_icon_color]"]'), 'settings[th_wishlist_brws_icon]');
 });
+
+//hide show page redirect setting
+jQuery(document).ready(function($) {
+    function toggleRedirectWishlistSettings() {
+        if ($('#thw_redirect_wishlist_page').is(':checked')) {
+            $('.thw-redirect-wishlist-dependent').show();
+        } else {
+            $('.thw-redirect-wishlist-dependent').hide();
+        }
+    }
+    // Run on page load
+    toggleRedirectWishlistSettings();
+
+    // Run on checkbox change
+    $('#thw_redirect_wishlist_page').on('change', function() {
+        toggleRedirectWishlistSettings();
+    });
+});
    
 });
 

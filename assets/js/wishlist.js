@@ -3,8 +3,8 @@ jQuery(function($) {
 $(document).on('click', '.thw-add-to-wishlist-button:not(.thw-login-required)', function (e) {
     e.preventDefault();
     var $button = $(this);
-    if ($button.hasClass('create-multi')) {
-            return;
+    if ($button.hasClass('create-multi')){
+    return;
     }
     var isShortcode = $button.hasClass('is-shortcode');
     var product_id = $button.data('product-id');
@@ -82,34 +82,58 @@ $(document).on('click', '.thw-add-to-wishlist-button:not(.thw-login-required)', 
             $button.removeClass('loading');
         }
     });
-});
-
-
+    });
     // Remove from wishlist
     $(document).on('click', '.thw-remove-item', function(e) {
-        e.preventDefault();
-        var $row = $(this).closest('tr');
-        var item_id = $row.data('item-id');
+    e.preventDefault();
+    var $this = $(this);
+    // Universal parent with data-item-id
+    var $parent = $this.closest('[data-item-id]');
+    if (!$parent.length) return; // safety check
+    var item_id = $parent.data('item-id');
+    if (!item_id) return; // safety check
+    $.ajax({
+        type: 'POST',
+        url: thwl_wishlist_params.ajax_url,
+        data: {
+            action: 'thwl_remove_from_wishlist',
+            nonce: thwl_wishlist_params.remove_nonce,
+            item_id: item_id
+        },
+        beforeSend: function() {
+            $parent.css('opacity', '0.5');
+        },
+        success: function(response) {
+            if (response.success) {
+                $parent.fadeOut(300, function() {
 
-        $.ajax({
-            type: 'POST',
-            url: thwl_wishlist_params.ajax_url,
-            data: { action: 'thwl_remove_from_wishlist', nonce: thwl_wishlist_params.remove_nonce, item_id: item_id },
-            beforeSend: function() { $row.css('opacity', '0.5'); },
-            success: function(response) {
-                if (response.success) {
-                    $row.fadeOut(300, function() {
-                        if ($row.siblings().length === 0) {
-                            var colspan = $row.children().length;
-                            $row.closest('tbody').html('<tr><td colspan="' + colspan + '">' + thwl_wishlist_params.i18n_empty_wishlist + '</td></tr>');
-                        }
-                        $row.remove();
-                    });
-                } else {
-                     $row.css('opacity', '1');
-                }
+                    // Table layout empty check
+                    if ($parent.is('tr') && $parent.siblings().length === 0) {
+                        var colspan = $parent.children().length;
+                        $parent.closest('tbody').html('<tr><td colspan="' + colspan + '">' + thwl_wishlist_params.i18n_empty_wishlist + '</td></tr>');
+                    }
+
+                    // Div layout empty check
+                    if ($parent.hasClass('thwl-wishlist-item') && $parent.siblings('.thwl-wishlist-item').length === 0) {
+                        $parent.closest('.thw-wishlist-items').html('<p>' + thwl_wishlist_params.i18n_empty_wishlist + '</p>');
+                    }
+
+                    // Grid layout empty check
+                    if ($parent.hasClass('thw-wishlist-card') && $parent.siblings('.thw-wishlist-card').length === 0) {
+                        $parent.closest('.thw-wishlist-grid').html('<p>' + thwl_wishlist_params.i18n_empty_wishlist + '</p>');
+                    }
+
+                    $parent.remove();
+                });
+            } else {
+                $parent.css('opacity', '1');
             }
-        });
+        },
+        error: function() {
+            $parent.css('opacity', '1');
+            alert('Unable to remove item. Please try again.');
+        }
+       });
     });
 
     // Update quantity
@@ -120,59 +144,67 @@ $(document).on('click', '.thw-add-to-wishlist-button:not(.thw-login-required)', 
         // Update WooCommerce add_to_cart_button data-quantity
         var $row = $input.closest('tr');
         var $button = $row.find('.add_to_cart_button');
-
         if ($button.length) {
             $button.attr('data-quantity', quantity);
         }
-
         $.post(thwl_wishlist_params.ajax_url, { action: 'thwl_update_item_quantity', nonce: thwl_wishlist_params.update_qty_nonce, item_id: item_id, quantity: quantity });
     });
 
     // Select/Deselect all
-    $('#thw-select-all').on('change', function() {
-        $('.thw-wishlist-table tbody input[type="checkbox"]').prop('checked', this.checked);
+    $(document).on('change', '#thw-select-all', function() {
+    $('.thwl-wishlist-item input[type="checkbox"]').prop('checked', this.checked);
     });
 
     // Add all selected to cart
-    $('.thw-add-all-to-cart').on('click', function(e) {
-        e.preventDefault();
-        var $button = $(this);
-        var items = [];
-        $('.thw-wishlist-table tbody input[type="checkbox"]:checked').each(function() {
-            items.push($(this).val());
-        });
+    $(document).on('click', '.thw-add-all-to-cart', function(e) {
+            e.preventDefault();
 
-        if (items.length === 0) {
-            alert('Please select products to add to cart.');
-            return;
-        }
+            var $button = $(this);
+            var items = [];
 
-        $.ajax({
-            type: 'POST',
-            url: thwl_wishlist_params.ajax_url,
-            data: { action: 'thwl_add_all_to_cart', nonce: thwl_wishlist_params.add_all_nonce, items: items },
-            beforeSend: function() { $button.addClass('loading'); },
-            success: function() {
-                if (thwl_wishlist_params.redirect_to_cart) {
-                    window.location.href = thwl_wishlist_params.cart_url;
-                } else {
-                    $button.text('Added to Cart!');
+            $('.thwl-wishlist-item input[type="checkbox"]:checked').each(function() {
+                items.push($(this).val());
+            });
+
+            if (items.length === 0) {
+                alert('Please select products to add to cart.');
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: thwl_wishlist_params.ajax_url,
+                data: {
+                    action: 'thwl_add_all_to_cart',
+                    nonce: thwl_wishlist_params.add_all_nonce,
+                    items: items
+                },
+                beforeSend: function() {
+                    $button.addClass('loading');
+                },
+                success: function() {
+                    if (thwl_wishlist_params.redirect_to_cart) {
+                        window.location.href = thwl_wishlist_params.cart_url;
+                    } else {
+                        $button.text('Added to Cart!');
+                    }
+                },
+                complete: function() {
+                    $button.removeClass('loading');
                 }
-            },
-            complete: function() { $button.removeClass('loading'); }
+            });
         });
-    });
 
-    // Copy link
-    $(document).on('click', '.thw-copy-link-button', function() {
-        var link = $(this).data('link');
-        var $temp = $("<input>");
-        $("body").append($temp);
-        $temp.val(link).select();
-        document.execCommand("copy");
-        $temp.remove();
-        alert('Wishlist link copied to clipboard!');
-    });
+        // Copy link
+        $(document).on('click', '.thw-copy-link-button', function() {
+            var link = $(this).data('link');
+            var $temp = $("<input>");
+            $("body").append($temp);
+            $temp.val(link).select();
+            document.execCommand("copy");
+            $temp.remove();
+            alert('Wishlist link copied to clipboard!');
+        });
 
     // redirect to cart or remove code
 
@@ -183,7 +215,7 @@ $(document).on('click', '.thw-add-to-wishlist-button:not(.thw-login-required)', 
         const quantity = $btn.data('quantity') || 1;
         const item_id = $btn.data('item-id');
         const token = $btn.data('wishlist-token');
-        const $row = $('tr[data-item-id="' + item_id + '"]');
+        const $row = $('.thwl-wishlist-item[data-item-id="' + item_id + '"]');
         // Optional: disable button while processing
         $btn.prop('disabled', true).addClass('loading');
         $.ajax({

@@ -7,11 +7,6 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
     require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-/**
- * Renders the list table for wishlists on the admin screen.
- *
- * @class THWL_Table
- */
 class THWL_Table extends WP_List_Table {
 
     public function __construct() {
@@ -23,36 +18,27 @@ class THWL_Table extends WP_List_Table {
     }
 
     /**
-     * Prepare the items for the table to process.
+     * Prepare table items
      */
     public function prepare_items() {
-        $columns = $this->get_columns();
-        $hidden = $this->get_hidden_columns();
+        $columns  = $this->get_columns();
+        $hidden   = $this->get_hidden_columns();
         $sortable = $this->get_sortable_columns();
         $this->_column_headers = [ $columns, $hidden, $sortable ];
 
         $this->process_bulk_action();
 
-        $per_page = 20;
+        $per_page     = 20;
         $current_page = $this->get_pagenum();
-        $total_items = THWL_Data::get_wishlist_count();
+        $total_items  = THWL_Data::get_wishlist_count();
 
         $this->set_pagination_args( [
             'total_items' => $total_items,
             'per_page'    => $per_page,
         ] );
 
-        // Verify nonce for sorting parameters
-        if ( isset( $_GET['orderby'], $_GET['order'], $_GET['_wpnonce'] ) ) {
-            if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'thw_wishlist_sort' ) ) {
-                wp_die( esc_html__( 'Security check failed.', 'th-wishlist' ) );
-            }
-            $orderby = sanitize_key( wp_unslash( $_GET['orderby'] ) );
-            $order = sanitize_key( wp_unslash( $_GET['order'] ) );
-        } else {
-            $orderby = 'created_at';
-            $order = 'desc';
-        }
+        $orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'created';
+        $order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
 
         $this->items = THWL_Data::get_wishlists( [
             'per_page' => $per_page,
@@ -62,9 +48,6 @@ class THWL_Table extends WP_List_Table {
         ] );
     }
 
-    /**
-     * Override the parent columns method. Defines the columns to show.
-     */
     public function get_columns() {
         return [
             'cb'            => '<input type="checkbox" />',
@@ -76,16 +59,10 @@ class THWL_Table extends WP_List_Table {
         ];
     }
 
-    /**
-     * Defines which columns are hidden
-     */
     public function get_hidden_columns() {
         return [];
     }
 
-    /**
-     * Defines the columns that are sortable
-     */
     public function get_sortable_columns() {
         return [
             'wishlist_name' => [ 'wishlist_name', false ],
@@ -94,166 +71,111 @@ class THWL_Table extends WP_List_Table {
         ];
     }
 
-    /**
-     * Render the checkbox column.
-     */
     protected function column_cb( $item ) {
         return sprintf( '<input type="checkbox" name="wishlist[]" value="%d" />', $item['id'] );
     }
-    
-    /**
-     * Render the "Name" column with actions.
-     */
+
     protected function column_wishlist_name( $item ) {
         $actions = [];
         $wishlist_page_url = get_permalink( get_option( 'thwl_page_id' ) );
 
-        // Always show the view link for the admin, as long as a wishlist page is set.
         if ( $wishlist_page_url ) {
             $actions['view'] = sprintf(
-                '<a href="%s" target="_blank" aria-label="%s">View</a>',
-                add_query_arg( 
-                    array(
-                        'wishlist_token' => $item['wishlist_token'],
-                        'wishlist_nonce' => wp_create_nonce( 'thwl_wishlist_nonce_action' ),
-                    ),
-                    $wishlist_page_url
-                 ),
-                /* translators: %s : Wishlist Name */
-                esc_attr( sprintf( __( 'View %s', 'th-wishlist' ), $item['wishlist_name'] ) )
+                '<a href="%s" target="_blank">%s</a>',
+                add_query_arg( [
+                    'wishlist_token' => $item['wishlist_token'],
+                    'wishlist_nonce' => wp_create_nonce( 'thwl_wishlist_nonce_action' ),
+                ], $wishlist_page_url ),
+                __( 'View', 'th-wishlist' )
             );
         }
 
         $delete_nonce = wp_create_nonce( 'thw_delete_wishlist' );
         $page = 'thwl-wishlists-tracking';
         $actions['delete'] = sprintf(
-            '<a href="?page=%s&action=delete&wishlist=%d&_wpnonce=%s" onclick="return confirm(\'%s\')" aria-label="%s">Delete</a>',
+            '<a href="?page=%s&action=delete&wishlist=%d&_wpnonce=%s" onclick="return confirm(\'%s\')">%s</a>',
             esc_attr( $page ),
             absint( $item['id'] ),
             esc_attr( $delete_nonce ),
-            esc_js( __( 'Are you sure you want to permanently delete this wishlist?', 'th-wishlist' ) ),
-            /* translators: %s : Wishlist Name */
-            esc_attr( sprintf( __( 'Delete %s', 'th-wishlist' ), $item['wishlist_name'] ) )
+            esc_js( __( 'Are you sure?', 'th-wishlist' ) ),
+            __( 'Delete', 'th-wishlist' )
         );
-        
+
         return '<strong>' . esc_html( $item['wishlist_name'] ) . '</strong>' . $this->row_actions( $actions );
     }
-    
-    /**
-     * Render the "Username" column.
-     */
+
     protected function column_username( $item ) {
-        if ( ! empty( $item['username'] ) ) {
-            return esc_html( $item['username'] );
-        }
-        return '<em>' . __( 'Guest', 'th-wishlist' ) . '</em>';
+        return ! empty( $item['username'] ) ? esc_html( $item['username'] ) : '<em>' . __( 'Guest', 'th-wishlist' ) . '</em>';
     }
 
-    /**
-     * Render the "Items" column.
-     */
     protected function column_items( $item ) {
         return absint( $item['item_count'] );
     }
 
-    /**
-     * Render the privacy column.
-     */
     protected function column_privacy( $item ) {
         return ucfirst( esc_html( $item['privacy'] ) );
     }
 
-    /**
-     * Render other columns.
-     */
     public function column_default( $item, $column_name ) {
-        switch ( $column_name ) {
-            case 'created_at':
-                return date_i18n( get_option( 'date_format' ), strtotime( $item[$column_name] ) );
-            default:
-                return '---';
+        if ( 'created_at' === $column_name ) {
+            return date_i18n( get_option( 'date_format' ), strtotime( $item['created_at'] ) );
         }
+        return '---';
     }
-    
-    /**
-     * Defines the bulk actions.
-     */
+
     public function get_bulk_actions() {
         return [
             'bulk-delete' => __( 'Delete', 'th-wishlist' ),
         ];
     }
-    
-    /**
-     * Process bulk actions.
-     */
+
     public function process_bulk_action() {
-
-        // Check for delete action
+        // Single delete
         if ( 'delete' === $this->current_action() ) {
-
-             // Check user capabilities
             if ( ! current_user_can( 'manage_options' ) ) {
-                wp_die( esc_html__( 'You are not allowed to perform this action.', 'th-wishlist' ) );
+                wp_die( __( 'Not allowed.', 'th-wishlist' ) );
             }
-
-            // Validate the nonce early
-            if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ), 'thw_delete_wishlist' ) ) {
-                wp_die( esc_html__( 'Security check failed. Invalid nonce.', 'th-wishlist' ) );
+            if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'thw_delete_wishlist' ) ) {
+                wp_die( __( 'Security check failed.', 'th-wishlist' ) );
             }
-
-            // Validate and sanitize input
             $wishlist_id = isset( $_GET['wishlist'] ) ? absint( $_GET['wishlist'] ) : 0;
-
-            if ( ! $wishlist_id ) {
-                wp_die( esc_html__( 'Invalid wishlist ID.', 'th-wishlist' ) );
+            if ( $wishlist_id ) {
+                THWL_Data::delete_wishlist( $wishlist_id );
             }
-
-            // Delete the wishlist
-            THWL_Data::delete_wishlist( $wishlist_id );
-
-            // Redirect to previous page
-            wp_safe_redirect( wp_get_referer() );
+            wp_safe_redirect( add_query_arg( [ 'page' => 'thwl-wishlists-tracking', 'deleted' => 1 ], admin_url( 'admin.php' ) ) );
             exit;
         }
 
         // Bulk delete
-        if (
-            ( isset( $_POST['action'] ) && 'bulk-delete' === sanitize_text_field( wp_unslash( $_POST['action'] ) ) ) ||
-            ( isset( $_POST['action2'] ) && 'bulk-delete' === sanitize_text_field( wp_unslash( $_POST['action2'] ) ) )
-        ) {
+        if ( ( isset( $_POST['action'] ) && 'bulk-delete' === $_POST['action'] ) ||
+             ( isset( $_POST['action2'] ) && 'bulk-delete' === $_POST['action2'] ) ) {
 
-            // Check user capabilities
-                if ( ! current_user_can( 'manage_options' ) ) {
-                    wp_die( esc_html__( 'You are not allowed to perform this action.', 'th-wishlist' ) );
-                }
-                
-            // Check required fields
-            if ( ! isset( $_POST['wishlist'], $_POST['_wpnonce'] ) ) {
-                wp_die( esc_html__( 'Invalid bulk delete request.', 'th-wishlist' ) );
+            check_admin_referer( 'bulk-' . $this->_args['plural'] );
+
+            $delete_ids = array_map( 'absint', (array) $_POST['wishlist'] );
+
+            foreach ( $delete_ids as $id ) {
+                THWL_Data::delete_wishlist( $id );
             }
 
-              // Verify nonce
-                if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'thw_bulk_delete_wishlist' ) ) {
-                    wp_die( esc_html__( 'Security check failed.', 'th-wishlist' ) );
-                }
-
-                // Sanitize and validate wishlist IDs
-                $delete_ids_raw = sanitize_text_field(wp_unslash( $_POST['wishlist'] ));
-                $delete_ids     = array_map( 'absint', (array) $delete_ids_raw );
-
-                if ( empty( $delete_ids ) ) {
-                    wp_die( esc_html__( 'No valid wishlist IDs provided.', 'th-wishlist' ) );
-                }
-
-                // Perform deletion
-                foreach ( $delete_ids as $id ) {
-                    THWL_Data::delete_wishlist( $id );
-                }
-
-                // Redirect back to previous page
-                wp_safe_redirect( wp_get_referer() );
-                exit;
-            }
+            wp_safe_redirect( add_query_arg(
+                [ 'page' => 'thwl-wishlists-tracking', 'deleted' => count( $delete_ids ) ],
+                admin_url( 'admin.php' )
+            ) );
+            exit;
+        }
     }
 }
+
+/**
+ * Admin notice after delete
+ */
+add_action( 'admin_notices', function() {
+    if ( isset( $_GET['deleted'] ) ) {
+        $count = (int) $_GET['deleted'];
+        printf(
+            '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
+            esc_html( sprintf( _n( '%d wishlist deleted.', '%d wishlists deleted.', $count, 'th-wishlist' ), $count ) )
+        );
+    }
+} );

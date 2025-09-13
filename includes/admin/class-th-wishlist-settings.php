@@ -63,18 +63,27 @@ function thwl_render_settings_tabs() {
 }
 
 public function settings_page() {
-    $default_columns = [ 'thumbnail', 'name', 'price', 'stock', 'add_to_cart', 'remove' ];
-    $all_columns = [
-        'checkbox'    => __( 'Checkbox', 'th-wishlist' ),
-        'thumbnail'   => __( 'Image', 'th-wishlist' ),
-        'name'        => __( 'Name', 'th-wishlist' ),
-        'price'       => __( 'Price', 'th-wishlist' ),
-        'stock'       => __( 'Stock Status', 'th-wishlist' ),
-        'quantity'    => __( 'Quantity', 'th-wishlist' ),
-        'add_to_cart' => __( 'Add to Cart', 'th-wishlist' ),
-        'date'        => __( 'Date Added', 'th-wishlist' ),
-        'remove'      => __( 'Remove', 'th-wishlist' ),
-    ];
+    $all_columns = apply_filters( 'thwl_all_columns', [
+    'checkbox'    => __( 'Checkbox', 'th-wishlist' ),
+    'thumbnail'   => __( 'Image', 'th-wishlist' ),
+    'name'        => __( 'Name', 'th-wishlist' ),
+    'price'       => __( 'Price', 'th-wishlist' ),
+    'stock'       => __( 'Stock Status', 'th-wishlist' ),
+    'quantity'    => __( 'Quantity', 'th-wishlist' ),
+    'add_to_cart' => __( 'Add to Cart', 'th-wishlist' ),
+    'date'        => __( 'Date Added', 'th-wishlist' ),
+    'remove'      => __( 'Remove', 'th-wishlist' ),
+    ] );
+
+    $default_columns = apply_filters( 'thwl_default_columns', [
+        'thumbnail',
+        'name',
+        'price',
+        'stock',
+        'add_to_cart',
+        'remove'
+    ] );
+    
     $options = get_option( 'thwl_settings', self::thwl_get_default_settings() );
     $saved_columns = isset( $options['th_wishlist_table_columns'] ) ? $options['th_wishlist_table_columns'] : $default_columns;
     $labels = isset( $options['th_wishlist_table_column_labels'] ) ? $options['th_wishlist_table_column_labels'] : self::thwl_get_default_settings()['th_wishlist_table_column_labels'];
@@ -267,6 +276,83 @@ public function settings_page() {
                                 </ul>
                             </td>
                         </tr>
+                        <tr class="th-row-with-checkbox">
+                            <th scope="row"><?php esc_html_e( 'Redirect to Wishlist Page via shorcode', 'th-wishlist' ); ?></th>
+                            <td>
+                               <input type="checkbox" 
+            id="thw_redirect_wishlist_page" 
+            name="settings[thw_redirect_wishlist_page]" 
+            value="1" 
+            <?php checked( isset( $options['thw_redirect_wishlist_page'] ) ? $options['thw_redirect_wishlist_page'] : 0, 1 ); ?> 
+        />
+                                <span class="description">
+                                     <?php esc_html_e( 'Use this shortcode anywhere on your site to create a Icon that redirects users to the Wishlist page. Example: [thwl_wishlist_redirect]', 'th-wishlist' ); ?>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="th-row thw-redirect-wishlist-dependent">
+                        <th scope="row"><?php esc_html_e( 'Add to Wishlist Icon', 'th-wishlist' ); ?></th>
+                        <td>
+                            <?php 
+                            $selected_page_icon = $options['thw_redirect_wishlist_page_icon'];
+                            $redirect_wishlist_page_icon = thwl_get_wishlist_icons_svg();
+                            $thw_redirect_wishlist_page_icon_color = isset( $options['thw_redirect_wishlist_page_icon_color'] ) ? $options['thw_redirect_wishlist_page_icon_color'] : '#111';
+                            $thw_redirect_wishlist_page_icon_color_hvr = isset( $options['thw_redirect_wishlist_page_icon_color_hvr'] ) ? $options['thw_redirect_wishlist_page_icon_color_hvr'] : '#111';
+                            $allowed_page_svg_tags = array(
+                                'svg'  => array(
+                                    'class'        => true,
+                                    'width'        => true,
+                                    'height'       => true,
+                                    'viewbox'      => true,
+                                    'fill'         => true,
+                                    'stroke'       => true,
+                                    'stroke-width' => true,
+                                    'xmlns'        => true,
+                                ),
+                                'path' => array(
+                                    'd'              => true,
+                                    'fill'           => true,
+                                    'stroke'         => true,
+                                    'stroke-linecap' => true,
+                                    'stroke-linejoin'=> true,
+                                    'clip-rule'      => true,
+                                    'fill-rule'      => true,
+                                ),
+                            );
+                            ?>
+                            <p><?php esc_html_e( 'Choose Page wishlist icon', 'th-wishlist' ); ?></p>
+                            <?php foreach ( $redirect_wishlist_page_icon as $icon1_key => $icon1_data ) : ?>
+                                <label class="thw-dashicon-option">
+                                    <input type="radio"
+                                        name="settings[thw_redirect_wishlist_page_icon]"
+                                        value="<?php echo esc_attr( $icon1_key ); ?>"
+                                        <?php checked($selected_page_icon, $icon1_key ); ?> />
+                                        <span title="<?php echo esc_attr( $icon1_data['name'] ); ?>">
+                                        <?php echo wp_kses( $icon1_data['svg'], $allowed_page_svg_tags); ?>
+                                    </span>
+                                </label>
+                            <?php endforeach; ?>
+                            </td>
+                       </tr>
+                       <?php $thw_redirect_wishlist_page_icon_size = isset( $options['thw_redirect_wishlist_page_icon_size'] ) ? $options['thw_redirect_wishlist_page_icon_size'] : '';?>
+                       <tr class="th-row thw-redirect-wishlist-dependent">
+                        <th scope="row"><?php esc_html_e( 'Page Icon', 'th-wishlist' ); ?></th>
+                        <td class="th-row-flex">
+                        <div class="th-color-picker">
+                        <p><?php esc_html_e( 'color', 'th-wishlist' ); ?></p>
+                        <input type="text" name="settings[thw_redirect_wishlist_page_icon_color]"  value="<?php echo esc_attr( $thw_redirect_wishlist_page_icon_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $thw_redirect_wishlist_page_icon_color ); ?>" />
+                        </div>
+                        <div class="th-color-picker">
+                        <p><?php esc_html_e( 'Hover color', 'th-wishlist' ); ?></p>
+                        <input type="text" name="settings[thw_redirect_wishlist_page_icon_color_hvr]"  value="<?php echo esc_attr( $thw_redirect_wishlist_page_icon_color_hvr ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $thw_redirect_wishlist_page_icon_color_hvr ); ?>" />
+                            </div>
+                        <div class="th-number">
+                        <p><?php esc_html_e( 'Size', 'th-wishlist' ); ?></p>
+                         <input type="number" class="small-text" id="thw_redirect_wishlist_page_icon_size" name="settings[thw_redirect_wishlist_page_icon_size]" value="<?php echo esc_attr( $thw_redirect_wishlist_page_icon_size ); ?>" min="0" max="100" step="">
+                         <span><?php esc_html_e( 'px', 'th-wishlist' ); ?></span>
+                        </div>
+                        </td>
+                     </tr>
                     </table>
                 </div>
                 <div id="style" class="thw-tab-content">
@@ -391,8 +477,9 @@ public function settings_page() {
                         <div> 
                         </td>
                      </tr>
+                     
                    </table>
-
+  
                    <?php 
                     $th_wishlist_table_bg_color = isset( $options['th_wishlist_table_bg_color'] ) ? $options['th_wishlist_table_bg_color'] : '';
                     $th_wishlist_table_brd_color = isset( $options['th_wishlist_table_brd_color'] ) ? $options['th_wishlist_table_brd_color'] : '';
@@ -560,6 +647,11 @@ public function settings_page() {
             'thw_show_quantity'            => 0,
             'th_wishlist_table_columns'       => [ 'thumbnail', 'name', 'price', 'stock', 'add_to_cart', 'remove' ],
             'th_wishlist_table_column_labels' => [],
+            'thw_redirect_wishlist_page'      => 0,
+            'thw_redirect_wishlist_page_icon' => 'heart-outline',
+            'thw_redirect_wishlist_page_icon_color' => '#111',
+            'thw_redirect_wishlist_page_icon_color_hvr' => '#111',
+            'thw_redirect_wishlist_page_icon_size' => '24',
             'th_wishlist_add_icon'         => 'heart-outline',
             'th_wishlist_add_icon_color'   => '#111',
             'th_wishlist_brws_icon'        => 'heart-filled',

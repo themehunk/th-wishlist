@@ -37,7 +37,7 @@ class THWL_Frontend {
     public function thwl_enqueue_styles_scripts() {
         
         wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),'1.0.1');
-        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.1.1', array( 
+        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.1.2', array( 
                 'strategy'  => 'async',
                 'in_footer' => false,
         ) );
@@ -102,7 +102,18 @@ class THWL_Frontend {
             }
             .thw-table-custom-style .thw-social-share a.thw-copy-link-button:hover {
                 color: " . esc_attr($th_wishlist_option['th_wishlist_shr_c_hvr_color']) . ";
-        }");
+             }
+            .thwl-page-redirect-icon svg{
+                    height:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_size']) . "px;
+                    width:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_size']) . "px;
+                } 
+            .thwl-page-redirect-whishlist .thwl-page-redirect-icon{
+                    color:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_color']) . ";
+                }
+             .thwl-page-redirect-whishlist:hover .thwl-page-redirect-icon{
+                    color:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_color_hvr']) . ";
+                }      
+             ");
 
         $wishlist_page_id = ! empty( $this->thwl_option['thwl_page_id'] ) 
         ? $this->thwl_option['thwl_page_id'] 
@@ -409,7 +420,7 @@ class THWL_Frontend {
     }
 
     public function thwl_wishlist_page_shortcode() {
-    //do_action('thwl_wishlist_view'); 
+     
     global $product;
     $output = '';
     $wishlist = null;
@@ -525,7 +536,7 @@ class THWL_Frontend {
             }
 
             $output .= sprintf(
-                '<tr data-item-id="%s" data-product-id="%s">',
+                '<tr class="thwl-wishlist-item" data-item-id="%s" data-product-id="%s">',
                 esc_attr( $item->id ),
                 esc_attr( $_product->get_id() )
             );
