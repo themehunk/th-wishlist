@@ -520,7 +520,9 @@ public function settings_page() {
                     $th_wishlist_shr_e_hvr_color = isset( $options['th_wishlist_shr_e_hvr_color'] ) ? $options['th_wishlist_shr_e_hvr_color'] : '';
                     ?>
 
-
+                    <?php if(THWL_PRO_ACTIVE){?>
+                    <?php do_action( 'thwl_after_pro_page_share_settings_fields' );?>
+                    <?php } else{?>
                    <h3 class="thws-content-title"><?php esc_html_e( 'Share Button', 'th-wishlist' ); ?></h3>
                    <table class="form-table">
                      <tr class="th-row-with-icon-radio">
@@ -589,6 +591,8 @@ public function settings_page() {
                         </td>
                      </tr>
                    </table>
+                   <?php } ?>
+                   <?php do_action( 'thwl_after_pro_page_multi_settings_fields' );?>
                 </div>
               <?php do_action( 'thwl_after_pro_settings_fields' );?>
             </div>

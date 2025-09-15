@@ -807,7 +807,7 @@ class THWL_Frontend {
         wp_send_json_success(['message' => 'Products added to cart.']);
     }
 
-// Shortcode: [thwl_add_to_wishlist product_id="10"]
+
 public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 	
     global $product;
