@@ -232,10 +232,11 @@ public function settings_page() {
                         <tr class="th-row-with-checkbox">
                             <th scope="row"><?php esc_html_e( 'Show Social Share Buttons', 'th-wishlist' ); ?></th>
                             <td>
-                                <input type="checkbox" name="settings[thw_show_social_share]" value="1" <?php checked( isset( $options['thw_show_social_share'] ) ? $options['thw_show_social_share'] : 0, 1 ); ?> />
+                                <input id="thwp_wishlist_share" type="checkbox" name="settings[thw_show_social_share]" value="1" <?php checked( isset( $options['thw_show_social_share'] ) ? $options['thw_show_social_share'] : 0, 1 ); ?> />
                                 <span class="description"><?php esc_html_e( 'Allows to share their wishlist.', 'th-wishlist' ); ?></span>
                             </td>
                         </tr>
+                        <?php do_action('thwl_after_pro_set_share_settings_fields');?>
                         <tr class="th-sort-row">
                             <th scope="row"><?php esc_html_e( 'Wishlist Table Columns', 'th-wishlist' ); ?></th>
                             <td>
