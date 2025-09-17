@@ -504,6 +504,7 @@ public function settings_page() {
                         </div> 
                         </td>
                      </tr>
+                     <?php do_action('thwl_after_pro_table_content_settings_fields');?>
                    </table>
                     <?php 
                     $th_wishlist_shr_fb_color = isset( $options['th_wishlist_shr_fb_color'] ) ? $options['th_wishlist_shr_fb_color'] : '';
