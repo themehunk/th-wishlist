@@ -171,8 +171,7 @@ font-weight: 500;
 }
 
 /* Center checkbox and add to cart text */
-.thw-wishlist-table .product-checkbox,
-.thw-wishlist-table .product-add_to_cart {
+.thw-wishlist-table .product-checkbox{
     text-align: center;
 }
 

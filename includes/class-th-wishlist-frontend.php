@@ -36,7 +36,7 @@ class THWL_Frontend {
 
     public function thwl_enqueue_styles_scripts() {
         
-        wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),'1.0.1');
+        wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),'1.0.2');
         wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.1.2', array( 
                 'strategy'  => 'async',
                 'in_footer' => false,
@@ -807,7 +807,7 @@ class THWL_Frontend {
         wp_send_json_success(['message' => 'Products added to cart.']);
     }
 
-// Shortcode: [thwl_add_to_wishlist product_id="10"]
+
 public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 	
     global $product;

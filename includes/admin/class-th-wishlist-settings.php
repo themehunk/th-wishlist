@@ -232,10 +232,11 @@ public function settings_page() {
                         <tr class="th-row-with-checkbox">
                             <th scope="row"><?php esc_html_e( 'Show Social Share Buttons', 'th-wishlist' ); ?></th>
                             <td>
-                                <input type="checkbox" name="settings[thw_show_social_share]" value="1" <?php checked( isset( $options['thw_show_social_share'] ) ? $options['thw_show_social_share'] : 0, 1 ); ?> />
+                                <input id="thwp_wishlist_share" type="checkbox" name="settings[thw_show_social_share]" value="1" <?php checked( isset( $options['thw_show_social_share'] ) ? $options['thw_show_social_share'] : 0, 1 ); ?> />
                                 <span class="description"><?php esc_html_e( 'Allows to share their wishlist.', 'th-wishlist' ); ?></span>
                             </td>
                         </tr>
+                        <?php do_action('thwl_after_pro_set_share_settings_fields');?>
                         <tr class="th-sort-row">
                             <th scope="row"><?php esc_html_e( 'Wishlist Table Columns', 'th-wishlist' ); ?></th>
                             <td>
@@ -437,9 +438,9 @@ public function settings_page() {
                         </td>
                     </tr>
                     <?php 
-                    $th_wishlist_btn_bg_color = isset( $options['th_wishlist_btn_bg_color'] ) ? $options['th_wishlist_btn_bg_color'] : '';
-                    $th_wishlist_btn_brd_color = isset( $options['th_wishlist_btn_brd_color'] ) ? $options['th_wishlist_btn_brd_color'] : '';
-                    $th_wishlist_btn_txt_color = isset( $options['th_wishlist_btn_txt_color'] ) ? $options['th_wishlist_btn_txt_color'] : '';
+                    $th_wishlist_btn_bg_color = isset( $options['th_wishlist_btn_bg_color'] ) ? $options['th_wishlist_btn_bg_color'] : '#6a4df5';
+                    $th_wishlist_btn_brd_color = isset( $options['th_wishlist_btn_brd_color'] ) ? $options['th_wishlist_btn_brd_color'] : '#6a4df5';
+                    $th_wishlist_btn_txt_color = isset( $options['th_wishlist_btn_txt_color'] ) ? $options['th_wishlist_btn_txt_color'] : '#fff';
                     ?>
 
                     <tr class="th-row-with-icon-radio">
@@ -481,9 +482,9 @@ public function settings_page() {
                    </table>
   
                    <?php 
-                    $th_wishlist_table_bg_color = isset( $options['th_wishlist_table_bg_color'] ) ? $options['th_wishlist_table_bg_color'] : '';
-                    $th_wishlist_table_brd_color = isset( $options['th_wishlist_table_brd_color'] ) ? $options['th_wishlist_table_brd_color'] : '';
-                    $th_wishlist_table_txt_color = isset( $options['th_wishlist_table_txt_color'] ) ? $options['th_wishlist_table_txt_color'] : '';
+                    $th_wishlist_table_bg_color = isset( $options['th_wishlist_table_bg_color'] ) ? $options['th_wishlist_table_bg_color'] : '#fff';
+                    $th_wishlist_table_brd_color = isset( $options['th_wishlist_table_brd_color'] ) ? $options['th_wishlist_table_brd_color'] : '#eee';
+                    $th_wishlist_table_txt_color = isset( $options['th_wishlist_table_txt_color'] ) ? $options['th_wishlist_table_txt_color'] : '#111';
                     ?>
                    <table class="form-table">
                      <tr class="th-row-with-icon-radio">
@@ -503,6 +504,7 @@ public function settings_page() {
                         </div> 
                         </td>
                      </tr>
+                     <?php do_action('thwl_after_pro_table_content_settings_fields');?>
                    </table>
                     <?php 
                     $th_wishlist_shr_fb_color = isset( $options['th_wishlist_shr_fb_color'] ) ? $options['th_wishlist_shr_fb_color'] : '';
@@ -520,7 +522,9 @@ public function settings_page() {
                     $th_wishlist_shr_e_hvr_color = isset( $options['th_wishlist_shr_e_hvr_color'] ) ? $options['th_wishlist_shr_e_hvr_color'] : '';
                     ?>
 
-
+                    <?php if ( defined( 'THWL_PRO_ACTIVE' ) && THWL_PRO_ACTIVE ) { ?>
+                    <?php do_action( 'thwl_after_pro_page_share_settings_fields' );?>
+                    <?php } else{ ?>
                    <h3 class="thws-content-title"><?php esc_html_e( 'Share Button', 'th-wishlist' ); ?></h3>
                    <table class="form-table">
                      <tr class="th-row-with-icon-radio">
@@ -589,6 +593,8 @@ public function settings_page() {
                         </td>
                      </tr>
                    </table>
+                   <?php } ?>
+                   <?php do_action( 'thwl_after_pro_page_multi_settings_fields' );?>
                 </div>
               <?php do_action( 'thwl_after_pro_settings_fields' );?>
             </div>
@@ -656,23 +662,23 @@ public function settings_page() {
             'th_wishlist_add_icon_color'   => '#111',
             'th_wishlist_brws_icon'        => 'heart-filled',
             'th_wishlist_brws_icon_color'  => '#111',
-            'th_wishlist_btn_txt_color'    => '',
-            'th_wishlist_btn_bg_color'     => '',
-            'th_wishlist_table_bg_color'   => '',
-            'th_wishlist_table_brd_color'  => '',
-            'th_wishlist_table_txt_color'  => '',
-            'th_wishlist_tb_btn_bg_color'  => '',
-            'th_wishlist_tb_btn_txt_color' => '',
-            'th_wishlist_shr_fb_color'     => '',
-            'th_wishlist_shr_fb_hvr_color' => '',
-            'th_wishlist_shr_x_color'      => '',
-            'th_wishlist_shr_x_hvr_color'  => '',
-            'th_wishlist_shr_w_color'      => '',
-            'th_wishlist_shr_w_hvr_color'  => '',
-            'th_wishlist_shr_e_color'      => '',
-            'th_wishlist_shr_e_hvr_color'  => '',
-            'th_wishlist_shr_c_color'      => '',
-            'th_wishlist_shr_c_hvr_color'  => '', 
+            'th_wishlist_btn_txt_color'    => '#fff',
+            'th_wishlist_btn_bg_color'     => '#6a4df5',
+            'th_wishlist_table_bg_color'   => '#fff',
+            'th_wishlist_table_brd_color'  => '#eee',
+            'th_wishlist_table_txt_color'  => '#111',
+            'th_wishlist_tb_btn_bg_color'  => '#6a4df5',
+            'th_wishlist_tb_btn_txt_color' => '#fff',
+            'th_wishlist_shr_fb_color'     => '#1877F2',
+            'th_wishlist_shr_fb_hvr_color' => '#1877F2',
+            'th_wishlist_shr_x_color'      => '#000',
+            'th_wishlist_shr_x_hvr_color'  => '#000',
+            'th_wishlist_shr_w_color'      => '#25D366',
+            'th_wishlist_shr_w_hvr_color'  => '#25D366',
+            'th_wishlist_shr_e_color'      => '#E4405F',
+            'th_wishlist_shr_e_hvr_color'  => '#E4405F',
+            'th_wishlist_shr_c_color'      => '#333',
+            'th_wishlist_shr_c_hvr_color'  => '#3333', 
         ];
         return apply_filters( 'thwl_default_settings', $defaults );
     }
