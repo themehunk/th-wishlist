@@ -174,7 +174,9 @@ font-weight: 500;
 .thw-wishlist-table .product-checkbox{
     text-align: center;
 }
-
+.thwl-wishlist-item a{
+text-decoration:none!important;
+}
 /* Wishlist Actions & Sharing */
 .thw-wishlist-actions {
     margin-top: 20px;
