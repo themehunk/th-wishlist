@@ -356,7 +356,10 @@ public function settings_page() {
                      </tr>
                     </table>
                 </div>
-                <div id="style" class="thw-tab-content">
+                <?php if ( defined( 'THWL_PRO_ACTIVE' ) && THWL_PRO_ACTIVE ) { ?>
+                <?php do_action('thwl_pro_style_customization');?>
+                <?php }else{ ?>
+                 <div id="style" class="thw-tab-content">
                   <h3 class="thws-content-title"><?php esc_html_e( 'Wishlist Button', 'th-wishlist' ); ?></h3>
                   <table class="form-table">
                     <?php $allowed_svg_tags = array(
@@ -504,7 +507,6 @@ public function settings_page() {
                         </div> 
                         </td>
                      </tr>
-                     <?php do_action('thwl_after_pro_table_content_settings_fields');?>
                    </table>
                     <?php 
                     $th_wishlist_shr_fb_color = isset( $options['th_wishlist_shr_fb_color'] ) ? $options['th_wishlist_shr_fb_color'] : '';
@@ -522,9 +524,7 @@ public function settings_page() {
                     $th_wishlist_shr_e_hvr_color = isset( $options['th_wishlist_shr_e_hvr_color'] ) ? $options['th_wishlist_shr_e_hvr_color'] : '';
                     ?>
 
-                    <?php if ( defined( 'THWL_PRO_ACTIVE' ) && THWL_PRO_ACTIVE ) { ?>
-                    <?php do_action( 'thwl_after_pro_page_share_settings_fields' );?>
-                    <?php } else{ ?>
+                   
                    <h3 class="thws-content-title"><?php esc_html_e( 'Share Button', 'th-wishlist' ); ?></h3>
                    <table class="form-table">
                      <tr class="th-row-with-icon-radio">
@@ -593,9 +593,10 @@ public function settings_page() {
                         </td>
                      </tr>
                    </table>
-                   <?php } ?>
-                   <?php do_action( 'thwl_after_pro_page_multi_settings_fields' );?>
+                  
+                   
                 </div>
+                <?php }?>
               <?php do_action( 'thwl_after_pro_settings_fields' );?>
             </div>
             <p>
