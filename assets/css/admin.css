@@ -445,20 +445,21 @@ align-items:center;
 #thw-settings-form input.th_color_picker{
     font-size: 0!important;
     position: relative;
-    height: 3px!important;
-    width:45px!important;
+    height: 35px!important;
+    width:35px!important;
     cursor: pointer;
     background-size: 0;
     transition: all .3s;
     border: 2px solid #eee;
+    border-radius:50%;
     margin:10px 0;
 }
-
 
 #thw-settings-form .th-row-flex{
 display: flex;
 justify-content:flex-start;
 }
+
 .th-color-picker{
 margin-right:1.5rem;
 }

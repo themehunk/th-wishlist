@@ -114,52 +114,66 @@ jQuery(document).ready(function($) {
     });
 
     function myColorPicker() {
-        let value_ = this;
-        const inputElement = $(value_);
-        const defaultColor = inputElement.css("background-color") || 'rgba(0, 0, 0, 1)';
-        const pickr = new Pickr({
-            el: value_,
-            useAsButton: true,
-            default: defaultColor,
-            theme: 'nano',
-            swatches: [
-                'rgba(244, 67, 54, 1)',
-                'rgba(233, 30, 99, 0.95)',
-                'rgba(156, 39, 176, 0.9)',
-                'rgba(103, 58, 183, 0.85)',
-                'rgba(63, 81, 181, 0.8)',
-                'rgba(33, 150, 243, 0.75)',
-                'rgba(255, 193, 7, 1)',
-            ],
-            components: {
-                preview: true,
-                opacity: true,
-                hue: true,
-                interaction: {
-                    input: true,
-                },
-            },
-        })
-        .on('change', (color, instance) => {
-            let color_ = color.toRGBA().toString(0);
-            // Preview CSS on input element
-            inputElement.css('background-color', color_);
-            // Apply color to input value
-            inputElement.val(color_);
-            // Enable save button
-            $('#submit').removeAttr('disabled');
-        })
-        .on('init', (instance) => {
-            $(instance._root.app).addClass('visible');
-        })
-        .on('hide', (instance) => {
-            instance._root.app.remove();
-        });
-    }
+    let value_ = this;
+    const inputElement = $(value_);
+    const defaultColor = inputElement.data("default-color") || 'rgba(0, 0, 0, 1)';
 
+    const pickr = new Pickr({
+        el: value_,
+        useAsButton: true,
+        default: inputElement.val() || defaultColor,
+        theme: 'nano',
+        swatches: [
+            'rgba(244, 67, 54, 1)',
+            'rgba(233, 30, 99, 0.95)',
+            'rgba(156, 39, 176, 0.9)',
+            'rgba(103, 58, 183, 0.85)',
+            'rgba(63, 81, 181, 0.8)',
+            'rgba(33, 150, 243, 0.75)',
+            'rgba(255, 193, 7, 1)',
+        ],
+        components: {
+            preview: true,
+            opacity: true,
+            hue: true,
+            interaction: { input: true },
+        },
+    })
+    .on('change', (color, instance) => {
+        let color_ = color.toRGBA().toString(0);
+        inputElement.css('background-color', color_);
+        inputElement.val(color_);
+        $('#submit').removeAttr('disabled');
+    })
+    .on('init', (instance) => {
+        $(instance._root.app).addClass('visible');
+    })
+    .on('hide', (instance) => {
+        instance._root.app.remove();
+    });
+
+    // Reset button handler
+    $(document).on('click', '.th-color-reset', function () {
+        const targetId = $(this).data('target');
+        const targetInput = $('#' + targetId);
+        const resetColor = targetInput.data('default-color') || 'rgba(0, 0, 0, 1)';
+
+        // Reset UI + input value
+        targetInput.val(resetColor).css('background-color', resetColor);
+
+        // If Pickr is bound to this input, set color programmatically
+        if (targetInput[0]._pickr) {
+            targetInput[0]._pickr.setColor(resetColor);
+        }
+
+        $('#submit').removeAttr('disabled');
+    });
+
+    // Attach pickr reference to input element for reset use
+    inputElement[0]._pickr = pickr;
+   }
     // Attach Pickr to inputs with class color_picker
     $(document).on('click', 'input.th_color_picker', myColorPicker);
-
    //icon picker change color
    $(document).ready(function () {
     function initColorPicker($colorInput, radioName) {

@@ -37,7 +37,7 @@ class THWL_Admin {
                 'thwl-admin',
                 THWL_URL . 'assets/css/admin.css',
                 [],
-                '2.2.2'
+                '2.2.3'
             );
 
              wp_enqueue_style(
@@ -55,11 +55,12 @@ class THWL_Admin {
                 '1.9.1',
                 true
             );
+            
             wp_enqueue_script(
                 'thwl-admin',
                 THWL_URL . 'assets/js/admin.js',
                 [ 'jquery', 'wp-color-picker', 'jquery-ui-sortable' ],
-                '1.2.2',
+                '1.2.3',
                 true
             );
 
