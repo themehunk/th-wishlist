@@ -403,10 +403,7 @@ public function settings_page() {
                                     </span>
                                 </label>
                             <?php endforeach; ?>
-                            <div class="th-color-picker">
-                            <p><?php esc_html_e( 'Add to Wishlist Icon color', 'th-wishlist' ); ?></p>
-                            <input type="text" name="settings[th_wishlist_add_icon_color]"  value="<?php echo esc_attr( $th_wishlist_add_icon_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_add_icon_color ); ?>" />
-                            <div>
+                             <?php self::thwl_render_color_picker('th_wishlist_add_icon_color', $th_wishlist_add_icon_color, __('Add to Wishlist Icon color','th-wishlist'),$th_wishlist_add_icon_color); ?>
                         </td>
                         
                     </tr>
@@ -434,30 +431,23 @@ public function settings_page() {
                             </label>
                             <?php endforeach; ?>
                             </div>
-                            <div class="th-color-picker">
-                            <p><?php esc_html_e( 'Browse Wishlist Icon color', 'th-wishlist' ); ?></p>
-                            <input type="text" name="settings[th_wishlist_brws_icon_color]" id="thw-wishlist-brws-icon-color" value="<?php echo esc_attr( $th_wishlist_brws_icon_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_brws_icon_color ); ?>" />
-                            </div>
+                            <?php self::thwl_render_color_picker('th_wishlist_brws_icon_color', $th_wishlist_brws_icon_color, __('Browse Wishlist Icon color','th-wishlist'),$th_wishlist_brws_icon_color); ?>
                         </td>
                     </tr>
+
                     <?php 
                     $th_wishlist_btn_bg_color = isset( $options['th_wishlist_btn_bg_color'] ) ? $options['th_wishlist_btn_bg_color'] : '#6a4df5';
                     $th_wishlist_btn_brd_color = isset( $options['th_wishlist_btn_brd_color'] ) ? $options['th_wishlist_btn_brd_color'] : '#6a4df5';
                     $th_wishlist_btn_txt_color = isset( $options['th_wishlist_btn_txt_color'] ) ? $options['th_wishlist_btn_txt_color'] : '#fff';
                     ?>
-
+                    
                     <tr class="th-row-with-icon-radio">
                         <th scope="row"><?php esc_html_e( 'Button', 'th-wishlist' ); ?></th>
                         <td class="th-row-flex">
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Backround color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_btn_bg_color]" id="thw-wishlist-btn-bg-color" value="<?php echo esc_attr( $th_wishlist_btn_bg_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_btn_bg_color ); ?>" />
-                        </div>
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Text color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_btn_txt_color]" id="thw-wishlist-btn-txt-color" value="<?php echo esc_attr( $th_wishlist_btn_txt_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_btn_txt_color ); ?>" />
-                        </div> 
-                        </div>
+                         <?php 
+                    self::thwl_render_color_picker('th_wishlist_btn_bg_color', $th_wishlist_btn_bg_color, __('Background','th-wishlist'),$th_wishlist_btn_bg_color); 
+                    self::thwl_render_color_picker('th_wishlist_btn_txt_color', $th_wishlist_btn_txt_color, __('Text','th-wishlist'),$th_wishlist_btn_txt_color); 
+                    ?>
                         </td>
                      </tr>
                     
@@ -471,14 +461,10 @@ public function settings_page() {
                      <tr class="th-row-with-icon-radio">
                         <th scope="row"><?php esc_html_e( 'Button Style', 'th-wishlist' ); ?></th>
                         <td class="th-row-flex">
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Button Text color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_tb_btn_txt_color]" id="thw-wishlist-tb-btn-txt-color" value="<?php echo esc_attr(  $th_wishlist_tb_btn_txt_color  ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_tb_btn_txt_color ); ?>" />
-                        </div>
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Button Background color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_tb_btn_bg_color]" id="thw-wishlist-tb-btn-bg-color" value="<?php echo esc_attr( $th_wishlist_tb_btn_bg_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr($th_wishlist_tb_btn_bg_color); ?>" />
-                        <div> 
+                        <?php 
+                            self::thwl_render_color_picker('th_wishlist_tb_btn_txt_color', $th_wishlist_tb_btn_txt_color, __('Text','th-wishlist'),$th_wishlist_tb_btn_txt_color); 
+                            self::thwl_render_color_picker('th_wishlist_tb_btn_bg_color', $th_wishlist_tb_btn_bg_color, __('Background','th-wishlist'),$th_wishlist_tb_btn_bg_color); 
+                        ?> 
                         </td>
                      </tr>
                      
@@ -493,18 +479,11 @@ public function settings_page() {
                      <tr class="th-row-with-icon-radio">
                         <th scope="row"><?php esc_html_e( 'Wishlist Table', 'th-wishlist' ); ?></th>
                         <td class="th-row-flex">
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Backround color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_table_bg_color]" id="thw-wishlist-table-bg-color" value="<?php echo esc_attr( $th_wishlist_table_bg_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_table_bg_color ); ?>" />
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Border color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_table_brd_color]" id="thw-wishlist-table-brd-color" value="<?php echo esc_attr( $th_wishlist_table_brd_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_table_brd_color ); ?>" />
-                        </div>
-                        </div>
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Text color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_table_txt_color]" id="thw-wishlist-table-txt-color" value="<?php echo esc_attr( $th_wishlist_table_txt_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_table_txt_color ); ?>" />
-                        </div> 
+                        <?php 
+                            self::thwl_render_color_picker('th_wishlist_table_bg_color', $th_wishlist_table_bg_color, __('Backround','th-wishlist'),$th_wishlist_table_bg_color); 
+                            self::thwl_render_color_picker('th_wishlist_table_brd_color', $th_wishlist_table_brd_color, __('Border','th-wishlist'),$th_wishlist_table_brd_color); 
+                            self::thwl_render_color_picker('th_wishlist_table_txt_color', $th_wishlist_table_txt_color, __('Text','th-wishlist'),$th_wishlist_table_txt_color); 
+                        ?>  
                         </td>
                      </tr>
                    </table>
@@ -530,73 +509,52 @@ public function settings_page() {
                      <tr class="th-row-with-icon-radio">
                         <th scope="row"><?php esc_html_e( 'Facebook', 'th-wishlist' ); ?></th>
                         <td class="th-row-flex">
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_shr_fb_color]" id="thw-wishlist-shr-fb-color" value="<?php echo esc_attr( $th_wishlist_shr_fb_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_shr_fb_color ); ?>" />
-                        </div>
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Hover', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_shr_fb_hvr_color]" id="thw-wishlist-shr-fb-color" value="<?php echo esc_attr( $th_wishlist_shr_fb_hvr_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_shr_fb_hvr_color ); ?>" />
-                        </div>
+                        <?php 
+                            self::thwl_render_color_picker('th_wishlist_shr_fb_color', $th_wishlist_shr_fb_color, __('Color','th-wishlist'),$th_wishlist_shr_fb_color); 
+                            self::thwl_render_color_picker('th_wishlist_shr_fb_hvr_color', $th_wishlist_shr_fb_hvr_color, __('Hover','th-wishlist'),$th_wishlist_shr_fb_hvr_color);  
+                        ?>
+                        
                         </td>
                      </tr>
                      <tr class="th-row-with-icon-radio">
                         <th scope="row"><?php esc_html_e( 'Twitter', 'th-wishlist' ); ?></th>
                         <td class="th-row-flex">
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_shr_x_color]" id="thw-wishlist-shr-x-color" value="<?php echo esc_attr( $th_wishlist_shr_x_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_shr_x_color ); ?>" />
-                        </div>
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Hover', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_shr_x_hvr_color]" id="thw-wishlist-shr-x-color" value="<?php echo esc_attr( $th_wishlist_shr_x_hvr_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_shr_x_hvr_color ); ?>" />
-                        </div>
+                        <?php 
+                            self::thwl_render_color_picker('th_wishlist_shr_x_color', $th_wishlist_shr_x_color, __('Color','th-wishlist'),$th_wishlist_shr_x_color); 
+                            self::thwl_render_color_picker('th_wishlist_shr_x_hvr_color', $th_wishlist_shr_x_hvr_color, __('Hover','th-wishlist'),$th_wishlist_shr_x_hvr_color);  
+                        ?>
                         </td>
                      </tr>
                      <tr class="th-row-with-icon-radio">
                         <th scope="row"><?php esc_html_e( 'Whatsapp', 'th-wishlist' ); ?></th>
                         <td class="th-row-flex">
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_shr_w_color]" id="thw-wishlist-shr-w-color" value="<?php echo esc_attr( $th_wishlist_shr_w_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_shr_w_color ); ?>" />
-                        </div>
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Hover', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_shr_w_hvr_color]" id="thw-wishlist-shr-w-color" value="<?php echo esc_attr( $th_wishlist_shr_w_hvr_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_shr_w_hvr_color ); ?>" />
-                        </div>
+                        <?php 
+                            self::thwl_render_color_picker('th_wishlist_shr_w_color', $th_wishlist_shr_w_color, __('Color','th-wishlist'),$th_wishlist_shr_w_color); 
+                            self::thwl_render_color_picker('th_wishlist_shr_w_hvr_color', $th_wishlist_shr_w_hvr_color, __('Hover','th-wishlist'),$th_wishlist_shr_w_hvr_color);  
+                        ?>
                         </td>
                      </tr>
                       <tr class="th-row-with-icon-radio">
                         <th scope="row"><?php esc_html_e( 'Email', 'th-wishlist' ); ?></th>
                         <td class="th-row-flex">
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_shr_e_color]" id="thw-wishlist-shr-w-color" value="<?php echo esc_attr( $th_wishlist_shr_e_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_shr_e_color ); ?>" />
-                        </div>
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Hover', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_shr_e_hvr_color]" id="thw-wishlist-shr-w-color" value="<?php echo esc_attr( $th_wishlist_shr_e_hvr_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_shr_e_hvr_color ); ?>" />
-                        </div>
+                            <?php 
+                            self::thwl_render_color_picker('th_wishlist_shr_e_color', $th_wishlist_shr_e_color, __('Color','th-wishlist'),$th_wishlist_shr_e_color); 
+                            self::thwl_render_color_picker('th_wishlist_shr_e_hvr_color', $th_wishlist_shr_e_hvr_color, __('Hover','th-wishlist'),$th_wishlist_shr_e_hvr_color);  
+                        ?>
                         </td>
                      </tr>
                      <tr class="th-row-with-icon-radio">
                         <th scope="row"><?php esc_html_e( 'Copy Url', 'th-wishlist' ); ?></th>
                         <td class="th-row-flex">
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Color', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_shr_c_color]" id="thw-wishlist-shr-c-color" value="<?php echo esc_attr( $th_wishlist_shr_c_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_shr_c_color ); ?>" />
-                        </div>
-                        <div class="th-color-picker">
-                        <p><?php esc_html_e( 'Hover', 'th-wishlist' ); ?></p>
-                        <input type="text" name="settings[th_wishlist_shr_c_hvr_color]" id="thw-wishlist-shr-c-color" value="<?php echo esc_attr( $th_wishlist_shr_c_hvr_color ); ?>" class="th_color_picker" style="background-color: <?php echo esc_attr( $th_wishlist_shr_c_hvr_color ); ?>" />
-                        </div>
+                            <?php 
+                            self::thwl_render_color_picker('th_wishlist_shr_c_color', $th_wishlist_shr_c_color, __('Color','th-wishlist'),$th_wishlist_shr_c_color); 
+                            self::thwl_render_color_picker('th_wishlist_shr_c_hvr_color', $th_wishlist_shr_c_hvr_color, __('Hover','th-wishlist'),$th_wishlist_shr_c_hvr_color);  
+                        ?>
                         </td>
                      </tr>
                    </table>
-                  
-                   
                 </div>
-                <?php }?>
+                <?php } ?>
               <?php do_action( 'thwl_after_pro_settings_fields' );?>
             </div>
             <p>
@@ -610,14 +568,11 @@ public function settings_page() {
                 <p><?php esc_html_e( 'Want to know how this plugin works. Read our Documentation.', 'th-wishlist' ); ?></p>
                 <a target="_blank" href="https://themehunk.com/docs/th-wishlist"><?php esc_html_e( 'View More', 'th-wishlist' ); ?></a>
             	</div>
-
                 <div class="thw-wrap-side">
                 <h4 class="wrp-title"><?php esc_html_e( 'Contact Support', 'th-wishlist' ); ?></h4>
                 <p><?php esc_html_e( 'If you need any help you can contact to our support team', 'th-wishlist' ); ?></p>
                 <a target="_blank" href="https://themehunk.com/contact-us/"><?php esc_html_e( 'Need Help ?', 'th-wishlist' ); ?></a>
             	</div>
-
-
                 <div class="thw-wrap-side">
                 <h4 class="wrp-title"><?php esc_html_e( 'Spread the News', 'th-wishlist' ); ?></h4>
                 <p><?php esc_html_e( 'Enjoying this plugin? Help spread the the creation and show off your amazing website with such amazing functionality.', 'th-wishlist' ); ?></p>
@@ -626,9 +581,7 @@ public function settings_page() {
         <span> <?php esc_html_e( 'Click to Tweet', 'th-wishlist' ); ?></span></a>
             	</div>
         </div>
-
     </div>
-
 </div>
 <?php }
     /**
@@ -682,5 +635,30 @@ public function settings_page() {
             'th_wishlist_shr_c_hvr_color'  => '#3333', 
         ];
         return apply_filters( 'thwl_default_settings', $defaults );
+    }
+
+    private static function thwl_render_color_picker($id, $value, $label, $default='') {
+        ?>
+        <div class="th-color-picker">
+            <p><?php echo esc_html($label); ?></p>
+            
+             <!-- Reset button -->
+            <div class="th-color-content">
+            <button type="button" 
+                class="th-color-reset" 
+                data-target="<?php echo esc_attr($id); ?>"
+                title="<?php esc_attr_e('Reset color', 'your-text-domain'); ?>"
+                >
+            <span class="dashicons dashicons-image-rotate"></span>
+            </button>
+            <input type="text" name="settings[<?php echo esc_attr($id); ?>]" 
+                id="<?php echo esc_attr($id); ?>" 
+                value="<?php echo esc_attr($value); ?>" 
+                class="th_color_picker" 
+                data-default-color="<?php echo esc_attr($default);?>"
+                style="background-color: <?php echo esc_attr($value); ?>" />
+            </div>
+        </div>
+        <?php
     }
 }

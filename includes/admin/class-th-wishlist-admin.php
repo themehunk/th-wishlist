@@ -37,7 +37,7 @@ class THWL_Admin {
                 'thwl-admin',
                 THWL_URL . 'assets/css/admin.css',
                 [],
-                '2.2.3'
+                '2.2.4'
             );
 
              wp_enqueue_style(
