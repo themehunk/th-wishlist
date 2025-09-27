@@ -1,5 +1,4 @@
 jQuery(document).ready(function($) {
-    
     // tab
     $(document).on('click', '.thw-tab', function(e) {
         e.preventDefault();
@@ -251,4 +250,305 @@ jQuery(document).ready(function($) {
    
 });
 
+// style tab
+(function($){
+            $('.thwl-pro-tabs li').on('click', function(){
+                var tab = $(this).data('tab');
+                $('.thwl-pro-tabs li').removeClass('active');
+                $(this).addClass('active');
+                $('.thwl-tab-content').removeClass('active');
+                $('#' + tab).addClass('active');
+            });
+})(jQuery);
+
+
+jQuery(document).ready(function($){
+    function updateIconColor(value){
+    const $svg = $('#thwl_icon_preview').find('svg.th-wishlist-icon-svg');
+
+    if ($svg.length) {
+        $svg.add($svg.find('*')).each(function(){
+            const $el = $(this);
+            const fillAttr = $el.attr('fill');
+            const strokeAttr = $el.attr('stroke');
+
+            // Fill only if not "none"
+            if (fillAttr && fillAttr.toLowerCase() !== 'none') {
+                if (fillAttr === 'currentColor') {
+                    $el.css('fill', value);
+                } else {
+                    $el.css('fill', value);
+                }
+            }
+
+            // Stroke only if not "none"
+            if (strokeAttr && strokeAttr.toLowerCase() !== 'none') {
+                if (strokeAttr === 'currentColor') {
+                    $el.css('stroke', value);
+                } else {
+                    $el.css('stroke', value);
+                }
+            }
+        });
+    }
+}
+
+function updateIconBColor(value){
+    const $svg = $('#thwl_brws_icon_preview').find('svg.th-wishlist-icon-svg');
+
+    if ($svg.length) {
+        $svg.add($svg.find('*')).each(function(){
+            const $el = $(this);
+            const fillAttr = $el.attr('fill');
+            const strokeAttr = $el.attr('stroke');
+
+            if (fillAttr && fillAttr.toLowerCase() !== 'none') {
+                if (fillAttr === 'currentColor') {
+                    $el.css('fill', value);
+                } else {
+                    $el.css('fill', value);
+                }
+            }
+
+            if (strokeAttr && strokeAttr.toLowerCase() !== 'none') {
+                if (strokeAttr === 'currentColor') {
+                    $el.css('stroke', value);
+                } else {
+                    $el.css('stroke', value);
+                }
+            }
+        });
+    }
+}
+
+    // When Add to Wishlist icon changes
+    $('input[name="settings[th_wishlist_add_icon]"]').on('change', function(){
+        var iconHtml = $(this).next('span').html();
+        $('#thwl_icon_preview').html(iconHtml);
+        // Apply current icon color
+        var color = $('#thwl-icon-color').val();
+        if(color) updateIconColor(color);
+    });
+
+    // When Add to Wishlist Browse icon changes
+    $('input[name="settings[th_wishlist_brws_icon]"]').on('change', function(){
+        var iconHtml = $(this).next('span').html();
+        $('#thwl_brws_icon_preview').html(iconHtml);
+        // Apply current icon color
+        var color = $('#thwl-icon-b-color').val();
+        if(color) updateIconBColor(color);
+    });
+    
+
+    // Live color pickers
+    $('.th_color_picker').each(function(){
+        var $input = $(this);
+        var target = $input.attr('id');
+        function applyColor(value){
+            switch(target){
+                case 'th_wishlist_btn_bg_color':
+                    $('#thwl_button_preview,#thwl_button_preview_browse').css('background-color', value);
+                    break;
+                case 'th_wishlist_btn_txt_color':
+                    $('#thwl_button_preview,#thwl_button_preview_browse').css('color', value);
+                    break;
+                case 'th_wishlist_add_icon_color':
+                    updateIconColor(value);
+                    break;
+                case 'th_wishlist_brws_icon_color':
+                    updateIconBColor(value);
+                    break;
+            }
+        }
+
+        var lastVal = $input.val().trim();
+        if(lastVal) applyColor(lastVal);
+
+        // Polling for live changes
+        setInterval(function(){
+            var val = $input.val().trim();
+            if(val !== lastVal){
+                lastVal = val;
+                applyColor(val);
+            }
+        }, 200);
+    });
+
+    // Initial preview for selected icon
+    var selectedIcon = $('input[name="settings[th_wishlist_add_icon]"]:checked').next('span').html();
+    if(selectedIcon){
+        $('#thwl_icon_preview').html(selectedIcon);
+        var color = $('#thwl-icon-color').val();
+        if(color) updateIconColor(color);
+    }
+    var selectedBIcon = $('input[name="settings[th_wishlist_brws_icon]"]:checked').next('span').html();
+    if(selectedBIcon){
+        $('#thwl_brws_icon_preview').html(selectedBIcon);
+        var color = $('#thwl-icon-b-color').val();
+        if(color) updateIconBColor(color);
+    }
+});
+
+
+// table content live
+jQuery(document).ready(function($){
+    // Map color pickers to preview elements
+    $('.th_color_picker').each(function(){
+        var $input = $(this);
+        var target = $input.attr('id');
+        function applyColor(value){
+            switch(target){
+                case 'th_wishlist_tb_btn_txt_color':
+                    $('.thw-wishlist-actions .all-button,.cart button').css('color', value);
+                    break;
+                case 'th_wishlist_tb_btn_bg_color':
+                    $('.thw-wishlist-actions .all-button,.cart button').css('background', value);
+                    break;
+                case 'th_wishlist_table_bg_color':
+                    $('.thwl-preview-table-1').css('background', value);
+                    break;
+                case 'th_wishlist_table_brd_color':
+                    $('.thwl-preview-table-1 th,.thwl-preview-table-1 td').css('border-color', value);
+                    break;
+                case 'th_wishlist_table_txt_color':
+                    $('.thwl-preview-table-1').css('color', value);
+                    break;
+                case 'th_wishlist_shr_fb_color':
+                    $('.thw-table-custom-style .thw-social-share a.thw-share-facebook').css('color', value);
+                    break;
+                case 'th_wishlist_shr_fb_hvr_color':
+                    $('#thwl-fb-hover-style').remove();
+                    $('head').append('<style id="thwl-fb-hover-style">.thw-table-custom-style .thw-social-share a.thw-share-facebook:hover{color:'+value+' !important;}</style>');
+                    break;
+                case 'th_wishlist_shr_x_color':
+                    $('.thw-table-custom-style .thw-social-share a.thw-share-twitter').css('color', value);
+                    break;
+                case 'th_wishlist_shr_x_hvr_color':
+                    $('#thwl-x-hover-style').remove();
+                    $('head').append('<style id="thwl-x-hover-style">.thw-table-custom-style .thw-social-share a.thw-share-twitter:hover{color:'+value+' !important;}</style>');
+                    break;
+                case 'th_wishlist_shr_w_color':
+                    $('.thw-table-custom-style .thw-social-share a.thw-share-whatsapp').css('color', value);
+                    break;
+                case 'th_wishlist_shr_w_hvr_color':
+                    $('#thwl-w-hover-style').remove();
+                    $('head').append('<style id="thwl-w-hover-style">.thw-table-custom-style .thw-social-share a.thw-share-whatsapp:hover{color:'+value+' !important;}</style>');
+                    break;
+                case 'th_wishlist_shr_e_color':
+                    $('.thw-table-custom-style .thw-social-share a.thw-share-email').css('color', value);
+                    break;
+                case 'th_wishlist_shr_e_hvr_color':
+                    $('#thwl-e-hover-style').remove();
+                    $('head').append('<style id="thwl-e-hover-style">.thw-table-custom-style .thw-social-share a.thw-share-email:hover{color:'+value+' !important;}</style>');
+                    break;
+                case 'th_wishlist_shr_c_color':
+                    $('.thw-table-custom-style .thw-social-share a.thw-copy-link-button').css('color', value);
+                    break;
+                case 'th_wishlist_shr_c_hvr_color':
+                    $('#thwl-c-hover-style').remove();
+                    $('head').append('<style id="thwl-c-hover-style">.thw-table-custom-style .thw-social-share a.thw-copy-link-button:hover{color:'+value+' !important;}</style>');
+                    break;
+
+                    
+                }
+        }
+        // init on load
+        var lastVal = $input.val().trim();
+        if(lastVal) applyColor(lastVal);
+        // poll for live changes
+        setInterval(function(){
+            var val = $input.val().trim();
+            if(val !== lastVal){
+                lastVal = val;
+                applyColor(val);
+            }
+        }, 200);
+    });
+});
+
+//page redirect
+jQuery(document).ready(function($){
+
+    function updatePreviewIconColor(value){
+        const $svg = $('#thwl_icon_preview_redirect').find('svg');
+        if ($svg.length) {
+            $svg.add($svg.find('*')).each(function(){
+                const $el = $(this);
+                const fillAttr = $el.attr('fill');
+                const strokeAttr = $el.attr('stroke');
+
+                if (fillAttr && fillAttr.toLowerCase() !== 'none') {
+                    $el.css('fill', value);
+                }
+                if (strokeAttr && strokeAttr.toLowerCase() !== 'none') {
+                    $el.css('stroke', value);
+                }
+            });
+        }
+    }
+
+    function updatePreviewIconHoverColor(value){
+        $('#thwl_button_preview_redirect')
+            .off('mouseenter mouseleave')
+            .on('mouseenter', function(){
+                updatePreviewIconColor(value);
+            })
+            .on('mouseleave', function(){
+                let normalColor = $('#thw_redirect_wishlist_page_icon_color').val();
+                if(normalColor) updatePreviewIconColor(normalColor);
+            });
+    }
+
+    function updatePreviewIconSize(value){
+        $('#thwl_icon_preview_redirect svg').css({
+            width: value + 'px',
+            height: value + 'px'
+        });
+    }
+
+    // When icon selection changes
+    $('input[name="settings[thw_redirect_wishlist_page_icon]"]').on('change', function(){
+        var iconHtml = $(this).next('span').html();
+        $('#thwl_icon_preview_redirect').html(iconHtml);
+
+        // Grab current values
+        let color = $('#thw_redirect_wishlist_page_icon_color').val();
+        let hvrColor = $('#thw_redirect_wishlist_page_icon_color_hvr').val();
+        let size = $('#thw_redirect_wishlist_page_icon_size').val();
+
+        // ✅ Reapply immediately
+        if(color) updatePreviewIconColor(color);
+        if(hvrColor) updatePreviewIconHoverColor(hvrColor);
+        if(size) updatePreviewIconSize(size);
+    });
+
+    // Color live update
+    $('#thw_redirect_wishlist_page_icon_color').on('input change', function(){
+        updatePreviewIconColor($(this).val());
+    });
+
+    // Hover color live update
+    $('#thw_redirect_wishlist_page_icon_color_hvr').on('input change', function(){
+        updatePreviewIconHoverColor($(this).val());
+    });
+
+    // Size live update
+    $('#thw_redirect_wishlist_page_icon_size').on('input change', function(){
+        updatePreviewIconSize($(this).val());
+    });
+
+    // Initialize on page load
+    var selectedIcon = $('input[name="settings[thw_redirect_wishlist_page_icon]"]:checked').next('span').html();
+    if(selectedIcon){
+        $('#thwl_icon_preview_redirect').html(selectedIcon);
+
+        let color = $('#thw_redirect_wishlist_page_icon_color').val();
+        let hvrColor = $('#thw_redirect_wishlist_page_icon_color_hvr').val();
+        let size = $('#thw_redirect_wishlist_page_icon_size').val();
+
+        if(color) updatePreviewIconColor(color);
+        if(hvrColor) updatePreviewIconHoverColor(hvrColor);
+        if(size) updatePreviewIconSize(size);
+    }
+});
 

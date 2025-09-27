@@ -38,6 +38,25 @@
 width:55%;
 }
 
+.thw-tabs-container{
+flex-wrap: wrap!important;  
+}
+.thw-notes {
+display: flex;
+flex-direction: row!important;  
+width: 100%!important;  
+gap: 20px;
+}
+.thw-wrap-side{
+ width: 33.33%!important;  
+}
+#thw-settings-form {
+    width: 78%!important;  
+}
+.thw-tabs-nav {
+    width:18%!important;  
+}
+
 .thw-tabs-list {
     list-style: none;
     padding: 0;
@@ -583,4 +602,255 @@ display:flex;
     display: flex; 
     flex-direction: column; 
     font-family: Arial, sans-serif;
+}
+
+
+/**********************/
+/* new styel */
+/***********************/
+/* Tabs */
+.thwl-pro-tabs { 
+    list-style: none; 
+    display: flex; 
+    margin-bottom: 20px; 
+    padding: 0; 
+    border-bottom: 2px solid #ddd; 
+    flex-wrap: wrap; 
+}
+
+.thwl-pro-tabs li { 
+    padding: 10px 15px; 
+    margin-right: 5px; 
+    cursor: pointer; 
+    background: #f9f9f9; 
+    border-radius: 5px 5px 0 0; 
+    border: 1px solid #ddd; 
+    border-bottom: none; 
+    transition: all 0.3s ease; 
+}
+
+.thwl-pro-tabs li:hover { 
+    background: #e3f2fd; 
+}
+
+.thwl-pro-tabs li.active { 
+    background: #524CFF;
+    color: #fff; 
+}
+
+/* Tab Contents */
+.thwl-pro-tab-contents { 
+    display: flex; 
+    gap: 20px; 
+    flex-wrap: wrap;
+}
+
+.thwl-settings-left, .thwl-live-preview-right { 
+
+    min-width: 280px; 
+}
+
+.thwl-settings-left{
+    width:30%;
+}
+.thwl-live-preview-right{ 
+     width:70%;
+}
+
+
+/* Live Preview */
+.thwl-live-preview-right { 
+    border: 1px solid #ddd; 
+    padding: 15px; 
+    background: #fefefe; 
+    border-radius: 5px; 
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.03); 
+}
+
+/* Tab content visibility */
+.thwl-tab-content { 
+    display: none; 
+    width: 100%;
+    flex-direction: row; 
+}
+
+.thwl-tab-content.active { 
+    display: flex; 
+    margin-top: 10px;
+}
+
+/* Wrapper */
+.thwl-settings-wrapper {
+    display: flex;
+    gap: 30px;
+    font-family: Arial, sans-serif;
+}
+
+/* Left Panel */
+.thwl-settings-left {
+
+    border-radius: 10px;
+}
+
+/* Grouped Settings */
+.thwl-setting-group {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+}
+
+.thwl-setting-group:hover {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+/* Label */
+.thwl-setting-label {
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+    font-size: 14px;
+    color: #333;
+}
+#thw-settings-form input.th_color_picker{
+    margin:0!important;
+}
+/* Icon Options */
+.thw-icon-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0px;
+}
+
+.thw-dashicon-option {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding:0;
+    border:none;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+}
+.thw-dashicon-option span{
+    border:1px solid #ddd!important;
+}
+.thw-dashicon-option:hover {
+    border-color: #6a4df5;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+}
+
+/* Hide radio buttons but still selectable */
+.thw-dashicon-option input[type="radio"] {
+    display: none;
+}
+
+/* Highlight selected icon */
+.thw-dashicon-option input[type="radio"]:checked + span {
+    border: 1px solid #6a4df5!important;
+    border-radius: 5px;
+}
+
+/* Color picker container */
+.th-color-picker {
+    margin-top: 10px;
+}
+
+.th-color-picker label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #555;
+}
+
+.th-color-picker input {
+    width: 60px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0;
+    text-align: center;
+}
+/* Right Panel - Live Preview */
+.thwl-live-preview-right {
+    flex: 1.5;
+    background: #fff;
+    padding: 0px 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.thwl-live-preview-right h4 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Button Preview */
+#thwl_button_preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    font-size: 18px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+.thwl-setting-content.thwl-2-col{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.thwl-setting-content.thwl-2-col .th-color-picker {
+    width:35%;
+    box-sizing: border-box;
+}
+.thwl-settings-wrapper {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start; /* align top */
+}
+
+/* Left Panel (scrollable) */
+/* Right Panel (sticky preview) */
+.thwl-live-preview-right {
+    position: sticky;
+    top: 20px; /* distance from top while scrolling */
+    align-self: flex-start; /* prevent stretching */
+    background: #fff; /* optional: white background */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .thwl-pro-tab-contents { flex-direction: column; }
+    .thwl-settings-left, .thwl-live-preview-right { min-width: 100%; }
+}
+.thw-wishlist-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.thw-social-share {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.thw-wishlist-table a, .thw-wishlist-actions a {
+    text-decoration: none !important;
+}
+ .th-number{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
