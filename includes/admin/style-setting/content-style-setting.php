@@ -116,7 +116,6 @@ $options = get_option( 'thwl_settings', [] );
                     <th style="padding:10px; border:1px solid <?php echo esc_attr($th_wishlist_table_brd_color); ?>;"><?php esc_html_e('Stock', 'th-wishlist'); ?></th>
                     <th style="padding:10px; border:1px solid <?php echo esc_attr($th_wishlist_table_brd_color); ?>;"><?php esc_html_e('Action', 'th-wishlist'); ?></th>
                     <th style="padding:10px; border:1px solid <?php echo esc_attr($th_wishlist_table_brd_color); ?>;"><?php esc_html_e('Remove', 'th-wishlist'); ?></th>
-                    
                 </tr>
             </thead>
             <tbody>
