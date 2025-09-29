@@ -239,3 +239,18 @@ width:100%;
 .thw-wishlist-table a,.thw-wishlist-actions a{
 text-decoration:none!important;
 }
+.thw-wishlist-table td {
+    font-size: 14px;
+}
+.thw-wishlist-table th {
+    font-weight: 500;
+    padding: 9px 12px;
+    line-height: 1.5em;
+    font-size: 16px;
+}
+span.stock.in-stock {
+    color: #00B200;
+}
+span.stock.out-of-stock {
+    color: #FF8C8C;
+}
