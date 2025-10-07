@@ -36,8 +36,8 @@ class THWL_Frontend {
 
     public function thwl_enqueue_styles_scripts() {
         
-        wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),'1.0.2');
-        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.1.2', array( 
+        wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),THWL_VERSION);
+        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),THWL_VERSION, array( 
                 'strategy'  => 'async',
                 'in_footer' => false,
         ) );
