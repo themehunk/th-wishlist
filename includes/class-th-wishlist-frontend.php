@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class THWL_Frontend {
     // Declare the property to avoid dynamic property deprecation warning
     private $thwl_option;
+
+    private static $styles_enqueued = false;
+    
     public function __construct() {
         // Use static method directly, no need to instantiate
         $this->thwl_option = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
@@ -35,6 +38,11 @@ class THWL_Frontend {
     }
 
     public function thwl_enqueue_styles_scripts() {
+
+        if ( self::$styles_enqueued ) {
+		return;
+        }
+        self::$styles_enqueued = true;
         
         wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),THWL_VERSION);
         wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),THWL_VERSION, array( 
@@ -50,9 +58,8 @@ class THWL_Frontend {
             .thw-btn-custom-style .thw-add-to-wishlist-button.in-wishlist .thw-icon {
                color: " . esc_attr($th_wishlist_option['th_wishlist_brws_icon_color']) . ";
             }
-            .thw-btn-custom-style .thw-add-to-wishlist-button {
+            .thw-btn-custom-style .thw-add-to-wishlist-button, .thw-btn-custom-style .thw-add-to-wishlist-button .thw-to-add-text,.thw-btn-custom-style .thw-add-to-wishlist-button .thw-to-browse-text{
                color: " . esc_attr($th_wishlist_option['th_wishlist_btn_txt_color']) . ";
-               background: " .esc_attr($th_wishlist_option['th_wishlist_btn_bg_color']) . ";
             }
             .thw-table-custom-style .thw-wishlist-actions .thw-add-all-to-cart,
             .thw-table-custom-style .thw-add-to-cart-cell .button {
