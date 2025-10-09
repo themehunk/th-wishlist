@@ -11,7 +11,7 @@ class THWL_Manager {
     private function __construct() {
 
         require_once THWL_DIR . 'includes/admin/class-th-wishlist-settings.php';
-        $this->settings = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
+        $this->settings = get_option( 'thwl_settings', []);
     }
 
     public static function get_instance() {
@@ -30,6 +30,6 @@ class THWL_Manager {
     }
 
     public function refresh_settings() {
-        $this->settings = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
+        $this->settings = get_option( 'thwl_settings', [] );
     }
 }

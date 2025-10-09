@@ -16,7 +16,9 @@ class THWL_Frontend {
     
     public function __construct() {
         // Use static method directly, no need to instantiate
-        $this->thwl_option = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
+        $saved_options = get_option( 'thwl_settings', [] );
+        $this->thwl_option = wp_parse_args( $saved_options, THWL_Settings::thwl_get_default_settings() );
+        
         add_action('wp_enqueue_scripts', array( $this, 'thwl_enqueue_styles_scripts' ) );
         //global button
         add_shortcode('thwl_wishlist_button', array( $this,'thwl_add_to_wishlist_button_shortcode'));
@@ -45,82 +47,12 @@ class THWL_Frontend {
         self::$styles_enqueued = true;
         
         wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),THWL_VERSION);
-        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),THWL_VERSION, array( 
+        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'', array( 
                 'strategy'  => 'async',
                 'in_footer' => false,
         ) );
         wp_enqueue_script( 'thwl' );
-        $th_wishlist_option = get_option( 'thwl_settings', THWL_Settings::thwl_get_default_settings() );
-        wp_add_inline_style('thwl',
-            ".thw-btn-custom-style .thw-add-to-wishlist-button .thw-icon {
-               color: " . esc_attr($th_wishlist_option['th_wishlist_add_icon_color']) . ";
-            }
-            .thw-btn-custom-style .thw-add-to-wishlist-button.in-wishlist .thw-icon {
-               color: " . esc_attr($th_wishlist_option['th_wishlist_brws_icon_color']) . ";
-            }
-            .thw-btn-custom-style .thw-add-to-wishlist-button, .thw-btn-custom-style .thw-add-to-wishlist-button .thw-to-add-text,.thw-btn-custom-style .thw-add-to-wishlist-button .thw-to-browse-text{
-               color: " . esc_attr($th_wishlist_option['th_wishlist_btn_txt_color']) . ";
-            }
-            .thw-table-custom-style .thw-wishlist-actions .thw-add-all-to-cart,
-            .thw-table-custom-style .thw-add-to-cart-cell .button {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_tb_btn_txt_color']) . ";
-                background: " . esc_attr($th_wishlist_option['th_wishlist_tb_btn_bg_color']) . ";
-            }
-            .thw-table-custom-style .thw-wishlist-table {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_table_txt_color']) . ";
-                background: " . esc_attr($th_wishlist_option['th_wishlist_table_bg_color']) . ";
-            }
-            .thw-table-custom-style .thw-wishlist-table th,
-            .thw-table-custom-style .thw-wishlist-table td {
-                border-color: " . esc_attr($th_wishlist_option['th_wishlist_table_brd_color']) . ";
-            }
-                .thw-table-custom-style .thw-social-share a.thw-share-facebook {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_fb_color']) . ";
-            }
-            .thw-table-custom-style .thw-social-share a.thw-share-facebook:hover {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_fb_hvr_color']) . ";
-            }
-                .thw-table-custom-style .thw-social-share a.thw-share-twitter {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_x_color']) . ";
-            }
-            .thw-table-custom-style .thw-social-share a.thw-share-twitter:hover {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_x_hvr_color']) . ";
-            }
-                .thw-table-custom-style .thw-social-share a.thw-share-twitter {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_x_color']) . ";
-            }
-            .thw-table-custom-style .thw-social-share a.thw-share-twitter:hover {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_x_hvr_color']) . ";
-            }
-                .thw-table-custom-style .thw-social-share a.thw-share-whatsapp {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_w_color']) . ";
-            }
-            .thw-table-custom-style .thw-social-share a.thw-share-whatsapp:hover {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_w_hvr_color']) . ";
-            }
-                .thw-table-custom-style .thw-social-share a.thw-share-email {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_e_color']) . ";
-            }
-            .thw-table-custom-style .thw-social-share a.thw-share-email:hover {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_e_hvr_color']) . ";
-            }
-                .thw-table-custom-style .thw-social-share a.thw-copy-link-button {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_c_color']) . ";
-            }
-            .thw-table-custom-style .thw-social-share a.thw-copy-link-button:hover {
-                color: " . esc_attr($th_wishlist_option['th_wishlist_shr_c_hvr_color']) . ";
-             }
-            .thwl-page-redirect-icon svg{
-                    height:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_size']) . "px;
-                    width:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_size']) . "px;
-                } 
-            .thwl-page-redirect-whishlist .thwl-page-redirect-icon{
-                    color:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_color']) . ";
-                }
-             .thwl-page-redirect-whishlist:hover .thwl-page-redirect-icon{
-                    color:" . esc_attr($th_wishlist_option['thw_redirect_wishlist_page_icon_color_hvr']) . ";
-                }      
-             ");
+        wp_add_inline_style('thwl',thwl_add_inline_custom_styles() );
 
         $wishlist_page_id = ! empty( $this->thwl_option['thwl_page_id'] ) 
         ? $this->thwl_option['thwl_page_id'] 
@@ -141,8 +73,7 @@ class THWL_Frontend {
             'cart_url'            => wc_get_cart_url(),
             'icon_style'          => isset($this->thwl_option['thw_button_display_style']) ? $this->thwl_option['thw_button_display_style'] : 'icon_text',
             'redirect_nonce'      => wp_create_nonce('thwl_wishlist_redirect_nonce'),
-            'th_wishlist_brws_icon' => $this->thwl_option['th_wishlist_brws_icon'],
-            'icons' => thwl_get_wishlist_icons_svg(),
+            'th_wishlist_brws_icon' => isset($this->thwl_option['th_wishlist_brws_icon']) ? $this->thwl_option['th_wishlist_brws_icon'] : 'heart-filled',
             ) );
     }
 

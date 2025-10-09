@@ -2,7 +2,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-$options = get_option( 'thwl_settings', [] );
+$saved_options = get_option( 'thwl_settings', [] );
+$options = wp_parse_args( $saved_options, self::thwl_get_default_settings() );
 ?>
 <div class="thwl-settings-wrapper" style="display:flex; gap:30px;">
     <!-- Left Settings Panel -->
