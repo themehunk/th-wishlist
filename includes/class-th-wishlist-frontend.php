@@ -45,13 +45,15 @@ class THWL_Frontend {
 		return;
         }
         self::$styles_enqueued = true;
+        if ( ! defined( 'THWL_PRO_ACTIVE' ) || ! THWL_PRO_ACTIVE ) {
+           wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),THWL_VERSION);
+           wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'', array( 
+                    'strategy'  => 'async',
+                    'in_footer' => false,
+            ) );
+            wp_enqueue_script( 'thwl' );
+        }
         
-        wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),THWL_VERSION);
-        wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'', array( 
-                'strategy'  => 'async',
-                'in_footer' => false,
-        ) );
-        wp_enqueue_script( 'thwl' );
         wp_add_inline_style('thwl',thwl_add_inline_custom_styles() );
 
         $wishlist_page_id = ! empty( $this->thwl_option['thwl_page_id'] ) 

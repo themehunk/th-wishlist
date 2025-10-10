@@ -32,14 +32,7 @@ class THWL_Admin {
         wp_enqueue_style( 'wp-color-picker' );
         wp_enqueue_script( 'wp-color-picker' );
         wp_enqueue_script( 'jquery-ui-sortable' );
-        // Enqueue custom admin styles.
-            wp_enqueue_style(
-                'thwl-admin',
-                THWL_URL . 'assets/css/admin.css',
-                [],
-                THWL_VERSION
-            );
-
+    
              wp_enqueue_style(
                 'pickr-style',
                 THWL_URL . 'assets/css/pickr.min.css',
@@ -55,14 +48,24 @@ class THWL_Admin {
                 '1.9.1',
                 true
             );
+
+            if ( ! defined( 'THWL_PRO_ACTIVE' ) || ! THWL_PRO_ACTIVE ) { 
+            // Enqueue custom admin styles.
+                wp_enqueue_style(
+                    'thwl-admin',
+                    THWL_URL . 'assets/css/thwl-admin.css',
+                    [],
+                    THWL_VERSION
+                );
             
             wp_enqueue_script(
                 'thwl-admin',
-                THWL_URL . 'assets/js/admin.js',
+                THWL_URL . 'assets/js/thwl-admin.js',
                 [ 'jquery', 'wp-color-picker', 'jquery-ui-sortable' ],
                 THWL_VERSION,
                 true
             );
+            }
 
             wp_localize_script(
                 'thwl-admin',
