@@ -208,3 +208,109 @@ function thwl_wishlist_redirect_url(){
     $wishlist_permalink = $wishlist_page_id ? get_the_permalink( $wishlist_page_id ) : home_url();
     return $wishlist_permalink;
 }
+
+/**
+ * Generate and add dynamic inline CSS for TH Wishlist based on user settings.
+ */
+function thwl_add_inline_custom_styles() {
+
+    // Helper function to safely get option value
+    if ( ! function_exists( 'thwl_get_option_value' ) ) {
+        function thwl_get_option_value( $options, $key ) {
+            return is_array( $options ) && isset( $options[ $key ] ) && $options[ $key ] !== '' ? esc_attr( $options[ $key ] ) : false;
+        }
+    }
+
+    // Always ensure this is an array
+    $th_wishlist_option = get_option( 'thwl_settings', [] );
+    if ( ! is_array( $th_wishlist_option ) ) {
+        $th_wishlist_option = [];
+    }
+    $custom_css = '';
+
+    /* --- Add to wishlist icon color --- */
+    if ( $color = thwl_get_option_value( $th_wishlist_option, 'th_wishlist_add_icon_color' ) ) {
+        $custom_css .= ".thw-btn-custom-style .thw-add-to-wishlist-button .thw-icon { color: {$color}; }";
+    }
+
+    /* --- In wishlist icon color --- */
+    if ( $color = thwl_get_option_value( $th_wishlist_option, 'th_wishlist_brws_icon_color' ) ) {
+        $custom_css .= ".thw-btn-custom-style .thw-add-to-wishlist-button.in-wishlist .thw-icon { color: {$color}; }";
+    }
+
+    /* --- Button text color --- */
+    if ( $color = thwl_get_option_value( $th_wishlist_option, 'th_wishlist_btn_txt_color' ) ) {
+        $custom_css .= "
+            .thw-btn-custom-style .thw-add-to-wishlist-button,
+            .thw-btn-custom-style .thw-add-to-wishlist-button .thw-to-add-text,
+            .thw-btn-custom-style .thw-add-to-wishlist-button .thw-to-browse-text {
+                color: {$color};
+            }";
+    }
+
+    /* --- Table button text and background --- */
+    $tb_btn_txt = thwl_get_option_value( $th_wishlist_option, 'th_wishlist_tb_btn_txt_color' );
+    $tb_btn_bg  = thwl_get_option_value( $th_wishlist_option, 'th_wishlist_tb_btn_bg_color' );
+    if ( $tb_btn_txt || $tb_btn_bg ) {
+        $custom_css .= "
+            .thw-table-custom-style .thw-wishlist-actions .thw-add-all-to-cart,
+            .thw-table-custom-style .thw-add-to-cart-cell .button {
+                " . ( $tb_btn_txt ? "color: {$tb_btn_txt};" : '' ) . "
+                " . ( $tb_btn_bg ? "background: {$tb_btn_bg};" : '' ) . "
+            }";
+    }
+
+    /* --- Table colors --- */
+    $tb_txt = thwl_get_option_value( $th_wishlist_option, 'th_wishlist_table_txt_color' );
+    $tb_bg  = thwl_get_option_value( $th_wishlist_option, 'th_wishlist_table_bg_color' );
+    if ( $tb_txt || $tb_bg ) {
+        $custom_css .= "
+            .thw-table-custom-style .thw-wishlist-table {
+                " . ( $tb_txt ? "color: {$tb_txt};" : '' ) . "
+                " . ( $tb_bg ? "background: {$tb_bg};" : '' ) . "
+            }";
+    }
+
+    /* --- Table border --- */
+    if ( $color = thwl_get_option_value( $th_wishlist_option, 'th_wishlist_table_brd_color' ) ) {
+        $custom_css .= "
+            .thw-table-custom-style .thw-wishlist-table th,
+            .thw-table-custom-style .thw-wishlist-table td {
+                border-color: {$color};
+            }";
+    }
+
+    /* --- Social share colors --- */
+    $socials = [
+        'facebook' => ['th_wishlist_shr_fb_color', 'th_wishlist_shr_fb_hvr_color'],
+        'twitter'  => ['th_wishlist_shr_x_color',  'th_wishlist_shr_x_hvr_color'],
+        'whatsapp' => ['th_wishlist_shr_w_color',  'th_wishlist_shr_w_hvr_color'],
+        'email'    => ['th_wishlist_shr_e_color',  'th_wishlist_shr_e_hvr_color'],
+        'copy-link-button' => ['th_wishlist_shr_c_color', 'th_wishlist_shr_c_hvr_color'],
+    ];
+
+    foreach ( $socials as $class => $keys ) {
+        $normal = thwl_get_option_value( $th_wishlist_option, $keys[0] );
+        $hover  = thwl_get_option_value( $th_wishlist_option, $keys[1] );
+        if ( $normal || $hover ) {
+            $custom_css .= ".thw-table-custom-style .thw-social-share a.thw-share-{$class} { " . ( $normal ? "color: {$normal};" : '' ) . " }";
+            if ( $hover ) {
+                $custom_css .= ".thw-table-custom-style .thw-social-share a.thw-share-{$class}:hover { color: {$hover}; }";
+            }
+        }
+    }
+
+    /* --- Redirect icon size & color --- */
+    if ( $size = thwl_get_option_value( $th_wishlist_option, 'thw_redirect_wishlist_page_icon_size' ) ) {
+        $custom_css .= ".thwl-page-redirect-icon svg { height: {$size}px; width: {$size}px; }";
+    }
+    if ( $color = thwl_get_option_value( $th_wishlist_option, 'thw_redirect_wishlist_page_icon_color' ) ) {
+        $custom_css .= ".thwl-page-redirect-whishlist .thwl-page-redirect-icon { color: {$color}; }";
+    }
+    if ( $color = thwl_get_option_value( $th_wishlist_option, 'thw_redirect_wishlist_page_icon_color_hvr' ) ) {
+        $custom_css .= ".thwl-page-redirect-whishlist:hover .thwl-page-redirect-icon { color: {$color}; }";
+    }
+
+    // Finally add inline style if CSS exists
+    return $custom_css;
+}

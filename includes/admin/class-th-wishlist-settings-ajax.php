@@ -25,28 +25,48 @@ class THWL_Ajax {
      * @return array Sanitized and validated data.
      */
     private function thwl_sanitize_form_data( $data ) {
-        
-        $sanitized = [];
-        $defaults  = THWL_Settings::thwl_get_default_settings();
+    $sanitized = [];
 
-        foreach ( $defaults as $key => $default_value ) {
-            if ( $key === 'th_wishlist_table_columns' && isset( $data['th_wishlist_table_columns'] ) && is_array( $data['th_wishlist_table_columns'] ) ) {
-                $sanitized['th_wishlist_table_columns'] = array_map( 'sanitize_text_field', $data['th_wishlist_table_columns'] );
-            } elseif ( $key === 'th_wishlist_table_column_labels' && isset( $data['th_wishlist_table_column_labels'] ) && is_array( $data['th_wishlist_table_column_labels'] ) ) {
-                $sanitized['th_wishlist_table_column_labels'] = array_map( 'sanitize_text_field', $data['th_wishlist_table_column_labels'] );
-            } elseif ( isset( $data[ $key ] ) ) {
-                if ( is_array( $data[ $key ] ) ) {
-                    $sanitized[ $key ] = array_map( 'sanitize_text_field', $data[ $key ] );
-                } else {
-                    $sanitized[ $key ] = sanitize_text_field( $data[ $key ] );
-                }
-            } else {
-                $sanitized[ $key ] = is_array( $default_value ) ? [] : 0;
-            }
-        }
-
+    if ( ! is_array( $data ) || empty( $data ) ) {
         return $sanitized;
     }
+
+    foreach ( $data as $key => $value ) {
+        // Skip invalid keys
+        if ( empty( $key ) ) {
+            continue;
+        }
+
+        // Special handling for columns (array of slugs)
+        if ( $key === 'th_wishlist_table_columns' && is_array( $value ) ) {
+            $sanitized[ $key ] = array_map( 'sanitize_text_field', array_filter( $value ) );
+            continue;
+        }
+
+        // Special handling for column labels (key => label pairs)
+        if ( $key === 'th_wishlist_table_column_labels' && is_array( $value ) ) {
+            $sanitized[ $key ] = array_map( 'sanitize_text_field', $value );
+            continue;
+        }
+
+        // Sanitize page IDs or numeric settings
+        if ( strpos( $key, '_id' ) !== false || strpos( $key, '_number' ) !== false ) {
+            $sanitized[ $key ] = absint( $value );
+            continue;
+        }
+
+        // Handle arrays in general (checkboxes, lists, etc.)
+        if ( is_array( $value ) ) {
+            $sanitized[ $key ] = array_map( 'sanitize_text_field', $value );
+            continue;
+        }
+
+        // Fallback — treat as string
+        $sanitized[ $key ] = sanitize_text_field( $value );
+    }
+
+    return $sanitized;
+}
 
     /**
      * Save settings via AJAX.
@@ -87,8 +107,7 @@ class THWL_Ajax {
             wp_send_json_error( __( 'Invalid permissions.', 'th-wishlist' ) );
         }
         // Get and save default settings
-        $defaults = THWL_Settings::thwl_get_default_settings();
-        update_option( 'thwl_settings', $defaults );
+        update_option( 'thwl_settings', []);
         wp_send_json_success( __( 'Settings reset to defaults!', 'th-wishlist' ) );
     }
 }

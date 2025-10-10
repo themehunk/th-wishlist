@@ -2,7 +2,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-$options = get_option( 'thwl_settings', [] );
+$saved_options = get_option( 'thwl_settings', [] );
+    $options = wp_parse_args( $saved_options, self::thwl_get_default_settings() );
 
                      $th_wishlist_tb_btn_txt_color = isset( $options['th_wishlist_tb_btn_txt_color'] ) ? $options['th_wishlist_tb_btn_txt_color'] : '';
                     $th_wishlist_tb_btn_bg_color = isset( $options['th_wishlist_tb_btn_bg_color'] ) ? $options['th_wishlist_tb_btn_bg_color'] : '';

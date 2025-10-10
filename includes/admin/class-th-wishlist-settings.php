@@ -84,8 +84,8 @@ public function settings_page() {
         'add_to_cart',
         'remove'
     ] );
-    
-    $options = get_option( 'thwl_settings', self::thwl_get_default_settings() );
+    $saved_options = get_option( 'thwl_settings', [] );
+    $options = wp_parse_args( $saved_options, self::thwl_get_default_settings() );
     $saved_columns = isset( $options['th_wishlist_table_columns'] ) ? $options['th_wishlist_table_columns'] : $default_columns;
     $labels = isset( $options['th_wishlist_table_column_labels'] ) ? $options['th_wishlist_table_column_labels'] : self::thwl_get_default_settings()['th_wishlist_table_column_labels'];
 ?>
@@ -415,7 +415,7 @@ public function settings_page() {
     }
 
     public static function thwl_add_style_customization() {
-        $options = get_option( 'thwl_settings', [] );
+        
     ?>
      <div id="style" class="thw-tab-content">
         <div class="thwl-pro-style-wrapper">
