@@ -18,7 +18,7 @@ class THWL_Frontend {
         // Use static method directly, no need to instantiate
         $saved_options = get_option( 'thwl_settings', [] );
         $this->thwl_option = wp_parse_args( $saved_options, THWL_Settings::thwl_get_default_settings() );
-        
+        add_filter( 'body_class', [ $this, 'thwl_wishlist_body_class' ] );
         add_action('wp_enqueue_scripts', array( $this, 'thwl_enqueue_styles_scripts' ) );
         //global button
         add_shortcode('thwl_wishlist_button', array( $this,'thwl_add_to_wishlist_button_shortcode'));
@@ -77,6 +77,18 @@ class THWL_Frontend {
             'redirect_nonce'      => wp_create_nonce('thwl_wishlist_redirect_nonce'),
             'th_wishlist_brws_icon' => isset($this->thwl_option['th_wishlist_brws_icon']) ? $this->thwl_option['th_wishlist_brws_icon'] : 'heart-filled',
             ) );
+    }
+
+    public function thwl_wishlist_body_class( $classes ) {
+
+        $wishlist_page_id = get_option( 'thwl_page_id' );
+
+        // Add class only if we are on the wishlist page
+        if ( $wishlist_page_id && is_page( $wishlist_page_id ) ) {
+            $classes[] = 'thwl-page';
+        }
+
+        return $classes;
     }
 
     public function thwl_add_to_wishlist_button_shortcode() {
