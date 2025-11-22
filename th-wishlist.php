@@ -3,7 +3,7 @@
  * Plugin Name:       TH Wishlist for WooCommerce
  * Plugin URI:        https://themehunk.com/wishlist
  * Description:       TH Wishlist is a powerful and user-friendly wishlist plugin for WooCommerce that lets your customers save their favorite products for later and helps boost conversions by keeping users engaged with the products they love.
- * Version:           1.1.3
+ * Version:           1.1.4
  * Author:            themehunk
  * Author URI:        https://www.themehunk.com
  * License:           GPLv2 or later
@@ -157,24 +157,37 @@ final class THWL_Wishlist {
 	/**
 	 * Display admin notice if WooCommerce is missing.
 	 */
-	public function thwl_woocommerce_missing_notice() {
-		if ( ! is_admin() ) {
-			return;
+	
+		public function thwl_woocommerce_missing_notice() {
+			if ( ! is_admin() ) {
+				return;
+			}
+
+			$plugin_name = 'TH Wishlist';
+			$woo_link    = '<a href="' . esc_url( 'https://woocommerce.com/' ) . '" target="_blank" rel="noopener noreferrer">' .
+						esc_html__( 'WooCommerce', 'th-wishlist' ) .
+						'</a>';
+
+			?>
+			<div class="notice notice-error is-dismissible">
+				<p>
+					<?php
+					/* translators: 1: Plugin name. 2: WooCommerce link */
+					echo wp_kses_post(
+						sprintf(
+							// translators: %1$s: Plugin name, %2$s: WooCommerce link
+							__( '%1$s requires %2$s to be installed and active.', 'th-wishlist' ),
+							esc_html( $plugin_name ),
+							$woo_link
+						)
+					);
+					?>
+				</p>
+			</div>
+			<?php
 		}
-		?>
-		<div class="notice notice-error is-dismissible">
-			<p>
-				<?php
-				printf(
-					esc_html__( '%1$s requires %2$s to be installed and active.', 'th-wishlist' ),
-					esc_html__( 'TH Wishlist', 'th-wishlist' ),
-					'<a href="' . esc_url( 'https://woocommerce.com/' ) . '" target="_blank">' . esc_html__( 'WooCommerce', 'th-wishlist' ) . '</a>'
-				);
-				?>
-			</p>
-		</div>
-		<?php
-	}
+
+
 
 	/**
 	 * Re-run installer if demo import skipped activation.
@@ -193,6 +206,7 @@ final class THWL_Wishlist {
 
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'thwl_wishlists';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared
 		$table_exists = $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $table_name ) );
 
 		$page_id = get_option( 'thwl_page_id' );

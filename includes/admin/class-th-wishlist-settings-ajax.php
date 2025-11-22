@@ -80,11 +80,13 @@ class THWL_Ajax {
             wp_send_json_error( __( 'Invalid permissions.', 'th-wishlist' ) );
         }
 
-        // Check if settings are provided and are an array
+       // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         if ( ! isset( $_POST['settings'] ) || ! is_array( $_POST['settings'] ) ) {
             wp_send_json_error( __( 'Error saving settings. Invalid data.', 'th-wishlist' ) );
         }
         // Unslash and sanitize the settings array
+
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $sanitized_data = $this->thwl_sanitize_form_data( wp_unslash( $_POST['settings'] ) );
         if ( ! empty( $sanitized_data ) ) {
             update_option( 'thwl_settings', $sanitized_data );

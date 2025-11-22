@@ -133,17 +133,29 @@ class THWL_Table extends WP_List_Table {
         // Single delete
         if ( 'delete' === $this->current_action() ) {
             if ( ! current_user_can( 'manage_options' ) ) {
-                wp_die( __( 'Not allowed.', 'th-wishlist' ) );
-            }
-            if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'thw_delete_wishlist' ) ) {
-                wp_die( __( 'Security check failed.', 'th-wishlist' ) );
-            }
-            $wishlist_id = isset( $_GET['wishlist'] ) ? absint( $_GET['wishlist'] ) : 0;
-            if ( $wishlist_id ) {
-                THWL_Data::delete_wishlist( $wishlist_id );
-            }
-            wp_safe_redirect( add_query_arg( [ 'page' => 'thwl-wishlists-tracking', 'deleted' => 1 ], admin_url( 'admin.php' ) ) );
-            exit;
+        wp_die( esc_html__( 'Not allowed.', 'th-wishlist' ) );
+    }
+
+    if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'thw_delete_wishlist' ) ) {
+        wp_die( esc_html__( 'Security check failed.', 'th-wishlist' ) );
+    }
+
+    $wishlist_id = isset( $_GET['wishlist'] ) ? absint( $_GET['wishlist'] ) : 0;
+
+    if ( $wishlist_id ) {
+        THWL_Data::delete_wishlist( $wishlist_id );
+    }
+
+    wp_safe_redirect(
+        add_query_arg(
+            [
+                'page'    => 'thwl-wishlists-tracking',
+                'deleted' => 1,
+            ],
+            admin_url( 'admin.php' )
+        )
+    );
+    exit;
         }
 
         // Bulk delete
@@ -173,9 +185,15 @@ class THWL_Table extends WP_List_Table {
 add_action( 'admin_notices', function() {
     if ( isset( $_GET['deleted'] ) ) {
         $count = (int) $_GET['deleted'];
+
+        /* translators: %d: Number of deleted wishlists */
+        $text = _n( '%d wishlist deleted.', '%d wishlists deleted.', $count, 'th-wishlist' );
+
+        $message = sprintf( $text, $count );
+
         printf(
             '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-            esc_html( sprintf( _n( '%d wishlist deleted.', '%d wishlists deleted.', $count, 'th-wishlist' ), $count ) )
+            esc_html( $message )
         );
     }
 } );
