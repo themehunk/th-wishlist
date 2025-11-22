@@ -399,7 +399,7 @@ public function settings_page() {
             <button type="button" 
                 class="th-color-reset" 
                 data-target="<?php echo esc_attr($id); ?>"
-                title="<?php esc_attr_e('Reset color', 'your-text-domain'); ?>"
+                title="<?php esc_attr_e('Reset color', 'th-wishlist'); ?>"
                 >
             <span class="dashicons dashicons-image-rotate"></span>
             </button>

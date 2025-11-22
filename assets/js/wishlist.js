@@ -265,4 +265,10 @@ $(document).on('click', '.thw-add-to-wishlist-button:not(.thw-login-required)', 
             }
         });
     });
+
+    // Login required popup alert
+    $(document).on('click', '.thw-login-required', function (e) {
+        e.preventDefault();
+        alert($(this).data('alert'));
+    });
 });
