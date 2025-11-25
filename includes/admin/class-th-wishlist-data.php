@@ -33,7 +33,7 @@ class THWL_Data {
 
             // --- Handle Logged-in User ---
             $user_id  = get_current_user_id();
-
+           // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wishlist = $wpdb->get_row(
                 $wpdb->prepare(
                     "SELECT * FROM {$wpdb->prefix}thwl_wishlists 
@@ -45,6 +45,7 @@ class THWL_Data {
             // 🔄 Merge guest wishlist (if any) into logged-in wishlist
             if ( isset( $_COOKIE['thwl_guest_uniqid'] ) ) {
                 $guest_token    = sanitize_text_field( wp_unslash($_COOKIE['thwl_guest_uniqid']) );
+               // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $guest_wishlist = $wpdb->get_row(
                     $wpdb->prepare(
                         "SELECT * FROM {$wpdb->prefix}thwl_wishlists WHERE session_id = %s",
@@ -56,6 +57,7 @@ class THWL_Data {
 
                     if ( ! $wishlist ) {
                         // No existing user wishlist → convert guest → user wishlist
+                        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                         $wpdb->update(
                             "{$wpdb->prefix}thwl_wishlists",
                             array(
@@ -66,7 +68,7 @@ class THWL_Data {
                             array( '%d', '%s' ),
                             array( '%d' )
                         );
-
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                         $wishlist = $wpdb->get_row(
                             $wpdb->prepare(
                                 "SELECT * FROM {$wpdb->prefix}thwl_wishlists WHERE id = %d",
@@ -80,6 +82,7 @@ class THWL_Data {
 
                         foreach ( $guest_items as $item ) {
                             if ( ! self::is_product_in_wishlist( $wishlist->id, $item->product_id, $item->variation_id ) ) {
+                                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                                 $wpdb->update(
                                     "{$wpdb->prefix}thwl_wishlist_items",
                                     array( 'wishlist_id' => $wishlist->id ),
@@ -88,6 +91,7 @@ class THWL_Data {
                                     array( '%d' )
                                 );
                             } else {
+                                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                                 $wpdb->delete(
                                     "{$wpdb->prefix}thwl_wishlist_items",
                                     array( 'id' => $item->id ),
@@ -97,6 +101,7 @@ class THWL_Data {
                         }
 
                         // Delete old guest wishlist row
+                        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                         $wpdb->delete(
                             "{$wpdb->prefix}thwl_wishlists",
                             array( 'id' => $guest_wishlist->id ),
@@ -112,6 +117,7 @@ class THWL_Data {
 
             if ( ! $wishlist ) {
                 // Create new default wishlist for user
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->insert(
                     "{$wpdb->prefix}thwl_wishlists",
                     array(
@@ -123,7 +129,7 @@ class THWL_Data {
                     ),
                     array( '%d', '%s', '%s', '%d', '%s' )
                 );
-
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wishlist = $wpdb->get_row(
                     $wpdb->prepare(
                         "SELECT * FROM {$wpdb->prefix}thwl_wishlists WHERE id = %d",
@@ -157,6 +163,7 @@ class THWL_Data {
             }
 
             // Try to fetch with that guest session id
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wishlist = $wpdb->get_row(
                 $wpdb->prepare(
                     "SELECT * FROM {$wpdb->prefix}thwl_wishlists WHERE session_id = %s AND is_default = 1",
@@ -166,6 +173,7 @@ class THWL_Data {
 
             if ( ! $wishlist ) {
                 // Create new guest default wishlist as 'public'
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->insert(
                     "{$wpdb->prefix}thwl_wishlists",
                     array(
@@ -177,7 +185,7 @@ class THWL_Data {
                     ),
                     array( '%s', '%s', '%s', '%d', '%s' )
                 );
-
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wishlist = $wpdb->get_row(
                     $wpdb->prepare(
                         "SELECT * FROM {$wpdb->prefix}thwl_wishlists WHERE id = %d",
@@ -235,23 +243,26 @@ class THWL_Data {
      * PHPCS: WordPress.DB.PreparedSQL.NotPrepared and PluginCheck.Security.DirectDB ignored
      * because `$orderby` and `$order` are fully sanitized via whitelist checks above.
      */
-    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
     return $wpdb->get_results( $prepared, ARRAY_A );
 }
 
 
     public static function get_wishlist_count() {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         return (int) $wpdb->get_var( "SELECT COUNT(id) FROM {$wpdb->prefix}thwl_wishlists" );
     }
 
     public static function delete_wishlist( $wishlist_id ) {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         $wpdb->delete(
             "{$wpdb->prefix}thwl_wishlists",
             array( 'id' => $wishlist_id ),
             array( '%d' )
         );
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         $wpdb->delete(
             "{$wpdb->prefix}thwl_wishlist_items",
             array( 'wishlist_id' => $wishlist_id ),
@@ -265,7 +276,7 @@ class THWL_Data {
         if ( ! $wishlist_id ) {
             return null;
         }
-
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         return $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}thwl_wishlists WHERE id = %d",
@@ -276,7 +287,7 @@ class THWL_Data {
 
     public static function get_wishlist_by_token( $token ) {
         global $wpdb;
-
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         return $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}thwl_wishlists WHERE wishlist_token = %s",
@@ -291,7 +302,7 @@ class THWL_Data {
         if ( ! $wishlist_id ) {
             return [];
         }
-
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         return $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}thwl_wishlist_items WHERE wishlist_id = %d",
@@ -302,7 +313,7 @@ class THWL_Data {
 
     public static function get_item( $item_id ) {
         global $wpdb;
-
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         return $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}thwl_wishlist_items WHERE id = %d",
@@ -317,7 +328,7 @@ class THWL_Data {
         if ( self::is_product_in_wishlist( $wishlist_id, $product_id, $variation_id ) ) {
             return false;
         }
-
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         $wpdb->insert(
             "{$wpdb->prefix}thwl_wishlist_items",
             array(
@@ -334,7 +345,7 @@ class THWL_Data {
 
     public static function remove_item( $item_id ) {
         global $wpdb;
-
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         return $wpdb->delete(
             "{$wpdb->prefix}thwl_wishlist_items",
             array( 'id' => $item_id ),
@@ -348,7 +359,7 @@ class THWL_Data {
         if ( $quantity < 1 ) {
             $quantity = 1;
         }
-
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         return $wpdb->update(
             "{$wpdb->prefix}thwl_wishlist_items",
             array( 'quantity' => $quantity ),
@@ -360,7 +371,7 @@ class THWL_Data {
 
     public static function is_product_in_wishlist( $wishlist_id, $product_id, $variation_id = 0 ) {
         global $wpdb;
-
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         return $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT COUNT(*) 
