@@ -328,7 +328,7 @@ class THWL_Data {
         if ( self::is_product_in_wishlist( $wishlist_id, $product_id, $variation_id ) ) {
             return false;
         }
-// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
+       // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
         $wpdb->insert(
             "{$wpdb->prefix}thwl_wishlist_items",
             array(
@@ -343,14 +343,42 @@ class THWL_Data {
         return $wpdb->insert_id;
     }
 
-    public static function remove_item( $item_id ) {
-        global $wpdb;
-// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB
-        return $wpdb->delete(
-            "{$wpdb->prefix}thwl_wishlist_items",
-            array( 'id' => $item_id ),
-            array( '%d' )
-        );
+        public static function remove_item( $item_id, $user_id = 0, $guest_token = '' ) {
+            global $wpdb;
+
+            $item = self::get_item( $item_id );
+            if ( ! $item ) {
+                return false;
+            }
+
+            $wishlist = self::get_wishlist_by_id( $item->wishlist_id );
+            if ( ! $wishlist ) {
+                return false;
+            }
+
+            // Logged-in owner check
+            if ( $wishlist->user_id ) {
+                if ( intval($wishlist->user_id) !== intval($user_id) ) {
+                    return false;
+                }
+            }
+            // Guest owner check
+            elseif ( $wishlist->session_id ) {
+                if ( empty($guest_token) || $guest_token !== $wishlist->session_id ) {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+
+            // Authorized delete
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            return $wpdb->delete(
+                "{$wpdb->prefix}thwl_wishlist_items",
+                [ 'id' => $item_id ],
+                [ '%d' ]
+            );
     }
 
     public static function update_item_quantity( $item_id, $quantity ) {

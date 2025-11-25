@@ -659,59 +659,44 @@ class THWL_Frontend {
 
         public function thwl_remove_from_wishlist_ajax() {
 
-            if ( ! is_user_logged_in() ) {
-                wp_send_json_error( [ 'message' => 'not_logged_in' ] );
-            }
+    check_ajax_referer( 'thwl-remove-nonce', 'nonce' );
 
-            check_ajax_referer( 'thwl-remove-nonce', 'nonce' );
+    $item_id = isset($_POST['item_id']) ? absint($_POST['item_id']) : 0;
+    if ( ! $item_id ) {
+        wp_send_json_error( [ 'message' => 'invalid_item' ] );
+    }
 
-            $item_id = isset($_POST['item_id']) ? absint($_POST['item_id']) : 0;
-            if ( ! $item_id ) {
-                wp_send_json_error( [ 'message' => 'invalid_item' ] );
-            }
+    $item = THWL_Data::get_item( $item_id );
+    if ( ! $item ) {
+        wp_send_json_error( [ 'message' => 'item_not_found' ] );
+    }
 
-            $item = THWL_Data::get_item( $item_id );
-            
-            if ( ! $item ) {
-                wp_send_json_error( [ 'message' => 'item_not_found' ] );
-            }
+    $wishlist = THWL_Data::get_wishlist_by_id( $item->wishlist_id );
+    if ( ! $wishlist ) {
+        wp_send_json_error( [ 'message' => 'wishlist_not_found' ] );
+    }
 
-            $wishlist = THWL_Data::get_wishlist_by_id( $item->wishlist_id );
+    $current_user_id = get_current_user_id();
+    $guest_token = isset($_COOKIE['thwl_guest_uniqid']) ? sanitize_text_field( wp_unslash($_COOKIE['thwl_guest_uniqid']) ) : '';
 
-           
-            if ( ! $wishlist ) {
-                wp_send_json_error( [ 'message' => 'wishlist_not_found' ] );
-            }
+    // Logged-in user is owner?
+    if ( $wishlist->user_id && intval($wishlist->user_id) === intval($current_user_id) ) {
+        $owner_id = $current_user_id;
+    }
+    // Guest is owner?
+    elseif ( $wishlist->session_id && $guest_token === $wishlist->session_id ) {
+        $owner_id = 0; // guest mode
+    }
+    else {
+        wp_send_json_error( [ 'message' => 'unauthorized' ] );
+    }
 
-            // 🔐 New Security Ownership Validation
-            $current_user_id = get_current_user_id();
-            $guest_token = isset($_COOKIE['thwl_guest_uniqid']) ? sanitize_text_field( wp_unslash($_COOKIE['thwl_guest_uniqid']) ) : '';
+    if ( THWL_Data::remove_item( $item_id, $owner_id, $guest_token ) ) {
+        wp_send_json_success();
+    }
 
-            if ( $wishlist->user_id ) {
-
-                // Logged-in wishlist → must match user ID
-                if ( intval( $wishlist->user_id ) !== intval( $current_user_id ) ) {
-                    wp_send_json_error( [ 'message' => 'unauthorized' ] );
-                }
-
-            } elseif ( $wishlist->session_id ) {
-
-                // Guest wishlist → must match guest cookie
-                if ( empty( $guest_token ) || $wishlist->session_id !== $guest_token ) {
-                    wp_send_json_error( [ 'message' => 'unauthorized' ] );
-                }
-
-            } else {
-                wp_send_json_error( [ 'message' => 'invalid_wishlist_owner' ] );
-            }
-
-            if ( THWL_Data::remove_item( $item_id ) !== false ) {
-                wp_send_json_success();
-            } else {
-                wp_send_json_error( [ 'message' => 'remove_failed' ] );
-            }
-        }
-
+    wp_send_json_error( [ 'message' => 'remove_failed' ] );
+}
 
         public function thwl_update_item_quantity_ajax() {
 
