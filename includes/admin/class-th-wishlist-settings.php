@@ -202,6 +202,7 @@ public function settings_page() {
                         <tr class="th-row-with-checkbox">
                             <th scope="row"><?php esc_html_e( 'Show "Add to wishlist" in Product Page', 'th-wishlist' ); ?></th>
                             <td>
+                                <input type="hidden" name="settings[thw_show_in_product]" value="0" />
                                 <input type="checkbox" name="settings[thw_show_in_product]" value="1" <?php checked( isset( $options['thw_show_in_product'] ) ? $options['thw_show_in_product'] : 0, 1 ); ?> />
                                 <span class="description"><?php esc_html_e( 'Enable the "Add to wishlist" feature in WooCommerce products Page', 'th-wishlist' ); ?></span>
                             </td>

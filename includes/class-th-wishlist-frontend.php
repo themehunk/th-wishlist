@@ -160,7 +160,11 @@ class THWL_Frontend {
             ? 'thw-btn-theme-style'
             : 'thw-btn-custom-style';
 
-        $output .= sprintf('<div class="thw-add-to-wishlist-button-wrap %s">', esc_attr($themedefault));
+        $wrap_class = ( is_product() && ! doing_action( 'woocommerce_after_shop_loop_item' ) )
+        ? 'th-wishlist-single'
+        : '';
+
+        $output .= sprintf('<div class="thw-add-to-wishlist-button-wrap %s %s">', esc_attr($themedefault) , esc_attr($wrap_class));
 
         $class_attr = trim($btnclasses . ' ' . implode(' ', $classes));
 
@@ -248,7 +252,9 @@ class THWL_Frontend {
 
   public function thwl_hook_wishlist_single_button_position() {
 
-    $thw_show_in_product = isset( $this->thwl_option['thw_show_in_product'] ) ? $this->thwl_option['thw_show_in_product'] : '';
+    $thw_show_in_product = isset( $this->thwl_option['thw_show_in_product'] )
+    ? (int) $this->thwl_option['thw_show_in_product']
+    : 1; 
     $position = isset( $this->thwl_option['thw_in_single_position'] ) ? $this->thwl_option['thw_in_single_position'] : 'after_crt_btn';
 
     if ( ! is_singular( 'product' )) {
@@ -863,7 +869,9 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 	// 🔐 Login required logic
 	if ( !$is_logged_in && ($this->thwl_option['thw_require_login'] ?? '0') === '1' ) {
 
-		$wrap_class = is_singular('product') ? 'th-wishlist-single' : '';
+		$wrap_class = ( is_product() && ! doing_action( 'woocommerce_after_shop_loop_item' ) )
+        ? 'th-wishlist-single'
+        : '';
 		$themedefault = ($atts['theme_style'] === 'yes')
 			? 'thw-btn-theme-style'
 			: 'thw-btn-custom-style';
@@ -945,7 +953,9 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 		? sprintf('<span class="%s">%s</span>', esc_attr($textCls), esc_html($text))
 		: (($atts['icon_style'] === 'icon') ? '' : sprintf('<span class="%s">%s</span>', esc_attr($textCls), esc_html($text)));
 
-	$wrap_class = is_singular('product') ? 'th-wishlist-single' : '';
+	$wrap_class = ( is_product() && ! doing_action( 'woocommerce_after_shop_loop_item' ) )
+        ? 'th-wishlist-single'
+        : '';
 	$themedefault = ($atts['theme_style'] === 'yes') ? 'thw-btn-theme-style' : 'thw-btn-custom-style';
 
 	return sprintf(
