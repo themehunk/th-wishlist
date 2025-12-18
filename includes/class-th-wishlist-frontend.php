@@ -278,7 +278,7 @@ class THWL_Frontend {
             break;
 
         case 'after_crt_btn':
-            add_action( 'woocommerce_after_add_to_cart_form', array( $this, 'add_to_wishlist_button' ), 1 );
+            add_action( 'woocommerce_after_add_to_cart_button', array( $this, 'add_to_wishlist_button' ), 1 );
             break;
 
         case 'after_summ':

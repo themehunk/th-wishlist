@@ -79,6 +79,10 @@ Yes, You can translate our plugin to desired language.
 
 
 == Changelog ==
+
+= 1.1.6=
+* Fixed:single product page hook change.
+
 = 1.1.5=
 * Fixed:Single product class issue.
 
