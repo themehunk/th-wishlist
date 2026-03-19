@@ -254,3 +254,35 @@ span.stock.in-stock {
 span.stock.out-of-stock {
     color: #FF8C8C;
 }
+/** table styles for mobile */
+/** table styles for mobile */
+@media (max-width: 768px) {
+
+    .thw-wishlist-form table, .thw-wishlist-form thead, .thw-wishlist-form tbody, .thw-wishlist-form th, .thw-wishlist-form td, .thw-wishlist-form tr {
+        display: block;
+        width: 100%;
+    }
+
+    .thw-wishlist-form thead {
+        display: none;
+    }
+
+    .thw-wishlist-form tr {
+        margin-bottom: 15px;
+       
+        padding: 10px;
+    }
+
+    .thw-wishlist-form td {
+        position: relative;
+      
+    }
+
+    .thw-wishlist-form td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        text-align: left;
+    }
+}
