@@ -460,18 +460,18 @@ class THWL_Frontend {
                         break;
 
                     case 'thumbnail':
-                        $output .= '<a href="' . esc_url($_product->get_permalink()) . '">' . wp_kses_post($_product->get_image()) . '</a>';
+                        $output .= '<a href="' . esc_url( $_product->get_permalink() ?? '' ) . '">' . wp_kses_post( $_product->get_image() ?? '' ) . '</a>';
                         break;
 
                     case 'name':
-                        $output .= '<a href="' . esc_url($_product->get_permalink()) . '">' . esc_html($_product->get_name()) . '</a>';
+                        $output .= '<a href="' . esc_url( $_product->get_permalink() ?? '' ) . '">' . esc_html( $_product->get_name() ?? '' ) . '</a>';
                         if ($_product->is_type('variation')) {
                             $output .= wp_kses_post(wc_get_formatted_variation($_product, true));
                         }
                         break;
 
                     case 'price':
-                        $output .= wp_kses_post($_product->get_price_html());
+                        $output .= wp_kses_post( $_product->get_price_html() ?? '' );
                         break;
 
                     case 'stock':

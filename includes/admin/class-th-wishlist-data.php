@@ -111,7 +111,9 @@ class THWL_Data {
                 }
 
                 // Clear guest cookie on login merge
-                setcookie( 'thwl_guest_uniqid', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN );
+                if ( ! headers_sent() ) {
+                    setcookie( 'thwl_guest_uniqid', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN );
+                }
                 unset( $_COOKIE['thwl_guest_uniqid'] );
             }
 
