@@ -35,7 +35,10 @@ class THWL_Frontend {
         add_action( 'wp_ajax_nopriv_thwl_add_all_to_cart', array( $this, 'thwl_add_all_to_cart_ajax' ) );
         add_action( 'wp_ajax_thwl_add_to_cart_and_manage', array( $this, 'thwl_add_to_cart_and_manage'));
         add_action( 'wp_ajax_nopriv_thwl_add_to_cart_and_manage', array( $this, 'thwl_add_to_cart_and_manage'));
+
+
     }
+
 
     public function thwl_enqueue_styles_scripts() {
 
@@ -111,7 +114,7 @@ class THWL_Frontend {
         );
 
         // Text settings
-        $add_text    = $this->thwl_option['thw_add_to_wishlist_text'] ?? __('Add to Wishlist', 'th-wishlist');
+        $add_text    = $this->thwl_option['thw_add_to_wishlist_text'] ?? __('Wishlist', 'th-wishlist');
         $browse_text = $this->thwl_option['thw_browse_wishlist_text'] ?? __('Browse Wishlist', 'th-wishlist');
 
         $text   = $in_wishlist ? $browse_text : $add_text;
@@ -181,15 +184,25 @@ class THWL_Frontend {
         } else {
 
             // Normal behavior
-            $output .= sprintf(
-                '<a class="thw-add-to-wishlist-button %s %s" data-product-id="%s" data-variation-id="%s">%s%s</a>',
-                esc_attr($class_attr),
-                $in_wishlist ? 'in-wishlist' : '',
-                esc_attr($product_id),
-                esc_attr($variation_id),
-                $icon_html,
-                $text_html
-            );
+            $tooltip_text = $in_wishlist
+                    ? esc_html__( 'Browse Wishlist', 'thw-add-to-wishlist' )
+                    : esc_html__( 'Wishlist', 'thw-add-to-wishlist' );
+
+                $output .= sprintf(
+                    '<a class="thw-add-to-wishlist-button %s %s"
+                        data-product-id="%s"
+                        data-variation-id="%s"
+                        data-tooltip="%s"
+                        aria-label="%s">%s%s</a>',
+                    esc_attr($class_attr),
+                    $in_wishlist ? 'in-wishlist' : '',
+                    esc_attr($product_id),
+                    esc_attr($variation_id),
+                    esc_attr($tooltip_text),
+                    esc_attr($tooltip_text),
+                    $icon_html,
+                    $text_html
+                );
         }
 
         $output .= '</div>';
@@ -841,7 +854,7 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 		'product_id'        => $default_product_id,
 		'add_text'          => !empty( $this->thwl_option['thw_add_to_wishlist_text'] )
 			? $this->thwl_option['thw_add_to_wishlist_text']
-			: esc_html__( 'Add to Wishlist', 'th-wishlist' ),
+			: esc_html__( 'Wishlist', 'th-wishlist' ),
 		'browse_text'       => !empty( $this->thwl_option['thw_browse_wishlist_text'] )
 			? $this->thwl_option['thw_browse_wishlist_text']
 			: esc_html__( 'Browse Wishlist', 'th-wishlist' ),
@@ -895,19 +908,27 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 			? ''
 			: sprintf('<span class="%s">%s</span>', esc_attr($textCls), esc_html($text));
 
-		return sprintf(
-			'<div class="thw-add-to-wishlist-button-wrap thw-add-to-wishlist-shorcode %s %s">'.
-			'<a class="thw-add-to-wishlist-button thw-login-required %s" '.
-			'data-alert="%s" data-product-id="%s" data-variation-id="%s">%s%s</a></div>',
-			esc_attr($wrap_class),
-			esc_attr($themedefault),
-			esc_attr($atts['custom_class']),
-			esc_attr__('Required Login', 'th-wishlist'),
-			esc_attr($product_id),
-			esc_attr($variation_id),
-			$icon_html,
-			$text_html
-		);
+		$tooltip_text = esc_html__( 'Login to add to Wishlist', 'th-wishlist' );
+
+            return sprintf(
+                '<div class="thw-add-to-wishlist-button-wrap thw-add-to-wishlist-shorcode %s %s">'.
+                '<a class="thw-add-to-wishlist-button thw-login-required %s"
+                    data-alert="%s"
+                    data-tooltip="%s"
+                    aria-label="%s"
+                    data-product-id="%s"
+                    data-variation-id="%s">%s%s</a></div>',
+                esc_attr($wrap_class),
+                esc_attr($themedefault),
+                esc_attr($atts['custom_class']),
+                esc_attr__( 'Required Login', 'th-wishlist' ),
+                esc_attr($tooltip_text),
+                esc_attr($tooltip_text),
+                esc_attr($product_id),
+                esc_attr($variation_id),
+                $icon_html,
+                $text_html
+            );
 	}
 
 	// 🔄 Fetch wishlist & check state normally
@@ -958,23 +979,32 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
         : '';
 	$themedefault = ($atts['theme_style'] === 'yes') ? 'thw-btn-theme-style' : 'thw-btn-custom-style';
 
-	return sprintf(
-		'<div class="thw-add-to-wishlist-button-wrap thw-add-to-wishlist-shorcode %s %s">'.
-		'<a class="thw-add-to-wishlist-button is-shortcode %s %s" '.
-		'data-browse-text="%s" data-product-id="%s" data-variation-id="%s" '.
-		'data-add-icon="%s" data-browse-icon="%s">%s%s</a></div>',
-		esc_attr($wrap_class),
-		esc_attr($themedefault),
-		esc_attr($btnclasses),
-		esc_attr($class_attr),
-		esc_attr($atts['browse_text']),
-		esc_attr($product_id),
-		esc_attr($variation_id),
-		esc_attr($atts['add_icon']),
-		esc_attr($atts['add_browse_icon']),
-		$icon_html,
-		$text_html
-	);
+	$tooltip_text = esc_html__( 'Wishlist', 'th-wishlist' );
+
+        return sprintf(
+            '<div class="thw-add-to-wishlist-button-wrap thw-add-to-wishlist-shorcode %s %s">'.
+            '<a class="thw-add-to-wishlist-button is-shortcode %s %s"
+                data-tooltip="%s"
+                aria-label="%s"
+                data-browse-text="%s"
+                data-product-id="%s"
+                data-variation-id="%s"
+                data-add-icon="%s"
+                data-browse-icon="%s">%s%s</a></div>',
+            esc_attr($wrap_class),
+            esc_attr($themedefault),
+            esc_attr($btnclasses),
+            esc_attr($class_attr),
+            esc_attr($tooltip_text),
+            esc_attr($tooltip_text),
+            esc_attr($atts['browse_text']),
+            esc_attr($product_id),
+            esc_attr($variation_id),
+            esc_attr($atts['add_icon']),
+            esc_attr($atts['add_browse_icon']),
+            $icon_html,
+            $text_html
+        );
 }
 
 

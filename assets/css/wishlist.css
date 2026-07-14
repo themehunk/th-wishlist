@@ -17,7 +17,6 @@ justify-content:start;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    overflow: hidden;
     box-shadow:none;
     background: none;
 }
@@ -38,9 +37,9 @@ color:#fff;
     z-index: 1;
 }
 
-.thw-add-to-wishlist-button:hover::before {
+/*.thw-add-to-wishlist-button:hover::before {
     left: 0;
-}
+}*/
 .thw-add-to-wishlist-button {
     display: inline-flex;
     align-items: center;
@@ -286,3 +285,136 @@ span.stock.out-of-stock {
         text-align: left;
     }
 }
+
+/********************** Themes Compatibility Css  *********************************** */
+.thw-add-to-wishlist-button-wrap.th-wishlist-single{
+    display: inline-flex;
+    margin-left: 9px;
+}
+.thw-add-to-wishlist-button:before{
+    content: ;
+}
+
+/* Tooltip */
+.thw-add-to-wishlist-button::after{
+    content:attr(data-tooltip);
+
+    position:absolute;
+    left:50%;
+    bottom:calc(100% + 12px);
+
+    transform:translateX(-50%) translateY(8px);
+
+    background:#1f2937;
+    color:#fff;
+
+    font-size:13px;
+    font-weight:500;
+    line-height:1;
+
+    padding:9px 14px;
+    border-radius:8px;
+
+    white-space:nowrap;
+
+    opacity:0;
+    visibility:hidden;
+
+    transition:.25s ease;
+
+    pointer-events:none;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.18),
+        0 2px 6px rgba(0,0,0,.12);
+
+    z-index:9999;
+}
+
+/* Arrow */
+.thw-add-to-wishlist-button::before{
+
+    content:'';
+
+    position:absolute;
+
+    left:50%;
+    bottom:100%;
+
+    transform:translateX(-50%) translateY(8px);
+
+    border-width:6px;
+    border-style:solid;
+    border-color:#1f2937 transparent transparent transparent;
+
+    opacity:0;
+    visibility:hidden;
+
+    transition:.25s ease;
+
+    pointer-events:none;
+
+    z-index:9999;
+}
+
+/* Hover */
+.thw-add-to-wishlist-button:hover::after,
+.thw-add-to-wishlist-button:hover::before{
+
+    opacity:1;
+    visibility:visible;
+
+    transform:translateX(-50%) translateY(0);
+}
+
+
+.ast-article-single .summary .th-wishlist-single{
+    border: 1px solid #D1D5DB;
+    border-radius: 4px;
+    padding: 4px 9px;
+    height: 34px;
+}
+.ast-article-single .summary .th-wishlist-icon-svg{
+    width: 18px;
+    height: 18px;
+}
+
+.ast-article-single .summary .thw-add-to-wishlist-button:hover{
+        opacity: 1;
+}
+.astra-shop-thumbnail-wrap .theme-compatible{
+    position: absolute;
+    right: 1em;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.2s;
+    z-index: 5;
+    cursor: pointer;
+    top: 4em;
+}
+.astra-shop-thumbnail-wrap:hover .theme-compatible{
+    visibility: visible;
+    opacity: 1;
+}
+/* shop page*/
+.theme-compatible .thw-add-to-wishlist-button{
+    border-radius: 50%;
+    color: var(--ast-global-color-2);
+    background: var(--ast-global-color-primary, var(--ast-global-color-5));
+    opacity: 0.7;
+    width: 2em;
+    height: 2em;
+    justify-content: center;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);
+}
+.theme-compatible .thw-add-to-wishlist-button:hover{
+    opacity: 1;
+}
+.astra-shop-thumbnail-wrap .theme-compatible svg{
+    width: 18px;
+    height: 18px;
+}
+
+
+
+/********************** Themes Compatibility End  *********************************** */

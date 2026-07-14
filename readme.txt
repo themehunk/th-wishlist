@@ -83,6 +83,7 @@ Yes, You can translate our plugin to desired language.
 = 1.1.6=
 * Update: Single product page design issue fix.
 * Fixed:single product page hook change.
+* Update: Astra compatibility added.
 
 = 1.1.5=
 * Fixed:Single product class issue.
