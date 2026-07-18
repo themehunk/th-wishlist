@@ -50,9 +50,9 @@ $thwl_options = wp_parse_args( $thwl_saved_options, self::thwl_get_default_setti
         </div>
 
 
-        <!-- Browse Wishlist Icon -->
+        <!-- Wishlist Icon -->
         <div class="thwl-setting-group" style="margin-top:20px;">
-            <label class="thwl-setting-label"><?php esc_html_e( 'Browse Wishlist Icon', 'th-wishlist' ); ?></label>
+            <label class="thwl-setting-label"><?php esc_html_e( 'Wishlist Icon', 'th-wishlist' ); ?></label>
             <?php 
             $thwl_selected_brws_icon = $thwl_options['th_wishlist_brws_icon'] ?? '';
             $thwl_browse_icons = thwl_get_wishlist_icons_svg();
@@ -76,7 +76,7 @@ $thwl_options = wp_parse_args( $thwl_saved_options, self::thwl_get_default_setti
                 self::thwl_render_color_picker(
                     'th_wishlist_brws_icon_color',
                     $thwl_browse_icon_color,
-                    __( 'Browse Wishlist Icon', 'th-wishlist' ),
+                    __( 'Wishlist Icon', 'th-wishlist' ),
                     $thwl_browse_icon_color
                 );
                 ?>

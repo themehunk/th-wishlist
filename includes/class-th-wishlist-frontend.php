@@ -69,7 +69,7 @@ class THWL_Frontend {
             'update_qty_nonce'    => wp_create_nonce( 'thwl-update-qty-nonce' ),
             'add_all_nonce'       => wp_create_nonce( 'thwl-add-all-nonce' ),
             'wishlist_page_url'   => $wishlist_page_id ? get_permalink( $wishlist_page_id ) : '',
-            'i18n_added'          => isset($this->thwl_option['thw_browse_wishlist_text']) ? $this->thwl_option['thw_browse_wishlist_text'] : __('Browse Wishlist', 'th-wishlist'),
+            'i18n_added'          => isset($this->thwl_option['thw_browse_wishlist_text']) ? $this->thwl_option['thw_browse_wishlist_text'] : __('Wishlist', 'th-wishlist'),
             'i18n_error'          => __('An error occurred. Please try again.', 'th-wishlist' ),
             'i18n_empty_wishlist' => __('Your wishlist is currently empty.', 'th-wishlist'),
             'redirect_to_cart'    => $thw_redirect_to_cart === '1',
@@ -115,7 +115,7 @@ class THWL_Frontend {
 
         // Text settings
         $add_text    = $this->thwl_option['thw_add_to_wishlist_text'] ?? __('Wishlist', 'th-wishlist');
-        $browse_text = $this->thwl_option['thw_browse_wishlist_text'] ?? __('Browse Wishlist', 'th-wishlist');
+        $browse_text = $this->thwl_option['thw_browse_wishlist_text'] ?? __('Wishlist', 'th-wishlist');
 
         $text   = $in_wishlist ? $browse_text : $add_text;
         $textCls = $in_wishlist ? 'thw-to-browse-text' : 'thw-to-add-text';
@@ -167,7 +167,7 @@ class THWL_Frontend {
         ? 'th-wishlist-single'
         : '';
 
-        $output .= sprintf('<div class="thw-add-to-wishlist-button-wrap %s %s">', esc_attr($themedefault) , esc_attr($wrap_class));
+        $output .= sprintf('<div class="thw-add-to-wishlist-button-wrap th-theme-action %s %s">', esc_attr($themedefault) , esc_attr($wrap_class));
 
         $class_attr = trim($btnclasses . ' ' . implode(' ', $classes));
 
@@ -185,7 +185,7 @@ class THWL_Frontend {
 
             // Normal behavior
             $tooltip_text = $in_wishlist
-                    ? esc_html__( 'Browse Wishlist', 'thw-add-to-wishlist' )
+                    ? esc_html__( 'Wishlist', 'thw-add-to-wishlist' )
                     : esc_html__( 'Wishlist', 'thw-add-to-wishlist' );
 
                 $output .= sprintf(
@@ -857,7 +857,7 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 			: esc_html__( 'Wishlist', 'th-wishlist' ),
 		'browse_text'       => !empty( $this->thwl_option['thw_browse_wishlist_text'] )
 			? $this->thwl_option['thw_browse_wishlist_text']
-			: esc_html__( 'Browse Wishlist', 'th-wishlist' ),
+			: esc_html__( 'Wishlist', 'th-wishlist' ),
 		'icon_style'        => !empty( $this->thwl_option['thw_button_display_style'] )
 			? $this->thwl_option['thw_button_display_style']
 			: 'icon_text',
@@ -911,7 +911,7 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 		$tooltip_text = esc_html__( 'Login to add to Wishlist', 'th-wishlist' );
 
             return sprintf(
-                '<div class="thw-add-to-wishlist-button-wrap thw-add-to-wishlist-shorcode %s %s">'.
+                '<div class="thw-add-to-wishlist-button-wrap th-theme-action thw-add-to-wishlist-shorcode %s %s">'.
                 '<a class="thw-add-to-wishlist-button thw-login-required %s"
                     data-alert="%s"
                     data-tooltip="%s"
@@ -982,7 +982,7 @@ public function thwl_add_to_wishlist_button_flexible_shortcode( $atts = [] ) {
 	$tooltip_text = esc_html__( 'Wishlist', 'th-wishlist' );
 
         return sprintf(
-            '<div class="thw-add-to-wishlist-button-wrap thw-add-to-wishlist-shorcode %s %s">'.
+            '<div class="thw-add-to-wishlist-button-wrap th-theme-action thw-add-to-wishlist-shorcode %s %s">'.
             '<a class="thw-add-to-wishlist-button is-shortcode %s %s"
                 data-tooltip="%s"
                 aria-label="%s"

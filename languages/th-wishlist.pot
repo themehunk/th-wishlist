@@ -21,7 +21,7 @@ msgid "\"Add to Wishlist\" Text"
 msgstr ""
 
 #: includes/admin/class-th-wishlist-settings.php:128
-msgid "\"Browse Wishlist\" Text"
+msgid "\"Wishlist\" Text"
 msgstr ""
 
 #. 1: Plugin name, 2: woocommerce link.
@@ -105,15 +105,15 @@ msgstr ""
 #: includes/class-th-wishlist-frontend.php:744
 #: includes/admin/class-th-wishlist-settings.php:130
 #: includes/admin/class-th-wishlist-settings.php:530
-msgid "Browse Wishlist"
+msgid "Wishlist"
 msgstr ""
 
 #: includes/admin/class-th-wishlist-settings.php:303
-msgid "Browse Wishlist Icon"
+msgid "Wishlist Icon"
 msgstr ""
 
 #: includes/admin/class-th-wishlist-settings.php:327
-msgid "Browse Wishlist Icon color"
+msgid "Wishlist Icon color"
 msgstr ""
 
 #: includes/class-th-wishlist-frontend.php:429
