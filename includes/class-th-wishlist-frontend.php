@@ -48,11 +48,36 @@ class THWL_Frontend {
         self::$styles_enqueued = true;
         if ( ! defined( 'THWL_PRO_ACTIVE' ) || ! THWL_PRO_ACTIVE ) {
            wp_enqueue_style('thwl', THWL_URL . 'assets/css/wishlist.css', array(),THWL_VERSION);
-           wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),'1.2.4', array( 
+           wp_register_script( 'thwl', THWL_URL . 'assets/js/wishlist.js', array( 'jquery' ),THWL_VERSION, array( 
                     'strategy'  => 'async',
                     'in_footer' => false,
             ) );
             wp_enqueue_script( 'thwl' );
+
+            /**
+             * Themes where compatibility wrapper is NOT required.
+             */
+            $excluded_themes = array(
+                'astra',
+                'top-store',
+                'top-store-pro'
+                // 'blocksy',
+                // 'kadence',
+                // 'woodmart',
+                // 'flatsome',
+            );
+
+            $current_theme = strtolower( wp_get_theme()->get_template() );
+
+            if ( ! in_array( $current_theme, $excluded_themes, true ) ) {
+                wp_register_script( 'thwl-compatibility', THWL_URL . 'assets/js/theme-comaptibility.js', array( 'jquery' ),THWL_VERSION, array( 
+                        'strategy'  => 'async',
+                        'in_footer' => false,
+                ) );
+                wp_enqueue_script( 'thwl-compatibility' );
+
+            }
+
         }
         
         wp_add_inline_style('thwl',thwl_add_inline_custom_styles() );
