@@ -370,14 +370,19 @@ span.stock.out-of-stock {
 
 .ast-article-single .summary .th-wishlist-single,
 .wp-theme-storefront .entry-summary .th-wishlist-single,
-.wp-theme-blocksy .summary .th-wishlist-single{
+.wp-theme-blocksy .summary .th-wishlist-single,
+.wp-theme-hello-elementor .summary .th-wishlist-single,
+.wp-theme-kadence .entry-summary .th-wishlist-single{
     border: 1px solid #D1D5DB;
     border-radius: 4px;
     padding: 4px 9px;
     height: 34px;
+    float: left;
 }
 .ast-article-single .summary .th-wishlist-icon-svg,
-.wp-theme-storefront .entry-summary .th-wishlist-icon-svg{
+.wp-theme-storefront .entry-summary .th-wishlist-icon-svg,
+.wp-theme-hello-elementor .summary .th-wishlist-icon-svg,
+.wp-theme-kadence .entry-summary .th-wishlist-icon-svg{
     width: 18px;
     height: 18px;
 }
@@ -424,15 +429,13 @@ span.stock.out-of-stock {
     color: inherit;
     font-size: 18px;
 }
-.wp-theme-storefront .th-wishlist-icon-svg {
-     width: 18px;
-     height: 18px;
-}
 .wp-theme-storefront .entry-summary .th-wishlist-single{
     height: 45px;
 }
 
-
+.wp-theme-storefront .entry-summary .thw-add-to-wishlist-button .thw-icon{
+    display: initial; 
+}
 /* Blocksy */
 .wp-theme-blocksy .summary .th-wishlist-single{
     border: 1px solid var(--quantity-initial-color, var(--theme-button-background-initial-color));
@@ -448,30 +451,34 @@ span.stock.out-of-stock {
 }
 
 .wp-theme-blocksy li.product .thw-add-to-wishlist-button{
-    color: var(--theme-button-text-hover-color);
-    border-color: var(--theme-button-border-hover-color);
-    background-color: var(--theme-button-background-hover-color);
-    min-height: var(--theme-button-min-height);
-    padding: var(--theme-button-padding);
+    color: var(--theme-text-color);
     text-align: center;
-    border-radius: var(--theme-button-border-radius, 3px);
-
-    font-family: var(--theme-button-font-family, var(--theme-font-family));
-    font-size: var(--theme-button-font-size);
-    font-weight: var(--theme-button-font-weight);
-    font-style: var(--theme-button-font-style);
-    line-height: var(--theme-button-line-height);
-    letter-spacing: var(--theme-button-letter-spacing);
-    text-transform: var(--theme-button-text-transform);
-    -webkit-text-decoration: var(--theme-button-text-decoration);
-    text-decoration: var(--theme-button-text-decoration);
+    font-family: var(--theme-font-family);
+    font-size: var(--theme-font-size);
+    font-weight: var(--theme-font-weight);
+    font-style: var(--theme-font-style, inherit);
+    line-height: var(--theme-line-height);
+    letter-spacing: var(--theme-letter-spacing);
+    text-transform: var(--theme-text-transform);
 }
 
-.wp-theme-blocksy li.product .thw-add-to-wishlist-button-wrap{
+.wp-theme-blocksy li.product .th-theme-actions-wrapper{
     justify-content: var(--horizontal-alignment);
 }
-
-
+.wp-theme-blocksy li.product .thw-add-to-wishlist-button:hover{
+    color: var(--theme-link-hover-color);
+}
+.wp-theme-hello-elementor li.product .th-theme-actions-wrapper{
+    justify-content: flex-start;
+}
+/* Hello Elementor */
+.wp-theme-hello-elementor .summary .th-wishlist-single{
+    height: 39px;
+}
+/* Kadence */
+.wp-theme-kadence .entry-summary .th-wishlist-single{
+    height: 41px;
+}
 @media screen and (max-width: 767px){
     .wp-theme-storefront .summary .thw-to-add-text{
         display: none;
@@ -482,6 +489,19 @@ span.stock.out-of-stock {
     .wp-theme-blocksy .summary .th-wishlist-single{
         width: 129px;
         margin-left: 0;
+    }
+    .wp-theme-hello-elementor .summary .th-wishlist-single .thw-to-add-text,
+    .wp-theme-hello-elementor .summary .th-wishlist-single .thw-to-browse-text{
+        display: none;
+    }
+    .wp-theme-hello-elementor .summary .th-product-compare-btn .icon{
+        margin-right: 0;
+    }
+    .wp-theme-hello-elementor .summary .th-wishlist-single{
+        width: 39px;
+    }
+    .wp-theme-hello-elementor .summary .thw-icon{
+        margin: 0;
     }
 }
 /********************** Themes Compatibility End  *********************************** */
