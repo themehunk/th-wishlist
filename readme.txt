@@ -81,8 +81,11 @@ Yes, You can translate our plugin to desired language.
 == Changelog ==
 
 = 1.1.7 =
-* Update: Plugin compatibility for following themes added
-Astra, StoreFront, Hello Elemntor, Kadence.
+* New: Added compatibility with the following themes:
+  - Astra
+  - Storefront
+  - Hello Elementor
+  - Blocksy
 
 = 1.1.6=
 * Update: Single product page design issue fix.
