@@ -86,6 +86,7 @@ Yes, You can translate our plugin to desired language.
   - Storefront
   - Hello Elementor
   - Blocksy
+  - Kadence
 
 = 1.1.6=
 * Update: Single product page design issue fix.
