@@ -152,13 +152,13 @@ public function settings_page() {
                         <tr>
                             <th scope="row"><?php esc_html_e( '"Add to Wishlist" Text', 'th-wishlist' ); ?></th>
                             <td>
-                                <input type="text" name="settings[thw_add_to_wishlist_text]" value="<?php echo esc_attr( isset( $options['thw_add_to_wishlist_text'] ) ? $options['thw_add_to_wishlist_text'] : __( 'Add to Wishlist', 'th-wishlist' ) ); ?>" class="regular-text" />
+                                <input type="text" name="settings[thw_add_to_wishlist_text]" value="<?php echo esc_attr( isset( $options['thw_add_to_wishlist_text'] ) ? $options['thw_add_to_wishlist_text'] : __( 'Wishlist', 'th-wishlist' ) ); ?>" class="regular-text" />
                             </td>
                         </tr>
                         <tr>
                             <th scope="row"><?php esc_html_e( '"Browse Wishlist" Text', 'th-wishlist' ); ?></th>
                             <td>
-                                <input type="text" name="settings[thw_browse_wishlist_text]" value="<?php echo esc_attr( isset( $options['thw_browse_wishlist_text'] ) ? $options['thw_browse_wishlist_text'] : __( 'Browse Wishlist', 'th-wishlist' ) ); ?>" class="regular-text" />
+                                <input type="text" name="settings[thw_browse_wishlist_text]" value="<?php echo esc_attr( isset( $options['thw_browse_wishlist_text'] ) ? $options['thw_browse_wishlist_text'] : __( 'Wishlist', 'th-wishlist' ) ); ?>" class="regular-text" />
                                 <p class="description"><?php esc_html_e( 'Text shown when the product is already in the wishlist.', 'th-wishlist' ); ?></p>
                             </td>
                         </tr>
@@ -348,8 +348,8 @@ public function settings_page() {
             'thw_require_login'            => 0,
             'thw_redirect_to_cart'         => 0,
             'thw_button_display_style'     => 'icon_text',
-            'thw_add_to_wishlist_text'     => __( 'Add to Wishlist', 'th-wishlist' ),
-            'thw_browse_wishlist_text'     => __( 'Browse Wishlist', 'th-wishlist' ),
+            'thw_add_to_wishlist_text'     => __( 'Wishlist', 'th-wishlist' ),
+            'thw_browse_wishlist_text'     => __( 'Wishlist', 'th-wishlist' ),
             'thw_btn_style_theme'          => 0,
             'thw_custom_icon_url'          => '',
             'thw_show_in_loop'             => 1,

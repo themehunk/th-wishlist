@@ -4,7 +4,7 @@ Author URI: : https://www.themehunk.com/
 Tags:woocommerce, wishlist, woocommerce wishlist, shop, ecommerce
 Requires at least: 5.0
 Tested up to: 7.0
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
@@ -80,9 +80,14 @@ Yes, You can translate our plugin to desired language.
 
 == Changelog ==
 
+= 1.1.7 =
+* Update: Plugin compatibility for following themes added
+Astra, StoreFront, Hello Elemntor, Kadence.
+
 = 1.1.6=
 * Update: Single product page design issue fix.
 * Fixed:single product page hook change.
+* Update: Astra compatibility added.
 
 = 1.1.5=
 * Fixed:Single product class issue.
