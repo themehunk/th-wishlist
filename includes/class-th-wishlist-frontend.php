@@ -59,12 +59,20 @@ class THWL_Frontend {
              */
             $excluded_themes = array(
                 'astra',
-                'top-store',
-                'top-store-pro'
-                // 'blocksy',
-                // 'kadence',
-                // 'woodmart',
-                // 'flatsome',
+                'top-store-pro',
+                'open-shop',
+                'open-shop-pro',
+                'open-mart',
+                'amaz-store',
+                'jot-shop',
+                'royal-shop',
+                'royal-shop-pro',
+                'big-store',
+                'm-shop',
+                'shopline',
+                'shopline-pro',
+                'almaira-shop',
+                'almaira'
             );
 
             $current_theme = strtolower( wp_get_theme()->get_template() );
