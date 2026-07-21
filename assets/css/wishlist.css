@@ -485,6 +485,37 @@ span.stock.out-of-stock {
 .wp-theme-kadence .th-theme-actions-wrapper{
     margin-top: 0;
 }
+/* TH SHOP MANIA */
+.wp-theme-th-shop-mania li .thunk-wishlist a:after,
+.wp-theme-top-store li .thunk-wishlist a:after,
+.wp-theme-top-store li .thunk-wishlist a:before,
+.wp-theme-top-store .thunk-product-wrap .thunk-wishlist a:after,
+.wp-theme-top-store .thunk-product-wrap .thunk-wishlist a:before{
+    display: none!important;
+}
+.wp-theme-th-shop-mania li .thunk-wishlist a:before,
+.wp-theme-th-shop-mania li .thunk-wishlist a:hover:before{
+    content: "\e912";
+    font-family: "th-icon";
+    
+    position: initial;
+    left: initial;
+    bottom: initial;
+    transform: initial;
+    border-width: initial;
+    border-style: initial;
+    border-color: initial;
+    opacity: initial;
+    visibility: initial;
+    transition: initial;
+    pointer-events: initial;
+    z-index:initial;
+    transform: initial;
+}
+.thunk-woo-product-list .thw-add-to-wishlist-button-wrap.th-wishlist-single{
+    margin-left: 0;
+}
+/* Top Store */
 @media screen and (max-width: 767px){
     .wp-theme-storefront .summary .thw-to-add-text{
         display: none;

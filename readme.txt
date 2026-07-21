@@ -87,6 +87,8 @@ Yes, You can translate our plugin to desired language.
   - Hello Elementor
   - Blocksy
   - Kadence
+  - Top Store
+  - TH Shop Mania
 
 = 1.1.6=
 * Update: Single product page design issue fix.
