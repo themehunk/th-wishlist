@@ -3,7 +3,7 @@
  * Plugin Name:       TH Wishlist for WooCommerce
  * Plugin URI:        https://themehunk.com/wishlist
  * Description:       TH Wishlist is a powerful and user-friendly wishlist plugin for WooCommerce that lets your customers save their favorite products for later and helps boost conversions by keeping users engaged with the products they love.
- * Version:           1.1.6
+ * Version:           1.1.7
  * Author:            themehunk
  * Author URI:        https://www.themehunk.com
  * License:           GPLv2 or later
@@ -230,3 +230,70 @@ function THWL() {
 }
 
 $GLOBALS['thwl_wishlist'] = THWL();
+
+
+
+function thwl_astra_shop_card_wishlist( $markup, $product ) {
+
+
+
+    if ( ! $product instanceof WC_Product ) {
+        return $markup;
+    }
+
+    // Wishlist shortcode available hai ya nahi.
+    if ( ! shortcode_exists( 'thwl_add_to_wishlist' ) ) {
+        return $markup;
+    }
+
+    ob_start();
+    ?>
+    <div class="thunk-wishlist theme-compatible">
+        <span class="thunk-wishlist-inner">
+            <?php
+            echo do_shortcode(
+                sprintf(
+                    '[thwl_add_to_wishlist
+                        product_id="%d"
+                        add_icon="th-icon th-icon-heart1"
+                        add_text=""
+                        add_browse_icon="th-icon th-icon-favorite"
+                        browse_text=""
+                        theme_style="yes"
+                        icon_style="icon_only_no_style"
+                        custom_class="th-wishlist-integrated"
+                    ]',
+                    $product->get_id()
+                )
+            );
+            ?>
+        </span>
+    </div>
+    <?php
+
+    $wishlist = ob_get_clean();
+
+    // Cart button ke baad wishlist.
+    return $markup . $wishlist;
+}
+
+
+add_action( 'after_setup_theme', 'thwl_astra_theme_integration' );
+
+function thwl_astra_theme_integration() {
+
+	// Astra theme active hai?
+	if ( 'Astra' !== wp_get_theme()->get( 'Name' ) && 'astra' !== wp_get_theme()->get_template() ) {
+		return;
+	}
+
+	add_filter(
+		'astra_addon_shop_cards_buttons_html',
+		'thwl_astra_shop_card_wishlist',
+		10,
+		2
+	);
+
+	// Astra me default wishlist hook remove.
+	remove_action( 'wp', 'thwl_hook_wishlist_loop_button_position' );
+}
