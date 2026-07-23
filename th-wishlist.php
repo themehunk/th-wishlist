@@ -94,6 +94,7 @@ final class THWL_Wishlist {
 	 * Include core files.
 	 */
 	public function thwl_includes() {
+		require_once THWL_DIR . 'pricing.php';
 		require_once THWL_DIR . 'includes/admin/class-th-wishlist-list-table.php';
 		require_once THWL_DIR . 'includes/admin/class-th-wishlist-data.php';
 		require_once THWL_DIR . 'includes/admin/class-th-wishlist-admin.php';

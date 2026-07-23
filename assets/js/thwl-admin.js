@@ -1,12 +1,22 @@
 jQuery(document).ready(function($) {
-    // tab
+    // Sidebar nav / tab switching
     $(document).on('click', '.thw-tab', function(e) {
         e.preventDefault();
         $('.thw-tab').removeClass('active');
         $('.thw-tab-content').removeClass('active');
         $(this).addClass('active');
-        const tabId = $(this).data('tab');
+        var tabId    = $(this).data('tab');
+        var tabTitle = $(this).data('title');
         $('#' + tabId).addClass('active');
+        if (tabTitle) {
+            $('.thwl-page-title').text(tabTitle);
+        }
+    });
+
+    // Sidebar Reset nav item triggers the hidden reset button
+    $(document).on('click', '.thwl-reset-nav', function(e) {
+        e.preventDefault();
+        $('#thw-reset-settings').trigger('click');
     });
 
     // Media uploader for custom icon
@@ -59,7 +69,7 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: data,
             beforeSend: function() {
-                $form.find('button[type="submit"]').prop('disabled', true).text('Saving...');
+                $form.find('button[type="submit"]').prop('disabled', true).text('Saving…');
             },
             success: function(response) {
                 $notice.removeClass('success error').addClass(response.success ? 'success' : 'error').text(response.data).show();
@@ -70,7 +80,7 @@ jQuery(document).ready(function($) {
                 setTimeout(function() { $notice.fadeOut(); }, 3000);
             },
             complete: function() {
-                $form.find('button[type="submit"]').prop('disabled', false).text('Save Settings');
+                $form.find('button[type="submit"]').prop('disabled', false).text('Save Changes');
             }
         });
     });
@@ -463,6 +473,23 @@ jQuery(document).ready(function($){
                 applyColor(val);
             }
         }, 200);
+    });
+});
+
+// Redirect icon picker — sync "selected" class for CSS active state
+jQuery(document).ready(function($){
+    $('input[name="settings[thw_redirect_wishlist_page_icon]"]').on('change', function(){
+        $('.thwl-redirect-icon-option').removeClass('selected');
+        $(this).closest('.thwl-redirect-icon-option').addClass('selected');
+    });
+});
+
+// Style icon pickers — sync "selected" class for CSS active state
+jQuery(document).ready(function($){
+    $(document).on('change', '.thwl-style-icon-option input[type="radio"]', function(){
+        var $grid = $(this).closest('.thwl-style-icon-grid');
+        $grid.find('.thwl-style-icon-option').removeClass('selected');
+        $(this).closest('.thwl-style-icon-option').addClass('selected');
     });
 });
 
