@@ -7,43 +7,54 @@
 
             var $product = $(this);
 
-            // Already processed.
-            if ( $product.children('.th-theme-actions-wrapper').length ) {
+            // Find both actions anywhere inside the product.
+            var $wishlist = $product.find('.thw-add-to-wishlist-button-wrap.th-theme-action').first();
+            var $compare  = $product.find('.thunk-compare.th-theme-action').first();
+
+            // Wrapper only when both actions exist.
+            if (!$wishlist.length || !$compare.length) {
                 return;
             }
 
-            var $actions = $product.children('.th-theme-action');
-
-            // Wrapper sirf tab jab 2 ya usse zyada actions hon.
-            if ( $actions.length < 2 ) {
+            // Both actions must have the same parent.
+            if ($wishlist.parent()[0] !== $compare.parent()[0]) {
                 return;
             }
 
-            var $wrapper = $('<div/>', {
-                class: 'th-theme-actions-wrapper'
-            });
+            var $parent = $wishlist.parent();
 
-            // Wishlist pehle.
-            $product.children('.thw-add-to-wishlist-button-wrap.th-theme-action').appendTo($wrapper);
+            // Already wrapped.
+            if ($parent.hasClass('th-theme-actions-wrapper')) {
+                return;
+            }
 
-            // Compare baad me.
-            $product.children('.thunk-compare.th-theme-action').appendTo($wrapper);
+            // If wrapper already exists inside parent.
+            if ($parent.children('.th-theme-actions-wrapper').length) {
+                return;
+            }
 
-            // Agar future me aur actions aaye to unhe bhi append kar do.
-            $product.children('.th-theme-action').appendTo($wrapper);
+            // Wishlist should always be first.
+            if ($wishlist.nextAll('.thunk-compare.th-theme-action').length === 0) {
+                $wishlist.insertBefore($compare);
+            }
 
-            $product.append($wrapper);
+            // Wrap both elements.
+            $wishlist.add($compare).wrapAll(
+                '<div class="th-theme-actions-wrapper"></div>'
+            );
 
         });
     }
 
-    $(thWrapThemeActions);
+    $(document).ready(thWrapThemeActions);
 
     $(document.body).on(
         'updated_wc_div added_to_cart removed_from_cart wc_fragments_loaded',
         thWrapThemeActions
     );
 
-    $(document).ajaxComplete(thWrapThemeActions);
+    $(document).ajaxComplete(function () {
+        thWrapThemeActions();
+    });
 
 })(jQuery);
