@@ -517,8 +517,8 @@ span.stock.out-of-stock {
 }
 /* Top Store */
 /* Big Store*/
-li.thunk-woo-product-list .thw-add-to-wishlist-button:before,
-li.thunk-woo-product-list .thw-add-to-wishlist-button:after{
+.wp-theme-big-store li.thunk-woo-product-list .thw-add-to-wishlist-button:before,
+.wp-theme-big-store li.thunk-woo-product-list .thw-add-to-wishlist-button:after{
     display: none!important;
 }
 @media screen and (max-width: 767px){
