@@ -366,13 +366,15 @@ class THWL_Settings {
                             <div id="thwl-help" class="thw-tab-content">
                                 <h3 class="thws-content-title"><?php esc_html_e( 'Help &amp; Documentation', 'th-wishlist' ); ?></h3>
                                 <div class="thwl-help-grid">
-
+                                    <?php if ( ! defined( 'THWL_PRO_ACTIVE' ) || ! THWL_PRO_ACTIVE ) { ?>
                                     <div class="thwl-help-card">
                                         <span class="dashicons dashicons-external thwl-help-icon"></span>
                                         <h4><?php esc_html_e( 'Upgrade To Pro', 'th-wishlist' ); ?></h4>
                                         <p><?php esc_html_e( 'Make product selection easy & advanced, using TH Wishlist Pro', 'th-wishlist' ); ?></p>
                                         <a target="_blank" href="https://themehunk.com/th-wishlist/" class="thwl-help-btn"><?php esc_html_e( 'Upgrade To Pro', 'th-wishlist' ); ?></a>
                                     </div>
+
+                                <?php  }  ?>
 
                                     <div class="thwl-help-card">
                                         <span class="dashicons dashicons-book-alt thwl-help-icon"></span>
