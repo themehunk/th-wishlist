@@ -23,6 +23,7 @@
 /* --- Root wrapper --- */
 .thwl-admin-page {
     margin-right: 0 !important;
+    margin-top: 0;
 }
 
 .thwl-admin-wrap {
