@@ -521,6 +521,10 @@ span.stock.out-of-stock {
 .wp-theme-big-store li.thunk-woo-product-list .thw-add-to-wishlist-button:after{
     display: none!important;
 }
+.wp-theme-top-store-pro li.thunk-woo-product-list .thw-add-to-wishlist-button:before,
+.wp-theme-top-store-pro li.thunk-woo-product-list .thw-add-to-wishlist-button:after{
+    display: none;
+}
 @media screen and (max-width: 767px){
     .wp-theme-storefront .summary .thw-to-add-text{
         display: none;
