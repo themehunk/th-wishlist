@@ -113,17 +113,20 @@ class THWL_Settings {
                             <span class="thwl-nav-label"><?php esc_html_e( 'Help', 'th-wishlist' ); ?></span>
                         </li>
 
-                        <li class="thwl-nav-item thwl-reset-nav">
+                        <li class="thwl-nav-item thw-tab"
+                            data-tab="thwl-reset"
+                            data-title="<?php esc_attr_e( 'Reset', 'th-wishlist' ); ?>">
                             <span class="dashicons dashicons-image-rotate"></span>
                             <span class="thwl-nav-label"><?php esc_html_e( 'Reset', 'th-wishlist' ); ?></span>
                         </li>
+
                     </ul>
 
                     <?php if ( ! defined( 'THWL_PRO_ACTIVE' ) || ! THWL_PRO_ACTIVE ) : ?>
                     <div class="thwl-sidebar-footer">
                         <p class="thwl-pro-title"><?php esc_html_e( 'Pro Plan', 'th-wishlist' ); ?></p>
                         <p class="thwl-pro-desc"><?php esc_html_e( 'Upgrade for more features', 'th-wishlist' ); ?></p>
-                        <a href="https://themehunk.com/th-wishlist-pro/" target="_blank" class="thwl-upgrade-btn">
+                        <a href="https://themehunk.com/th-wishlist/" target="_blank" class="thwl-upgrade-btn">
                             <?php esc_html_e( 'Upgrade Now', 'th-wishlist' ); ?>
                         </a>
                     </div>
@@ -139,7 +142,7 @@ class THWL_Settings {
                             <h2 class="thwl-page-title"><?php echo esc_html( $first_tab_label ); ?></h2>
                             <div class="thwl-header-actions">
                                 <?php if ( ! defined( 'THWL_PRO_ACTIVE' ) || ! THWL_PRO_ACTIVE ) : ?>
-                                <a href="https://themehunk.com/th-wishlist-pro/" target="_blank" class="thwl-get-premium-btn">
+                                <a href="https://themehunk.com/th-wishlist/" target="_blank" class="thwl-get-premium-btn">
                                     <?php esc_html_e( 'Get Premium Version', 'th-wishlist' ); ?>
                                 </a>
                                 <?php endif; ?>
@@ -363,6 +366,14 @@ class THWL_Settings {
                             <div id="thwl-help" class="thw-tab-content">
                                 <h3 class="thws-content-title"><?php esc_html_e( 'Help &amp; Documentation', 'th-wishlist' ); ?></h3>
                                 <div class="thwl-help-grid">
+
+                                    <div class="thwl-help-card">
+                                        <span class="dashicons dashicons-external thwl-help-icon"></span>
+                                        <h4><?php esc_html_e( 'Upgrade To Pro', 'th-wishlist' ); ?></h4>
+                                        <p><?php esc_html_e( 'Make product selection easy & advanced, using TH Wishlist Pro', 'th-wishlist' ); ?></p>
+                                        <a target="_blank" href="https://themehunk.com/th-wishlist/" class="thwl-help-btn"><?php esc_html_e( 'Upgrade To Pro', 'th-wishlist' ); ?></a>
+                                    </div>
+
                                     <div class="thwl-help-card">
                                         <span class="dashicons dashicons-book-alt thwl-help-icon"></span>
                                         <h4><?php esc_html_e( 'Documentation', 'th-wishlist' ); ?></h4>
@@ -381,8 +392,43 @@ class THWL_Settings {
                                         <p><?php esc_html_e( 'Enjoying this plugin? Help spread the word and leave us a review!', 'th-wishlist' ); ?></p>
                                         <a target="_blank" href="https://wordpress.org/plugins/th-wishlist/#reviews" class="thwl-help-btn"><?php esc_html_e( 'Leave a Review', 'th-wishlist' ); ?></a>
                                     </div>
+
+                                    <div class="thwl-help-card twitter">
+                                        <span class="dashicons dashicons-share-alt2 thwl-help-icon"></span>
+                                        <h4><?php esc_html_e( 'Spread the News', 'th-wishlist' ); ?></h4>
+                                        <p><?php esc_html_e( 'Enjoying this plugin? Help spread the the creation and show off your amazing website with such amazing functionality.', 'th-wishlist' ); ?></p>
+                                        <a target="_blank" href="https://twitter.com/intent/tweet?url=https://themehunk.com/th-wishlist/&text=Hey, I just tried out the WordPress Plugin for <?php echo esc_url(home_url()); ?> . You can also check out this awesome plugin: TH Wishlist 
+@ThemeHunk %20%23WooCommerce%20%23WordPress" class="thwl-help-btn"><?php esc_html_e( 'Click To Tweet', 'th-wishlist' ); ?></a>
+                                    </div>
                                 </div>
                             </div>
+
+                             <div id="thwl-reset" class="thw-tab-content">
+
+                                <div class="reset-tab">
+
+                        <div class="svg-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-triangle-alert" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+                        </div>
+                        <h2>Reset All Settings?</h2>
+                        <p>This action will restore all configuration settings to their default factory values. Your 
+                        current custom styles, colors, and behavior logic will be permanently deleted.</p>
+
+                        <p class="submit  th-save-btn">
+                        
+
+                            <span class="thw-tab thwl-reset-nav">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw" aria-hidden="true"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg> <?php esc_html_e( 'Reset Settings', 'th-wishlist' ); ?>
+                            </span>
+
+                        
+
+                    </p>
+                    </div>
+
+                                 
+
+                             </div>
 
                         </div><!-- .thw-tabs-content -->
 

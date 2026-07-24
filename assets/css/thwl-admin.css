@@ -32,19 +32,26 @@
     background: #f0f0f1;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
     border-top: 1px solid #dcdcde;
+    margin-top: 0;
 }
 
 /* =====================================================
    SIDEBAR
    ===================================================== */
 .thwl-sidebar {
-    width: 210px;
-    min-width: 210px;
     background: #fff;
     border-right: 1px solid #e5e5e5;
     display: flex;
     flex-direction: column;
     position: relative;
+
+    position: fixed;
+    width: 209px;
+    height: 100vh;
+    z-index: 2;
+    top: 32px;
+    overflow-y: auto;
+    padding-top: 10px;
 }
 
 /* Logo area */
@@ -183,6 +190,7 @@
     background: #f0f0f1;
     display: flex;
     flex-direction: column;
+    margin-left: 209px;
 }
 
 #thw-settings-form {
@@ -201,6 +209,10 @@
     padding: 13px 24px;
     border-bottom: 1px solid #e5e5e5;
     flex-shrink: 0;
+
+    position: sticky;
+    top: 32px;
+    z-index: 99999;
 }
 
 .thwl-page-title {
@@ -1129,14 +1141,14 @@
 
 /* Two-column layout */
 .thwl-style-layout {
+    width: 100%;
     display: flex;
     gap: 20px;
     align-items: flex-start;
-    flex-wrap: wrap;
 }
 
 .thwl-style-settings-col {
-    flex: 1 1 300px;
+    width: 51%;
     min-width: 280px;
     display: flex;
     flex-direction: column;
@@ -1144,7 +1156,6 @@
 }
 
 .thwl-style-preview-col {
-    flex: 0 0 280px;
     min-width: 220px;
     position: sticky;
     top: 32px;
@@ -1415,7 +1426,64 @@
 .thwl-preview-table {
     font-size: 12px;
 }
-
+.thwl-help-card.twitter{
+    max-width: 229px;
+}
+/* Reset CSS STARTS   */
+.thw-tabs-content .reset-tab {
+    width: max-content;
+    padding: 108px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    max-width: 1200px;
+    margin: auto;
+    background: #ffffff;
+    border-radius: 9px;
+    margin: 0 auto;
+}
+.thw-tabs-content .reset-tab .svg-wrapper {
+    background-color: rgb(254 242 242 / 1);
+    border-radius: 100%;
+    width: 59px;
+    height: 59px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.thw-tabs-content .svg-wrapper svg {
+    color: rgb(239 68 68 / 1);
+}
+.thw-tabs-content .reset-tab p {
+    max-width: 718px;
+    text-align: center;
+    color: rgb(107 114 128 / 1);
+    font-size: .99rem;
+    line-height: 1.625;
+}
+.thw-tabs-content .th-save-btn span {
+    color: rgb(220 38 38 / 1);
+    box-shadow: 0 0 #0000, 0 0 #0000, 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    background-color: rgb(254 242 242 / 1);
+    border-color: rgb(254 226 226 / 1);
+    border-radius: 9px;
+    transition-property: color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    padding: 1rem 2rem;
+    font-weight: 700;
+    font-size: .99rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
 /* Responsive */
 @media (max-width: 900px) {
     .thwl-style-layout {
