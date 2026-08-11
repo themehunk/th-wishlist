@@ -355,6 +355,11 @@ class THWL_Frontend {
                 //$block = ( 'single-product' === $template ) ? 'add-to-cart-form' : 'product-button';
                 add_filter( "render_block_woocommerce/add-to-cart-form", array( $this, 'inject_wishlist_in_block' ), 10, 3 );
                 $hooked = true;
+                add_action(
+        'woocommerce_after_shop_loop_item',
+        array( $this, 'add_to_wishlist_button' ),
+        7
+    );
                 break;
 
             case 'before_summ':
@@ -381,13 +386,57 @@ class THWL_Frontend {
      * @param WP_Block $instance The block instance.
      * @return string Modified block content.
      */
-    public function inject_wishlist_in_block( $block_content, $block, $instance ) {
-        ob_start();
-        $this->add_to_wishlist_button();
-        $wishlist_button_html = ob_get_clean();
-        // Append after original content. You could also prepend or place conditionally.
-        return $block_content . $wishlist_button_html;
+   public function inject_wishlist_in_block( $block_content, $block, $instance ) {
+
+    ob_start();
+
+    $this->add_to_wishlist_button();
+
+    $wishlist_button_html = ob_get_clean();
+
+    if ( empty( $wishlist_button_html ) ) {
+        return $block_content;
     }
+
+    /*
+     * Main Single Product Add to Cart Form.
+     */
+    if ( false !== strpos( $block_content, '</form>' ) ) {
+
+        /*
+         * Wishlist before Compare.
+         */
+        if ( false !== strpos( $block_content, 'thunk-compare' ) ) {
+
+            $block_content = preg_replace(
+                '/(<div[^>]*class=["\'][^"\']*\bthunk-compare\b[^"\']*["\'][^>]*>)/',
+                $wishlist_button_html . '$1',
+                $block_content,
+                1
+            );
+
+        } else {
+
+            /*
+             * Wishlist before closing form.
+             */
+            $block_content = str_replace(
+                '</form>',
+                $wishlist_button_html . '</form>',
+                $block_content
+            );
+        }
+
+        return $block_content;
+    }
+
+    /*
+     * Product Button block.
+     *
+     * Used by Related Products / Shop block product loops.
+     */
+    return $block_content . $wishlist_button_html;
+}
 
     public function thwl_wishlist_page_shortcode() {
 

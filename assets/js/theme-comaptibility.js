@@ -3,7 +3,7 @@
 
     function thWrapThemeActions() {
 
-        $('.woocommerce .products .product').each(function () {
+         $('.woocommerce .products .product, .wc-block-product').each(function () {
 
             var $product = $(this);
 
